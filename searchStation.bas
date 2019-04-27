@@ -75,6 +75,7 @@ Sub Globals
 	Private nowPlayingText As String
 	Private clsScrllLabel As clsScrollLabel
 	Private ivLogoStation As ImageView
+	Private sprGenre As Spinner
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -100,6 +101,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	ivCountry.Bitmap = LoadBitmap(File.DirAssets,flagname)
 		
+	genGenreList
 	If FirstTime Then
 		
 	End If
@@ -574,7 +576,7 @@ Sub btn_clear_search_Click
 	im.HideKeyboard
 	edt_find.Text = ""
 	clvStationList.Clear
-	edt_find.Hint = "Enter station name"
+	edt_find.Hint = "station name"
 	lbl_stationname.Text = "Tap above to search"
 	reflect.Target = edt_find
 	reflect.RunMethod("clearFocus")
@@ -703,7 +705,7 @@ Sub getGenryCountry
 End Sub
 
 Sub pullStationUrl(stUrl As String)
-	return
+	Return
 	Dim url As String
 	Log("SEARCHSTATION : " &stUrl)
 	
@@ -744,4 +746,18 @@ Sub stripUrl(url As String) As String
 		Return newUrl
 	End If
 	
+End Sub
+
+Sub genGenreList
+	Dim cur As Cursor = genDb.genrneCountry(vDefCountry)
+	
+	For i = 0 To cur.RowCount -1
+		cur.Position = i
+		sprGenre.Add(cur.GetString("genre"))
+	Next
+	
+End Sub
+
+Sub sprGenre_ItemClick (Position As Int, Value As Object)
+	Log(Value)	
 End Sub

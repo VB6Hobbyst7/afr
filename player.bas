@@ -1909,5 +1909,5 @@ Sub showLyricProviderImage(img As Bitmap)
 End Sub
 
 Sub lblNowPlayingStation_Click
-	StartActivity(checkStationUpdate)
+	'StartActivity(checkStationUpdate)
 End Sub

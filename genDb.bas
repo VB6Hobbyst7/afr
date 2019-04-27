@@ -530,7 +530,12 @@ End Sub
 
 Public Sub genrneCountry(country As String) As Cursor
 	initDB
-	Dim sql As String = "select distinct genre from rdolist where country = ? order by genre"
+	Dim sql As String = $"select distinct genre from rdolist where
+country = ? 
+and genre <> '-' 
+and genre <> ' ' 
+and genre is NOT NULL 
+order by genre"$
 	
 	Return vSql.ExecQuery2(sql, Array As String(country))
 	
