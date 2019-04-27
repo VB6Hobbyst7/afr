@@ -31,7 +31,7 @@ Sub Process_Globals
 	Public spotMap As Map
 	
 	'STRING
-	Public dbL, Username, Password, activeActivity, playerUsed, lastfmapi, countryCode As String
+	Public dbL, Username, Password, activeActivity, playerUsed, lastfmapi, countryCode, updateFile As String
 	Public SpotClientID1, SpotClientSecret1, SourceWeb1, mManualFolder, vAlbumTrack As String
 	Public vAlbumName, vAlbumReleaseDate, irp_dbFolder, vSong, vStationName As String
 	Public chartArtist, chartSong, streamLostInfo, vSpotError, vSpotUrl, localeDatFormat As String
@@ -45,7 +45,7 @@ Sub Process_Globals
 	'BOOLEAN
 	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound As Boolean
 	Public streamStarted, vIsPreset, pnl_album_info_button, pnl_stop_button, pnl_lyric_button, tryRestartStream As Boolean = False
-	Public chatDataLyric, lyricsOnDemand, pnl_store_song_button, lyricFound, albumArtFound, albumArtSet, streamLost As Boolean = False
+	Public chatDataLyric, lyricsOnDemand, pnl_store_song_button, lyricFound, albumArtFound, albumArtSet, streamLost, getUpdate As Boolean = False
 	'FLOAT
 	Public vDataUsage, ivAlbumArtHeight, ivAlbumArtwidth As Float
 	'INT

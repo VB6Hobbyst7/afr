@@ -112,6 +112,27 @@ Public Sub countStoredSong As Int
 	Return count
 End Sub
 
+Public Sub genUpdateTable
+	Dim qry As String
+	initDB
+	qry = $"CREATE TABLE IF NOT EXISTS stUpdate 
+		(stupdate_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+		stname TEXT,
+		description TEXT,
+		genre TEXT,
+		country TEXT,
+		language TEXT,
+		stream1 TEXT,
+		stream2 TEXT,
+		stream3 TEXT,
+		stream4 TEXT,
+		stream5 TEXT,
+		stream6 TEXT)"$
+	vSql.ExecNonQuery(qry)
+	
+	vacuumDB
+End Sub
+
 Public Sub genStoredSongTable
 	Dim vQry As String
 	initDB
@@ -433,6 +454,20 @@ Public Sub countryTableExists As Boolean
 	vSql.ExecNonQuery(sql)
 	vSql.ExecNonQuery(sqlIndex)
 	Return True
+	
+End Sub
+
+Public Sub tableExists(table As String) As Boolean
+	initDB
+	
+	Dim cur As Cursor
+	cur = vSql.ExecQuery("SELECT name FROM sqlite_master WHERE type='table' AND name = '" & table & "'")
+	
+	If cur.RowCount = 1 Then
+		Return True
+	End If
+	
+	Return False
 	
 End Sub
 

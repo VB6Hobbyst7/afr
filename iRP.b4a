@@ -759,6 +759,7 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
+	private dbTimestamp as Long
 	Dim clsGen As clsGeneral
 	Private NativeMe As JavaObject
 	Private toolbar As ACToolBarDark
@@ -881,60 +882,41 @@ Sub FTP_DownloadProgress (ServerPath As String, TotalDownloaded As Long, Total A
 	End If
 End Sub
 
-'Sub FTP_ListCompleted (ServerPath As String, Success As Boolean, Folders() As FTPEntry, Files() As FTPEntry)
-'	Log(ServerPath)
-'	If Success = False Then
-'		Log(LastException)
-'	Else
-'		For i = 0 To Folders.Length - 1
-'			Log(Folders(i).Name)
-'		Next
-'		For i = 0 To  Files.Length- 1
-'			Log(Files(i).Name & ", " & Files(i).Size & ", " & DateTime.Date(Files(i).Timestamp))
-'		Next
-'	End If
-'	
-'End Sub
 
 Sub startIRP
-	'genDb.truncateTable("rdolist")
-	
-	'ftp.List("/")
-
-	'Dim sf As Object = ftp.DownloadFile("rdolist_main.csv", False, Starter.irp_dbFolder, "rdolist_main.csv")
-'	Wait For (sf) FTP_ListCompleted (ServerPath As String, Success As Boolean)
-'	Log("list completed: " & Success)
-	
-	'Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
-	'Log("download completed: " & Success)
-	
+'	genDb.truncateTable("rdolist")
 	
 	Dim appStarted As Int = 0
 	If kvs.ContainsKey("app_started") = True Then
 		appStarted = kvs.GetSimple("app_started")
 	End If
 	
-	If genDb.countRecords("rdolist") = 0 Then
+	Dim rdoCount As Int  = genDb.countRecords("rdolist")
+	wait for (checkUpdate) Complete(r As Boolean)
+	
+	
+	If dbTimestamp > kvs.getSimple("stationsTimestamp") Then
+	Log(dbTimestamp)
+	Log(kvs.getSimple("stationsTimestamp"))
+		Msgbox2Async($"Radio station update availeble, update now?"$, Starter.vAppname, "Yes", "", "No", Null, False)
+	
+		Wait For Msgbox_Result (response As Int)
+	
+		If response = DialogResponse.POSITIVE Then
+			genDb.truncateTable("rdolist")
+		End If
+	End If
+	
+	If rdoCount = 0 Then
+		kvs.PutSimple("stationsTimestamp", dbTimestamp)
 		If pnl_permission.IsInitialized Then
 			pnl_permission.Visible = False
 		End If
-		pnlMain.LoadLayout("main_import_data")
-		Sleep(1)
-'		showImportViews(True)
-		lblDbConnected.Visible = True
-		lblDbConnected.Text = ""
-		ftp.PassiveMode = True
-		ftp.Initialize("FTP", "ftp.pdeg.nl", 21, Starter.doy, Starter.moy)
-		Dim sf As Object = ftp.DownloadFile("rdolist_main.csv", False, Starter.irp_dbFolder, "rdolist_main.csv")
-		Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
-		ftp.Close
-		wait for(importStations) Complete (result As Boolean)
-		Sleep(2000)
-		pnl_import_data.Visible = False
+
+		wait for (importData("rdolist_main.csv", "rdolist")) Complete (result As Boolean)
+
 		pnlMain.LoadLayout("welcome")
 	End If
-
-'	showWelcome
 
 	If appStarted = 0 Then
 		wait for (showWelcome) Complete (result As Boolean)
@@ -944,9 +926,16 @@ Sub startIRP
 		pnlMain.Visible = False
 	End If
 	getSetVaultData
-'	getSetrdoDatabase
-	genDb.vacuumDB
-	genDb.genStoredSongTable
+	'genDb.vacuumDB
+	If genDb.tableExists("stored_songs") = False Then
+		genDb.genStoredSongTable
+	End If
+	If genDb.tableExists("stUpdate") = False Then
+		genDb.genUpdateTable
+	End If
+	genDb.truncateTable("stUpdate")
+	
+	
 	'genDb.dropTable("country")
 '	Dim tableFound As Boolean = genDb.countryTableExists
 '	genDb.deleteCountryList
@@ -959,8 +948,64 @@ Sub startIRP
 End Sub
 
 
-Sub Activity_Resume
+Sub checkUpdate As ResumableSub
+	If ftp.IsInitialized = False Then
+		ftp.Initialize("FTP", "ftp.pdeg.nl", 21, Starter.doy, Starter.moy)
+	End If
+	ftp.List("/")
+	wait for FTP_ListCompleted(ServerPath As String, Success As Boolean, Folders() As FTPEntry, Files() As FTPEntry)
+	If Success = False Then
+		Log(LastException)
+		ftp.Close
+	Else
+		For i = 0 To Files.Length - 1
+			dbTimestamp = Files(i).Timestamp
+		Next
+		ftp.Close
+	End If
+	Return True
+End Sub
 
+'Sub FTP_ListCompleted (ServerPath As String, Success As Boolean, Folders() As FTPEntry, Files() As FTPEntry) As ResumableSub
+'	
+'	'Dim dbTimsstamp As Long = kvs.GetSimple("stationsTimestamp")
+'	
+'	If Success = False Then
+'		Log(LastException)
+'		ftp.Close
+'		
+'	Else
+'		
+'		For i = 0 To Files.Length - 1
+'			Log(Files(i).Name)
+'			dbTimestamp = Files(i).Timestamp
+'			Log(dbTimestamp)
+'		Next
+'		ftp.Close
+'	End If
+'	Return Success
+'End Sub
+
+
+Sub importData(fileName As String, table As String)As ResumableSub
+	pnlMain.LoadLayout("main_import_data")
+	'Sleep(1)
+	lblDbConnected.Visible = True
+	lblDbConnected.Text = ""
+	ftp.PassiveMode = True
+	ftp.Initialize("FTP", "ftp.pdeg.nl", 21, Starter.doy, Starter.moy)
+	Dim sf As Object = ftp.DownloadFile(fileName, False, Starter.irp_dbFolder, "rdolist_main.csv")
+	Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
+	ftp.Close
+	wait for(importStations(table)) Complete (result As Boolean)
+	Sleep(2000)
+	pnl_import_data.Visible = False
+	Return True
+End Sub
+
+
+Sub Activity_Resume
+	
 End Sub
 
 
@@ -1068,6 +1113,10 @@ Sub initKvs
 		kvs.Initialize(Starter.irp_dbFolder, "settings", False)
 	End If
 
+	If kvs.ContainsKey("stationsTimestamp") = False Then
+		kvs.PutSimple("stationsTimestamp", 0)
+	End If
+	
 	If kvs.ContainsKey("wifionly") = False Then
 		kvs.PutSimple("wifionly", False)
 		Starter.vWifiOnly	= False
@@ -1139,7 +1188,7 @@ Sub ivPegi_Click
 End Sub
 
 
-Public Sub importStations As ResumableSub
+Public Sub importStations(table As String) As ResumableSub
 	Dim su As StringUtils
 	Dim csv As List
 	Dim items() As String
@@ -1159,7 +1208,7 @@ Public Sub importStations As ResumableSub
 	
 	sql = $"insert
 	into
-		rdolist (stname,
+		${table} (stname,
 		description,
 		genre,
 		country,
@@ -1182,7 +1231,7 @@ Public Sub importStations As ResumableSub
 	?,
 	?)"$
 	
-	genDb.truncateTable("rdolist")
+	genDb.truncateTable(table)
 	csv = su.LoadCSV(Starter.irp_dbFolder, "rdolist_main.csv", "|")
 	stCount = csv.Size-1
 	redPerc = (23/stCount)*modValue
@@ -1203,7 +1252,7 @@ Public Sub importStations As ResumableSub
 	vSql.EndTransaction
 	
 	iterateLabel(100)
-	lbl_stname.Text = $"Done.. Added ${stCount} stations"$
+	lbl_stname.Text = $"Done.. Imported ${stCount} stations"$
 	
 	File.Delete(Starter.irp_dbFolder, "rdolist_main.csv")
 	Return False
