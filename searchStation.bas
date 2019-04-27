@@ -256,7 +256,7 @@ End Sub
 
 
 Sub getsearchStation(params As List) As Cursor
-	Dim curs As Cursor = genDb.getSearchStation(params.Get(0), params.Get(1))
+	Dim curs As Cursor = genDb.getSearchStation(params.Get(0), params.Get(1), params.Get(2))
 	
 	Return curs
 End Sub
@@ -507,9 +507,10 @@ Sub edt_find_EnterPressed
 		params.Add(vText)
 		params.Add(vDefCountry)
 		
+		
 		clvStationList.Clear
 		clvStationList.sv.Visible = False
-		Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry)
+		Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, sprGenre.GetItem(sprGenre.SelectedIndex))
 		
 		For i = 0 To rs.RowCount-1
 			rs.Position = i

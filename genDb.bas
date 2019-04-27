@@ -220,20 +220,25 @@ Sub getStationIdByName(vStation As String) As String
 		vCurs.Position	= 0
 		Return vCurs.GetString("pref_id")
 	Else
-		return "null"
+		Return "null"
 	End If
 End Sub
 
 
-Sub getSearchStation(vStation As String, vUseCountry As String) As Cursor
+Sub getSearchStation(vStation As String, vUseCountry As String, genre As String) As Cursor
 	Dim vQry As String
 	Dim vCurs As Cursor
-	
+	If genre = "" Then
+		genre = "%"
+	Else 
+		genre = $"%${genre}%"$	
+	End If
 	initDB
 	
-	vQry	= "SELECT * FROM rdolist WHERE stname LIKE ? AND country = ? COLLATE NOCASE ORDER BY stname ASC"
 	
-	vCurs	= vSql.ExecQuery2(vQry, Array As String(vStation, vUseCountry))
+	vQry	= "SELECT * FROM rdolist WHERE stname LIKE ? AND country = ? and genre like ? COLLATE NOCASE ORDER BY stname ASC"
+	
+	vCurs	= vSql.ExecQuery2(vQry, Array As String(vStation, vUseCountry, genre))
 	
 	Return vCurs
 End Sub
