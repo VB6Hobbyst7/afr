@@ -1908,3 +1908,5 @@ Sub showLyricProviderImage(img As Bitmap)
 	'lbl_stream_lost.SetBackgroundImage(img)
 End Sub
 
+Sub lblNowPlayingStation_Click
+End Sub
