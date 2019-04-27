@@ -1,0 +1,1211 @@
+﻿Build1=Default,nl.pdeg.irp
+Build2=PGR,nl.pdeg.irp,RELEASE,UI
+File1=001-next.svg
+File10=010-unlock.svg
+File100=Cyprus Northern.png
+File101=Cyprus.png
+File102=Czech Republic.png
+File103=Denmark.png
+File104=Djibouti.png
+File105=dlgSongInfo.bal
+File106=Dominica.png
+File107=Dominican Republic.png
+File108=Ecuador.png
+File109=editStation.bal
+File11=011-back.svg
+File110=Egypt.png
+File111=El Salvador.png
+File112=Equatorial Guinea.png
+File113=Eritrea.png
+File114=Estonia.png
+File115=Ethiopia.png
+File116=Falkland Islands.png
+File117=Faroe Islands.png
+File118=Fiji.png
+File119=Finland.png
+File12=012-upload.svg
+File120=France.png
+File121=French Polynesia.png
+File122=Gabon.png
+File123=Gambia.png
+File124=Georgia.png
+File125=Germany.png
+File126=getSetStation.bal
+File127=Ghana.png
+File128=Gibraltar.png
+File129=Greece.png
+File13=013-play.svg
+File130=Greenland.png
+File131=Grenada.png
+File132=Guam.png
+File133=Guatemala.png
+File134=Guinea Bissau.png
+File135=Guinea.png
+File136=Guyana.png
+File137=Haiti.png
+File138=Honduras.png
+File139=Hong Kong.png
+File14=014-like.svg
+File140=Hungary.png
+File141=Iceland.png
+File142=image4512.png
+File143=India.png
+File144=Indonesia.png
+File145=info.svg
+File146=Iran.png
+File147=Iraq.png
+File148=Ireland.png
+File149=irp_icon.png
+File15=015-refresh.svg
+File150=Israel.png
+File151=Italy.png
+File152=Jamaica.png
+File153=Japan.png
+File154=Jordan.png
+File155=Kazakhstan.png
+File156=Kenya.png
+File157=Kiribati.png
+File158=Korea, South.png
+File159=Kuwait.png
+File16=016-share.svg
+File160=Kyrgyzstan.png
+File161=Laos.png
+File162=Latvia.png
+File163=Lebanon.png
+File164=Lesotho.png
+File165=letters_.bal
+File166=Liberia.png
+File167=Libya.png
+File168=Liechtenstein.png
+File169=Lithuania.png
+File17=017-bars-graphics.svg
+File170=lod.png
+File171=logo_afr.png
+File172=lstCountry.bal
+File173=lstStat1.bal
+File174=Luxembourg.png
+File175=lyric.html
+File176=Macao.png
+File177=Macedonia.png
+File178=Madagascar.png
+File179=main.bal
+File18=018-minimize.svg
+File180=main_askPhonePermission.bal
+File181=main_import_data.bal
+File182=Malawi.png
+File183=Malaysia.png
+File184=Maldives.png
+File185=Mali.png
+File186=Malta.png
+File187=Marshall Islands.png
+File188=Martinique.png
+File189=Mauritania.png
+File19=019-reduce-volume.svg
+File190=Mauritius.png
+File191=Mexico.png
+File192=Micronesia.png
+File193=Moldova.png
+File194=Monaco.png
+File195=Mongolia.png
+File196=Montserrat.png
+File197=Morocco.png
+File198=Mozambique.png
+File199=Myanmar.png
+File2=002-music.svg
+File20=020-menu.svg
+File200=Namibia.png
+File201=Nauru.png
+File202=Nepal.png
+File203=Netherlands Antilles.png
+File204=Netherlands.png
+File205=New Zealand.png
+File206=Nicaragua.png
+File207=Niger.png
+File208=Nigeria.png
+File209=Niue.png
+File21=021-pause.svg
+File210=no_internet.bal
+File211=no_logo.png
+File212=no_wifi.png
+File213=NoImageAvailable.png
+File214=no-internet.png
+File215=nologo.png
+File216=Norfolk Island.png
+File217=North Korea.png
+File218=Norway.png
+File219=Oman.png
+File22=022-power-button.svg
+File220=outline_alarm_off_black_18dp.png
+File221=outline_alarm_on_black_18dp.png
+File222=outline_radio.png
+File223=outline_volume_off_black_24.png
+File224=outline_volume_up_black_24.png
+File225=Pakistan.png
+File226=Palau.png
+File227=Panama.png
+File228=Papua New Guinea.png
+File229=Paraguay.png
+File23=023-recording.svg
+File230=pegi3.png
+File231=Peru.png
+File232=Philippines.png
+File233=Pitcairn Islands.png
+File234=play.svg
+File235=play_stream.svg
+File236=play32.png
+File237=play-button.svg
+File238=player.bal
+File239=playerStation.bal
+File24=024-low-volume.svg
+File240=plnUpdateList.bal
+File241=pnlUpdateNew.bal
+File242=Poland.png
+File243=Portugal.png
+File244=Puerto Rico.png
+File245=Qatar.png
+File246=radio.png
+File247=radio_flat.png
+File248=radio_notif.png
+File249=rdo.png
+File25=025-shuffle.svg
+File250=rdodb.db
+File251=Romania.png
+File252=Russian Federation.png
+File253=Rwanda.png
+File254=sad_smiley.png
+File255=Saint Kitts and Nevis.png
+File256=Saint Lucia.png
+File257=Saint Pierre.png
+File258=Saint Vincent and the Grenadines.png
+File259=Samoa.png
+File26=026-recording-1.svg
+File260=San Marino.png
+File261=Sao Tome and Principe.png
+File262=Saudi Arabia.png
+File263=searchStation.bal
+File264=Senegal.png
+File265=Serbia and Montenegro.png
+File266=Seychelles.png
+File267=show_album.svg
+File268=show_lyrics.svg
+File269=show_volume.svg
+File27=027-information.svg
+File270=show_volume_off.svg
+File271=Sierra Leone.png
+File272=Singapore.png
+File273=sleeptimer.svg
+File274=slidingMenu.bal
+File275=Slovakia.png
+File276=Slovenia.png
+File277=Soloman_Islands.png
+File278=Somalia.png
+File279=song_playing.html
+File28=028-folder.svg
+File280=South Africa.png
+File281=South Georgia.png
+File282=Soviet Union.png
+File283=Spain.png
+File284=speaker_max.png
+File285=speaker_min.png
+File286=Sri Lanka.png
+File287=stop.png
+File288=stop.svg
+File289=stop_song.svg
+File29=029-previous.svg
+File290=stop_stream.svg
+File291=stop32.png
+File292=store_song.svg
+File293=stored_songs.bal
+File294=stores_song_detail.bal
+File295=Sudan.png
+File296=Suriname.png
+File297=Swaziland.png
+File298=Sweden.png
+File299=Switzerland.png
+File3=003-stop.svg
+File30=030-mute.svg
+File300=Syria.png
+File301=Taiwan.png
+File302=Tajikistan.png
+File303=Tanzania.png
+File304=Thailand.png
+File305=Tibet.png
+File306=Timor-Leste.png
+File307=Togo.png
+File308=Tonga.png
+File309=Trinidad and Tobago.png
+File31=031-skip.svg
+File310=Tunisia.png
+File311=Turkey.png
+File312=Turkmenistan.png
+File313=Turks and Caicos Islands.png
+File314=Tuvalu.png
+File315=Uganda.png
+File316=Ukraine.png
+File317=United Arab Emirates.png
+File318=United Kingdom.png
+File319=United States of America.png
+File32=032-forwards.svg
+File320=Uruguay.png
+File321=Uzbekistan.png
+File322=Vanuatu.png
+File323=Vatican City State (Holy See).png
+File324=Venezuela.png
+File325=Vietnam.png
+File326=Virgin Islands (U.S.).png
+File327=Wallis and Futuna.png
+File328=welcome.bal
+File329=wifi.png
+File33=033-forwards-1.svg
+File330=Yemen.png
+File331=Zambia.png
+File332=Zimbabwe.png
+File34=034-volume-adjustment.svg
+File35=035-volume-up.svg
+File36=036-rate.svg
+File37=037-question-mark.svg
+File38=038-padlock.svg
+File39=039-skip-1.svg
+File4=004-settings.svg
+File40=040-backward.svg
+File41=4.jpg
+File42=add_to_favorite.svg
+File43=addNewStations.bal
+File44=Afghanistan.png
+File45=Albania.png
+File46=Algeria.png
+File47=American Samoa.png
+File48=Andorra.png
+File49=Angola.png
+File5=005-loop.svg
+File50=Anguilla.png
+File51=Antarctica.png
+File52=Antigua and Barbuda.png
+File53=Argentina.png
+File54=Armenia.png
+File55=arrow.png
+File56=Aruba.png
+File57=Australia.png
+File58=Austria.png
+File59=Azerbaijan.png
+File6=006-loop-1.svg
+File60=Bahamas.png
+File61=Bahrain.png
+File62=ball_glass_green.png
+File63=Bangladesh.png
+File64=Barbados.png
+File65=baseline_language_white_24dp.png
+File66=baseline-language-24px.svg
+File67=Belarus.png
+File68=Belgium.png
+File69=Belize.png
+File7=007-controller.svg
+File70=Benin.png
+File71=Bermuda.png
+File72=Bhutan.png
+File73=Bolivia.png
+File74=Bosnia.png
+File75=Botswana.png
+File76=Brazil.png
+File77=British Virgin Islands.png
+File78=Brunei.png
+File79=Bulgaria.png
+File8=008-maximize.svg
+File80=Burkina Faso.png
+File81=Burundi.png
+File82=Cambodia.png
+File83=Cameroon.png
+File84=Canada.png
+File85=Cape Verde.png
+File86=Cayman Islands.png
+File87=Central African Republic.png
+File88=Chad.png
+File89=checkStationUpdate.bal
+File9=009-headphone.svg
+File90=Chile.png
+File91=China.png
+File92=Christmas Island.png
+File93=Colombia.png
+File94=Comoros.png
+File95=Congo.png
+File96=Cook Islands.png
+File97=Costa Rica.png
+File98=Croatia.png
+File99=Cuba.png
+FileGroup1=svg
+FileGroup10=svg
+FileGroup100=flags
+FileGroup101=flags
+FileGroup102=flags
+FileGroup103=flags
+FileGroup104=flags
+FileGroup105=Default Group
+FileGroup106=flags
+FileGroup107=flags
+FileGroup108=flags
+FileGroup109=Default Group
+FileGroup11=svg
+FileGroup110=flags
+FileGroup111=flags
+FileGroup112=flags
+FileGroup113=flags
+FileGroup114=flags
+FileGroup115=flags
+FileGroup116=flags
+FileGroup117=flags
+FileGroup118=flags
+FileGroup119=flags
+FileGroup12=svg
+FileGroup120=flags
+FileGroup121=flags
+FileGroup122=flags
+FileGroup123=flags
+FileGroup124=flags
+FileGroup125=flags
+FileGroup126=Default Group
+FileGroup127=flags
+FileGroup128=flags
+FileGroup129=flags
+FileGroup13=svg
+FileGroup130=flags
+FileGroup131=flags
+FileGroup132=flags
+FileGroup133=flags
+FileGroup134=flags
+FileGroup135=flags
+FileGroup136=flags
+FileGroup137=flags
+FileGroup138=flags
+FileGroup139=flags
+FileGroup14=svg
+FileGroup140=flags
+FileGroup141=flags
+FileGroup142=Default Group
+FileGroup143=flags
+FileGroup144=flags
+FileGroup145=Default Group
+FileGroup146=flags
+FileGroup147=flags
+FileGroup148=flags
+FileGroup149=Default Group
+FileGroup15=svg
+FileGroup150=flags
+FileGroup151=flags
+FileGroup152=flags
+FileGroup153=flags
+FileGroup154=flags
+FileGroup155=flags
+FileGroup156=flags
+FileGroup157=flags
+FileGroup158=flags
+FileGroup159=flags
+FileGroup16=svg
+FileGroup160=flags
+FileGroup161=flags
+FileGroup162=flags
+FileGroup163=flags
+FileGroup164=flags
+FileGroup165=Default Group
+FileGroup166=flags
+FileGroup167=flags
+FileGroup168=flags
+FileGroup169=flags
+FileGroup17=svg
+FileGroup170=Default Group
+FileGroup171=images
+FileGroup172=Default Group
+FileGroup173=Default Group
+FileGroup174=flags
+FileGroup175=other
+FileGroup176=flags
+FileGroup177=flags
+FileGroup178=flags
+FileGroup179=Default Group
+FileGroup18=svg
+FileGroup180=Default Group
+FileGroup181=Default Group
+FileGroup182=flags
+FileGroup183=flags
+FileGroup184=flags
+FileGroup185=flags
+FileGroup186=flags
+FileGroup187=flags
+FileGroup188=flags
+FileGroup189=flags
+FileGroup19=svg
+FileGroup190=flags
+FileGroup191=flags
+FileGroup192=flags
+FileGroup193=flags
+FileGroup194=flags
+FileGroup195=flags
+FileGroup196=flags
+FileGroup197=flags
+FileGroup198=flags
+FileGroup199=flags
+FileGroup2=svg
+FileGroup20=svg
+FileGroup200=flags
+FileGroup201=flags
+FileGroup202=flags
+FileGroup203=flags
+FileGroup204=flags
+FileGroup205=flags
+FileGroup206=flags
+FileGroup207=flags
+FileGroup208=flags
+FileGroup209=flags
+FileGroup21=svg
+FileGroup210=Default Group
+FileGroup211=Default Group
+FileGroup212=images
+FileGroup213=images
+FileGroup214=Default Group
+FileGroup215=images
+FileGroup216=flags
+FileGroup217=flags
+FileGroup218=flags
+FileGroup219=flags
+FileGroup22=svg
+FileGroup220=Default Group
+FileGroup221=Default Group
+FileGroup222=Default Group
+FileGroup223=Default Group
+FileGroup224=Default Group
+FileGroup225=flags
+FileGroup226=flags
+FileGroup227=flags
+FileGroup228=flags
+FileGroup229=flags
+FileGroup23=svg
+FileGroup230=Default Group
+FileGroup231=flags
+FileGroup232=flags
+FileGroup233=flags
+FileGroup234=Default Group
+FileGroup235=Default Group
+FileGroup236=images
+FileGroup237=Default Group
+FileGroup238=Default Group
+FileGroup239=Default Group
+FileGroup24=svg
+FileGroup240=Default Group
+FileGroup241=Default Group
+FileGroup242=flags
+FileGroup243=flags
+FileGroup244=flags
+FileGroup245=flags
+FileGroup246=Default Group
+FileGroup247=Default Group
+FileGroup248=images
+FileGroup249=images
+FileGroup25=svg
+FileGroup250=other
+FileGroup251=flags
+FileGroup252=flags
+FileGroup253=flags
+FileGroup254=Default Group
+FileGroup255=flags
+FileGroup256=flags
+FileGroup257=flags
+FileGroup258=flags
+FileGroup259=flags
+FileGroup26=svg
+FileGroup260=flags
+FileGroup261=flags
+FileGroup262=flags
+FileGroup263=Default Group
+FileGroup264=flags
+FileGroup265=flags
+FileGroup266=flags
+FileGroup267=Default Group
+FileGroup268=Default Group
+FileGroup269=Default Group
+FileGroup27=svg
+FileGroup270=Default Group
+FileGroup271=flags
+FileGroup272=flags
+FileGroup273=Default Group
+FileGroup274=Default Group
+FileGroup275=flags
+FileGroup276=flags
+FileGroup277=flags
+FileGroup278=flags
+FileGroup279=Default Group
+FileGroup28=svg
+FileGroup280=flags
+FileGroup281=flags
+FileGroup282=flags
+FileGroup283=flags
+FileGroup284=images
+FileGroup285=images
+FileGroup286=flags
+FileGroup287=images
+FileGroup288=Default Group
+FileGroup289=Default Group
+FileGroup29=svg
+FileGroup290=Default Group
+FileGroup291=images
+FileGroup292=Default Group
+FileGroup293=Default Group
+FileGroup294=Default Group
+FileGroup295=flags
+FileGroup296=flags
+FileGroup297=flags
+FileGroup298=flags
+FileGroup299=flags
+FileGroup3=svg
+FileGroup30=svg
+FileGroup300=flags
+FileGroup301=flags
+FileGroup302=flags
+FileGroup303=flags
+FileGroup304=flags
+FileGroup305=flags
+FileGroup306=flags
+FileGroup307=flags
+FileGroup308=flags
+FileGroup309=flags
+FileGroup31=svg
+FileGroup310=flags
+FileGroup311=flags
+FileGroup312=flags
+FileGroup313=flags
+FileGroup314=flags
+FileGroup315=flags
+FileGroup316=flags
+FileGroup317=flags
+FileGroup318=flags
+FileGroup319=flags
+FileGroup32=svg
+FileGroup320=flags
+FileGroup321=flags
+FileGroup322=flags
+FileGroup323=flags
+FileGroup324=flags
+FileGroup325=flags
+FileGroup326=flags
+FileGroup327=flags
+FileGroup328=Default Group
+FileGroup329=images
+FileGroup33=svg
+FileGroup330=flags
+FileGroup331=flags
+FileGroup332=flags
+FileGroup34=svg
+FileGroup35=svg
+FileGroup36=svg
+FileGroup37=svg
+FileGroup38=svg
+FileGroup39=svg
+FileGroup4=svg
+FileGroup40=svg
+FileGroup41=images
+FileGroup42=Default Group
+FileGroup43=Default Group
+FileGroup44=flags
+FileGroup45=flags
+FileGroup46=flags
+FileGroup47=flags
+FileGroup48=flags
+FileGroup49=flags
+FileGroup5=svg
+FileGroup50=flags
+FileGroup51=flags
+FileGroup52=flags
+FileGroup53=flags
+FileGroup54=flags
+FileGroup55=Default Group
+FileGroup56=flags
+FileGroup57=flags
+FileGroup58=flags
+FileGroup59=flags
+FileGroup6=svg
+FileGroup60=flags
+FileGroup61=flags
+FileGroup62=Default Group
+FileGroup63=flags
+FileGroup64=flags
+FileGroup65=Default Group
+FileGroup66=Default Group
+FileGroup67=flags
+FileGroup68=flags
+FileGroup69=flags
+FileGroup7=svg
+FileGroup70=flags
+FileGroup71=flags
+FileGroup72=flags
+FileGroup73=flags
+FileGroup74=flags
+FileGroup75=flags
+FileGroup76=flags
+FileGroup77=flags
+FileGroup78=flags
+FileGroup79=flags
+FileGroup8=svg
+FileGroup80=flags
+FileGroup81=flags
+FileGroup82=flags
+FileGroup83=flags
+FileGroup84=flags
+FileGroup85=flags
+FileGroup86=flags
+FileGroup87=flags
+FileGroup88=flags
+FileGroup89=Default Group
+FileGroup9=svg
+FileGroup90=flags
+FileGroup91=flags
+FileGroup92=flags
+FileGroup93=flags
+FileGroup94=flags
+FileGroup95=flags
+FileGroup96=flags
+FileGroup97=flags
+FileGroup98=flags
+FileGroup99=flags
+Group=Default Group
+IconFile=
+Library1=core
+Library10=randomaccessfile
+Library11=reflection
+Library12=net
+Library13=runtimepermissions
+Library14=json
+Library15=stringfunctions
+Library16=encryption
+Library17=okhttputils2
+Library18=sv_irp
+Library19=xmllayoutbuilder
+Library2=appcompat
+Library20=datacollection
+Library21=emphasistextview
+Library22=xmlsax
+Library23=network
+Library24=ioxsvg
+Library25=ime
+Library26=xui views
+Library27=dialogs
+Library3=xui
+Library4=sql
+Library5=stringutils
+Library6=phone
+Library7=mlwifi
+Library8=javaobject
+Library9=designsupport
+ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	~\n~	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'SetApplicationAttribute(android:icon, "@drawable/radio")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~CreateResource(values-v21, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~	~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~
+Module1=player
+Module10=editStation
+Module11=clsDeviceVolume
+Module12=genDb
+Module13=scrobbler
+Module14=clsGeneral
+Module15=KeyValueStore
+Module16=clsChartlyrics
+Module17=getSetStation
+Module18=clsGenVolumeControl
+Module19=irp_CustomListView
+Module2=Starter
+Module20=clsGenTimer
+Module21=clsTimer
+Module22=NB6
+Module23=modGlobal
+Module24=clsScrollLabel
+Module25=phdetect
+Module26=clsRandomImage
+Module3=searchStation
+Module4=cmGen
+Module5=checkStationUpdate
+Module6=clsFunctions
+Module7=clsHttp
+Module8=stored_songs
+Module9=addNewStations
+NumberOfFiles=332
+NumberOfLibraries=27
+NumberOfModules=26
+Version=9.01
+@EndOfDesignText@
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: False
+#End Region
+
+#Region  Project Attributes
+	#ApplicationLabel: AdFree Radio
+	#VersionCode: 30052031
+	#VersionName: 0.99
+	 'SupportedOrientations possible values: unspecified, landscape or portrait
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+
+	#LibraryName: OkHttpUtils2
+	#AdditionalJar: Java-Json
+	#AdditionalJar: aacdecoder-android-0.8
+	#MultiDex: False
+	#additionaljar: com.android.support:support-v4
+#End Region
+
+#Region Diff
+#AdditionalRes: ..\resource
+#Extends: android.support.v7.app.AppCompatActivity
+#ExcludeClasses: .games, .drive, .fitness, .wearable, .measurement, .cast, .auth, .nearby
+#ExcludeClasses: .tagmanager, .analytics, .wallet, .plus, .vision, .gcm, .maps
+#BridgeLogger: True
+#CanInstallToExternalStorage : True
+#End Region
+
+Sub Process_Globals
+	Dim ftp As FTP
+End Sub
+
+Sub Globals
+	Dim clsGen As clsGeneral
+	Private NativeMe As JavaObject
+	Private toolbar As ACToolBarDark
+	Private rp As RuntimePermissions
+	Private lblDbConnected As Label
+	Private pnlMain As Panel
+	Private kvs As KeyValueStore
+	Private svIrp As MySecVault
+	Dim M1 As Map
+	Dim CollSer As dcCollectionSerializer
+	Private btnContinue As Button
+	Private ImageView1 As ImageView
+	Private ImageView2 As ImageView
+	Private btn_ok As Button
+	Private pnl_noInternet As Panel
+	Private acExitButton As ACColoredButton
+	Private clsGen As clsGeneral
+	Private lbl_welcome_msg As Label
+	Private ph As PhoneWakeState
+	Private stCount As Int
+	Private stImportPerc As Float
+	Private lbl_data As Label
+	Private lbl_db As Label
+	Private lbl_stname As Label
+	Private redPerc As Float 
+	Private greenPerc As Float
+	Private redCurrValue As Float = 0
+	Private greenCurrValue As Float = 0
+	Private dlCount As Int = 1
+	Private pnl_import_data As Panel
+	Private pnl_permission As Panel
+End Sub
+
+
+#If JAVA
+	public void RegisterIcyURLStreamHandler(){
+	try {
+	        java.net.URL.setURLStreamHandlerFactory( new java.net.URLStreamHandlerFactory(){
+	            public java.net.URLStreamHandler createURLStreamHandler( String protocol ) {
+	                if ("icy".equals( protocol )) return new com.spoledge.aacdecoder.IcyURLStreamHandler();
+	                return null;
+	            }
+	        });
+	    }
+	    catch (Throwable t) {
+
+	    }
+	}
+#End If
+
+
+Sub Activity_Create(FirstTime As Boolean)
+	
+	Activity.LoadLayout("main")
+
+	clsGen.Initialize
+	getSetrdoDatabase
+	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+	initKvs
+	
+	If kvs.GetSimple("app_normal_exit") <> 1 Then
+		kvs.PutSimple("app_started", 0)
+	End If
+	kvs.PutSimple("app_normal_exit", 0)
+	
+	ph.KeepAlive(True)
+	ph.PartialLock
+	
+	Wait For (clsGen.CheckConnected) Complete(result As Boolean)
+	If result = False Then
+		toolbar.SubTitle = "Internet connection required"
+		pnlMain.LoadLayout("no_internet")
+		Return
+	End If
+
+	If rp.Check(rp.PERMISSION_READ_PHONE_STATE) Then
+		startIRP
+		Return
+	End If
+
+	Starter.activeActivity = "Main"
+	DateTime.DateFormat =  DateTime.DeviceDefaultDateFormat
+	
+	If FirstTime Then
+		NativeMe.InitializeContext
+		NativeMe.RunMethod("RegisterIcyURLStreamHandler", Null)
+	End If
+
+	If rp.Check(rp.PERMISSION_READ_PHONE_STATE) = False Then
+		pnlMain.LoadLayout("main_askPhonePermission")
+		Return
+	Else
+		startIRP
+	End If
+
+
+End Sub
+
+Sub iterateLabel(count As String)
+	lblDbConnected.Text = $"Importing stations ${NumberFormat2(count, 1, 0, 0, False)} %"$
+	lbl_data.TextSize = 100-count
+	lbl_db.TextSize = count
+	redCurrValue = redCurrValue + redPerc
+	greenCurrValue = greenCurrValue + greenPerc
+		
+	lbl_db.TextColor = Colors.ARGB(255, redCurrValue,greenCurrValue,0)
+End Sub
+
+
+
+
+Sub FTP_DownloadProgress (ServerPath As String, TotalDownloaded As Long, Total As Long)
+	dlCount = dlCount +1
+	If dlCount Mod 30 = 0 Then
+		Dim s As String
+		s = "Downloaded " & Round(TotalDownloaded / 1000) & "KB"
+		If Total > 0 Then s = s & " out of " & Round(Total / 1000) & "KB"
+		lblDbConnected.Text = "Downloading station list " & Round(TotalDownloaded / 1000) & "KB"
+		Sleep(0)
+	End If
+End Sub
+
+'Sub FTP_ListCompleted (ServerPath As String, Success As Boolean, Folders() As FTPEntry, Files() As FTPEntry)
+'	Log(ServerPath)
+'	If Success = False Then
+'		Log(LastException)
+'	Else
+'		For i = 0 To Folders.Length - 1
+'			Log(Folders(i).Name)
+'		Next
+'		For i = 0 To  Files.Length- 1
+'			Log(Files(i).Name & ", " & Files(i).Size & ", " & DateTime.Date(Files(i).Timestamp))
+'		Next
+'	End If
+'	
+'End Sub
+
+Sub startIRP
+	'genDb.truncateTable("rdolist")
+	
+	'ftp.List("/")
+
+	'Dim sf As Object = ftp.DownloadFile("rdolist_main.csv", False, Starter.irp_dbFolder, "rdolist_main.csv")
+'	Wait For (sf) FTP_ListCompleted (ServerPath As String, Success As Boolean)
+'	Log("list completed: " & Success)
+	
+	'Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
+	'Log("download completed: " & Success)
+	
+	
+	Dim appStarted As Int = 0
+	If kvs.ContainsKey("app_started") = True Then
+		appStarted = kvs.GetSimple("app_started")
+	End If
+	
+	If genDb.countRecords("rdolist") = 0 Then
+		If pnl_permission.IsInitialized Then
+			pnl_permission.Visible = False
+		End If
+		pnlMain.LoadLayout("main_import_data")
+		Sleep(1)
+'		showImportViews(True)
+		lblDbConnected.Visible = True
+		lblDbConnected.Text = ""
+		ftp.PassiveMode = True
+		ftp.Initialize("FTP", "ftp.pdeg.nl", 21, Starter.doy, Starter.moy)
+		Dim sf As Object = ftp.DownloadFile("rdolist_main.csv", False, Starter.irp_dbFolder, "rdolist_main.csv")
+		Wait For (sf) ftp_DownloadCompleted (ServerPath As String, Success As Boolean)
+		ftp.Close
+		wait for(importStations) Complete (result As Boolean)
+		Sleep(2000)
+		pnl_import_data.Visible = False
+		pnlMain.LoadLayout("welcome")
+	End If
+
+'	showWelcome
+
+	If appStarted = 0 Then
+		wait for (showWelcome) Complete (result As Boolean)
+	End If
+	
+	If pnlMain.IsInitialized Then
+		pnlMain.Visible = False
+	End If
+	getSetVaultData
+'	getSetrdoDatabase
+	genDb.vacuumDB
+	genDb.genStoredSongTable
+	'genDb.dropTable("country")
+'	Dim tableFound As Boolean = genDb.countryTableExists
+'	genDb.deleteCountryList
+'	If tableFound = True Then
+'		wait for(addCountries) Complete (result As Boolean)
+'	End If
+	
+'	wait for(clsGen.importStations) Complete (result As Boolean)
+	startPlayer
+End Sub
+
+
+Sub Activity_Resume
+
+End Sub
+
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+
+End Sub
+
+
+Sub startPlayer
+'	getSetVaultData
+	
+	Dim cur As Cursor = genDb.getPresetStations
+	
+	
+If  genDb.getCountryBookmark = "" And cur.RowCount < 1 Then
+		StartActivity(getSetStation)
+	Else
+		StartActivity(player)
+	End If
+	Activity.Finish
+End Sub
+
+
+Sub getSetrdoDatabase
+	If File.Exists(Starter.irp_dbFolder, "station_logo") = False Then
+		File.MakeDir(Starter.irp_dbFolder, "station_logo")
+	End If
+
+
+	If File.Exists(Starter.irp_dbFolder, "rdodb.db") = False Then
+		File.Copy(File.DirAssets, "rdodb.db", Starter.irp_dbFolder, "rdodb.db")
+	End If
+End Sub
+
+
+Sub Activity_PermissionResult (Permission As String, Result As Boolean)
+	If Permission = rp.PERMISSION_READ_PHONE_STATE Then
+		'pnlMain.Visible = False
+		startIRP
+	End If
+End Sub
+
+
+Private Sub getSetVaultData
+	Dim arrMap() As Byte = svIrp.MyMap
+	If arrMap <> Null Then
+		Dim M1 As Map = CollSer.CompressedBytesToMap(arrMap)
+		
+		For i = 0 To M1.Size - 1
+			If M1.GetKeyAt(i) = "spoturl" Then
+				Starter.SourceWeb1	= M1.GetValueAt(i)
+			End If
+			If M1.GetKeyAt(i) = "spotclient" Then
+				Starter.SpotClientID1 = M1.GetValueAt(i)
+			End If
+			If M1.GetKeyAt(i) = "spotsecret" Then
+				Starter.SpotClientSecret1	=  M1.GetValueAt(i)
+			End If
+
+			If M1.GetKeyAt(i) = "dburel" Then
+				Starter.dbL	= M1.GetValueAt(i)
+			End If
+
+			If M1.GetKeyAt(i) = "dbpass" Then
+				Starter.Password	= M1.GetValueAt(i)
+			End If
+
+			If M1.GetKeyAt(i) = "dbuser" Then
+				Starter.Username	= M1.GetValueAt(i)
+			End If
+		Next
+	End If
+
+End Sub
+
+
+Sub btnContinue_Click
+	rp.CheckAndRequest(rp.PERMISSION_READ_PHONE_STATE)
+	pnl_permission.Visible = False
+End Sub
+
+
+Sub showWelcome As ResumableSub
+	pnlMain.LoadLayout("welcome")
+	Return True
+End Sub
+
+
+Sub btn_ok_Click
+	ExitApplication
+End Sub
+
+
+Sub acExitButton_Click
+	ExitApplication
+
+End Sub
+
+
+Sub initKvs
+	If File.Exists(Starter.irp_dbFolder, "settings") = False Then
+		kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+	Else
+		kvs.Initialize(Starter.irp_dbFolder, "settings", False)
+	End If
+
+	If kvs.ContainsKey("wifionly") = False Then
+		kvs.PutSimple("wifionly", False)
+		Starter.vWifiOnly	= False
+	End If
+
+	If kvs.ContainsKey("updatelogo") = False Then
+		kvs.PutSimple("updatelogo", False)
+		Starter.vUpdateLogo	= False
+	End If
+
+	If kvs.ContainsKey("data_usage") = False Then
+		kvs.PutSimple("data_usage", 0)
+	End If
+	
+	If kvs.ContainsKey("app_normal_exit") = False Then
+		kvs.PutSimple("app_normal_exit", 0)
+	End If
+
+	If kvs.ContainsKey("pnl_stop_button") = False Then
+		kvs.PutSimple("pnl_stop_button", False)
+	End If
+
+	If kvs.ContainsKey("pnl_lyric_button") = False Then
+		kvs.PutSimple("pnl_lyric_button", False)
+	End If
+
+	If kvs.ContainsKey("pnl_store_song_button") = False Then
+		kvs.PutSimple("pnl_store_song_button", False)
+	End If
+
+	If kvs.ContainsKey("pnl_album_info_button") = False Then
+		kvs.PutSimple("pnl_album_info_button", False)
+	End If
+
+	If kvs.ContainsKey("app_started") = False Then
+		kvs.PutSimple("app_started", 0)
+	End If
+
+	If kvs.ContainsKey("lblNowPlayingDataRate") = False Then
+		kvs.PutSimple("lblNowPlayingDataRate", "")
+	End If
+
+	If kvs.ContainsKey("lbl_time_now") = False Then
+		kvs.PutSimple("lbl_time_now", "")
+	End If
+
+'	If kvs.ContainsKey("player_station_logo") = False Then
+'		kvs.PutBitmap("player_station_logo", Null)
+'	End If
+'
+'	If kvs.ContainsKey("store_song_albumart") = False Then
+'		kvs.PutBitmap("store_song_albumart", Null)
+'	End If
+	
+	If kvs.ContainsKey("sleep_timer") = False Then
+		kvs.PutSimple("sleep_timer", 0)
+	End If
+	
+	If kvs.ContainsKey("sleep_timer_duration") = False Then
+		kvs.PutSimple("sleep_timer_duration", 3600000) ' one hour
+	End If
+	
+End Sub
+
+Sub ivPegi_Click
+	Dim intent1 As Intent
+	intent1.Initialize(intent1.ACTION_VIEW, "https://pegi.info/")
+	StartActivity(intent1)
+End Sub
+
+
+Public Sub importStations As ResumableSub
+	Dim su As StringUtils
+	Dim csv As List
+	Dim items() As String
+	Dim modValue As Int = 50
+	Dim sql As String
+	Dim vSql As SQL
+	Dim vDbName As String = "rdodb.db"
+	
+	Dim db_path As String = CallSub(Starter, "getDbPath")
+	Try
+		If vSql.IsInitialized = False Then
+			vSql.Initialize(db_path, vDbName, False)
+		End If
+	Catch
+		Log(LastException)
+	End Try
+	
+	sql = $"insert
+	into
+		rdolist (stname,
+		description,
+		genre,
+		country,
+		language,
+		stream1,
+		stream2,
+		stream3,
+		stream4,
+		stream5,
+		stream6)
+	VALUES (?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?)"$
+	
+	genDb.truncateTable("rdolist")
+	csv = su.LoadCSV(Starter.irp_dbFolder, "rdolist_main.csv", "|")
+	stCount = csv.Size-1
+	redPerc = (23/stCount)*modValue
+	greenPerc = (192/stCount)*modValue
+	
+	vSql.BeginTransaction
+	For i = 2 To csv.Size - 1
+		If i Mod modValue = 0 Then
+			stImportPerc = i/stCount * 100
+			iterateLabel(stImportPerc)
+			Sleep(0)
+		End If
+		
+		items = csv.Get(i)
+		vSql.ExecNonQuery2(sql, Array As String(items(1), items(2), items(3), items(4), items(5),items(6), items(7), items(8), items(9), items(10), items(11)))
+	Next
+	vSql.TransactionSuccessful
+	vSql.EndTransaction
+	
+	iterateLabel(100)
+	lbl_stname.Text = $"Done.. Added ${stCount} stations"$
+	
+	File.Delete(Starter.irp_dbFolder, "rdolist_main.csv")
+	Return False
+End Sub
+
