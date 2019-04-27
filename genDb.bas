@@ -537,5 +537,3 @@ Public Sub genrneCountry(country As String) As Cursor
 End Sub
 
 
-
-
