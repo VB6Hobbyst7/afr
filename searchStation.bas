@@ -74,16 +74,30 @@ Sub Globals
 	
 	Private nowPlayingText As String
 	Private clsScrllLabel As clsScrollLabel
-	Private ivLogoStation As ImageView
-	Private sprGenre As Spinner
+	Private tsSearchMain As TabStrip
+	Private lblSearch As Label
+	Private lblGenreName As Label
+	Private pnlGenreName As Panel
+	Private pnlClvGenre As Panel
+	Private clvCountryGenre As irp_CustomListView
+	Private pnlGenre As Panel
+	Private pnlListGenreName As Panel
+	Private lblGenre As Label
+	Private lblLanguage As Label
+	Private lblGenreClear As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	ivLogoStation.Initialize("")
-	ivLogoStation.BringToFront
 	Starter.activeActivity = "searchStation"
-	Activity.LoadLayout("searchStation")
+	'Activity.LoadLayout("searchStation")
+	Activity.LoadLayout("tsSearchStation")
 	
+	tsSearchMain.LoadLayout("searchStation", "Find station")
+	tsSearchMain.LoadLayout("searchStationGenre", "Genre")
+	
+	Private cd As ColorDrawable
+	cd.Initialize(Colors.Transparent, 0)
+	edt_find.Background = cd
 	'****SHOW VOLUMEBAR FROM CLASS*********************
 	Private clsGenVol As clsGenVolumeControl
 	clsGenVol.Initialize
@@ -100,8 +114,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	End If
 	
 	ivCountry.Bitmap = LoadBitmap(File.DirAssets,flagname)
-		
 	genGenreList
+	
 	If FirstTime Then
 		
 	End If
@@ -492,7 +506,11 @@ Sub edt_find_EnterPressed
 	Dim vText As String	= edt_find.Text
 	Dim params As List
 	Dim streamCount As Int
+	Dim genre As String = ""
 	
+	If lblGenre.Text <> "" Then
+		genre = lblGenre.Text
+	End If
 	params.Initialize
 
 	If vText.Length < 2 Then
@@ -510,7 +528,7 @@ Sub edt_find_EnterPressed
 		
 		clvStationList.Clear
 		clvStationList.sv.Visible = False
-		Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, sprGenre.GetItem(sprGenre.SelectedIndex))
+		Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, genre)
 		
 		For i = 0 To rs.RowCount-1
 			rs.Position = i
@@ -704,61 +722,95 @@ End Sub
 Sub getGenryCountry
 	Dim cur As Cursor = genDb.genrneCountry(vDefCountry)
 End Sub
+'
+'Sub pullStationUrl(stUrl As String)
+'	Return
+'	Dim url As String
+'	Log("SEARCHSTATION : " &stUrl)
+'	
+'	If bm.IsInitialized = False Then
+'		
+'	End If
+'	url = $"https://logo.clearbit.com/${stUrl}/?size=150&format=png"$
+'	Dim j As HttpJob
+'	j.Initialize("", Me)
+'	j.Download(url)
+'	Wait For (j) JobDone(j As HttpJob)
+'	If j.Success Then
+'		bm = j.GetBitmap
+'		bm.Resize(150, 150, True)
+'		ivLogoStation.Bitmap = bm
+'		j.Release
+'		Return
+'	Else 
+'		j.Release
+'		pullStationUrl(stripUrl(stUrl))
+'	End If
+'	
+'End Sub
 
-Sub pullStationUrl(stUrl As String)
-	Return
-	Dim url As String
-	Log("SEARCHSTATION : " &stUrl)
-	
-	If bm.IsInitialized = False Then
-		
-	End If
-	url = $"https://logo.clearbit.com/${stUrl}/?size=150&format=png"$
-	Dim j As HttpJob
-	j.Initialize("", Me)
-	j.Download(url)
-	Wait For (j) JobDone(j As HttpJob)
-	If j.Success Then
-		bm = j.GetBitmap
-		bm.Resize(150, 150, True)
-		ivLogoStation.Bitmap = bm
-		j.Release
-		Return
-	Else 
-		j.Release
-		pullStationUrl(stripUrl(stUrl))
-	End If
-	
+
+'Sub stripUrl(url As String) As String
+'	Dim countSlash, slashIndex As Int
+'	Dim newUrl As String
+'	
+'	countSlash = cmGen.CountChar(url, "/")
+'	
+'	If countSlash > 2 Then
+'		slashIndex	= cmGen.getFirstSlash(url,"/")
+'		newUrl		= url.SubString2(0, slashIndex)
+'	End If
+'	
+'	If newUrl.Length > 0 Then
+'		Return newUrl
+'	End If
+'	
+'End Sub
+
+Sub lblSearch_Click
+	edt_find_EnterPressed
 End Sub
 
-
-Sub stripUrl(url As String) As String
-	Dim countSlash, slashIndex As Int
-	Dim newUrl As String
-	
-	countSlash = cmGen.CountChar(url, "/")
-	
-	If countSlash > 2 Then
-		slashIndex	= cmGen.getFirstSlash(url,"/")
-		newUrl		= url.SubString2(0, slashIndex)
-	End If
-	
-	If newUrl.Length > 0 Then
-		Return newUrl
-	End If
-	
+Sub pnlGenreName_Click
+	tsSearchMain.ScrollTo(2, True)
 End Sub
 
 Sub genGenreList
-	Dim cur As Cursor = genDb.genrneCountry(vDefCountry)
+	Dim curs As Cursor = genDb.genrneCountry(vDefCountry)
 	
-	For i = 0 To cur.RowCount -1
-		cur.Position = i
-		sprGenre.Add(cur.GetString("genre"))
+	For i = 0 To curs.RowCount-1
+		curs.Position = i
+		clvCountryGenre.Add(genListGenre(curs.GetString("genre"), clvCountryGenre.AsView.Width),"")
 	Next
-	
 End Sub
 
-Sub sprGenre_ItemClick (Position As Int, Value As Object)
-	Log(Value)	
+Sub genListGenre(genre As String, width As Int ) As Panel
+	
+	Dim p As Panel
+	p.Initialize("")
+	p.SetLayout(0,0, width, 61dip)
+	p.LoadLayout("genreList") 
+	
+	p.Tag = genre
+	lblGenreName.Text = genre
+	Return p
+End Sub
+
+Sub pnlGenre_Click
+	tsSearchMain.ScrollTo(1, True)
+End Sub
+
+
+Sub clvCountryGenre_ItemClick (Index As Int, Value As Object)
+	Dim pnl As Panel = clvCountryGenre.GetPanel(Index)
+	lblGenre.Text = pnl.Tag
+	
+	tsSearchMain.ScrollTo(0, True)
+	lblGenreClear.Visible = True
+End Sub
+
+Sub lblGenreClear_Click
+	lblGenre.Text = "Genre"
+	
+	lblGenreClear.Visible = False
 End Sub

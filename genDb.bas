@@ -538,7 +538,7 @@ Public Sub genrneCountry(country As String) As Cursor
 	Dim sql As String = $"select distinct genre from rdolist where
 country = ? 
 and genre <> '-' 
-and genre <> ' ' 
+and genre <> '' 
 and genre is NOT NULL 
 order by genre"$
 	
