@@ -508,19 +508,20 @@ Sub edt_find_EnterPressed
 	Dim streamCount As Int
 	Dim genre As String = ""
 	
-	If lblGenre.Text <> "" Then
+	If lblGenre.Text <> "Genre" Then
 		genre = lblGenre.Text
 	End If
 	params.Initialize
 
-	If vText.Length < 2 Then
+	If vText.Length < 2 And lblGenre.Text = "" And lblLanguage.Text = "" Then
 		Return
 	End If
+	
 	
 	checkAarPlaying
 	ProgressBar1.Visible = True
 	Sleep(10)
-	If vText.Length > 0 Then
+'	If vText.Length > 0 Then
 		vText	= "%"&vText&"%"
 		params.Add(vText)
 		params.Add(vDefCountry)
@@ -554,7 +555,7 @@ Sub edt_find_EnterPressed
 		panelIndex		= 0
 		Sleep(0)
 		getStationInfo(0)
-	End If
+'	End If
 End Sub
 
 Sub ivCountry_Click

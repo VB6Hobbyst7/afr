@@ -228,6 +228,10 @@ End Sub
 Sub getSearchStation(vStation As String, vUseCountry As String, genre As String) As Cursor
 	Dim vQry As String
 	Dim vCurs As Cursor
+	
+	If vStation = "" Then
+		vStation = "%"
+	End If
 	If genre = "" Then
 		genre = "%"
 	Else 
@@ -537,9 +541,9 @@ Public Sub genrneCountry(country As String) As Cursor
 	initDB
 	Dim sql As String = $"select distinct genre from rdolist where
 country = ? 
-and genre <> '-' 
+and (genre <> '-' 
 and genre <> '' 
-and genre is NOT NULL 
+and genre is NOT NULL)
 order by genre"$
 	
 	Return vSql.ExecQuery2(sql, Array As String(country))
