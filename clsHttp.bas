@@ -154,14 +154,14 @@ Sub getSpotifySongData(jsonData As String)
 		If items.Size < 1 Then
 			If songReversed = False Then
 				songReversed	= True
-				LogColor("songReversed", Colors.Green)
+'				LogColor("songReversed", Colors.Green)
 				spBearer(Starter.chartSong, Starter.chartArtist)
 			End If
 			noSongData
 			Return
 		End If
 		For Each colitems As Map In items
-			Dim duration_ms As Long		 = colitems.Get("duration_ms")'
+			Dim duration_ms As Long		= colitems.Get("duration_ms")'
 			Dim album As Map			= colitems.Get("album")'
 			Dim artists As List			= album.Get("artists")
 			Dim external_urls As Map	= colitems.Get("external_urls")'

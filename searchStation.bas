@@ -29,7 +29,6 @@ Sub Globals
 	Private lblStreamBitrate As Label
 	Private edt_find As EditText
 	Private btn_clear_search As Label
-	Private edt_station_name As EmphasisTextView
 	Private lbl_stationname As Label
 	Private pnl_stationname As Panel
 	Private lblAppHeader As Label
@@ -43,6 +42,7 @@ Sub Globals
 	Private panelPlaying As String
 	Private xml As XmlLayoutBuilder
 	Private panelLabelPlaying As Label
+	Private panelLabelplayingText As String
 	Private vDefCountry As String
 	Private vStreamLst As List
 	Private panelIndex As Int = -1
@@ -85,6 +85,12 @@ Sub Globals
 	Private lblGenre As Label
 	Private lblLanguage As Label
 	Private lblGenreClear As Label
+	Private lbl_dispStationName As Label
+	Private pnl_language As Panel
+	Private lbl_language As Label
+	Private clv_language As irp_CustomListView
+	Private lblLanguageClear As Label
+	Private pnlNoSearch As Panel
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -94,6 +100,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	tsSearchMain.LoadLayout("searchStation", "Find station")
 	tsSearchMain.LoadLayout("searchStationGenre", "Genre")
+	tsSearchMain.LoadLayout("clvLanguage", "Language")
 	
 	Private cd As ColorDrawable
 	cd.Initialize(Colors.Transparent, 0)
@@ -115,13 +122,14 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	ivCountry.Bitmap = LoadBitmap(File.DirAssets,flagname)
 	genGenreList
+	genLanguage
 	
 	If FirstTime Then
 		
 	End If
-	lblAppHeader.Text	= Starter.vAppname
-	lblSelectedCountry.Text = vDefCountry
-	setSvg(ivSelectCountry, "baseline-language-24px.svg")
+'	lblAppHeader.Text	= Starter.vAppname
+'	lblSelectedCountry.Text = vDefCountry
+'	setSvg(ivSelectCountry, "baseline-language-24px.svg")
 	Starter.activeActivity		= "searchStation"
 	createStreamPanel(pnl_stream1, iv_start_stop1, iv_add_favorite1)
 	createStreamPanel(pnl_stream2, iv_start_stop2, iv_add_favorite2)
@@ -175,7 +183,6 @@ Sub genStationList(stname As String, genre As String, info As String, width As I
 	Dim p As Panel
 	Dim streamText As String = " Stream"
 	Dim streamCount As Int = 1
-	Dim vFind As String	= edt_find.Text
 	
 	p.Initialize("")
 	p.SetLayout(0,0, width, 61dip)
@@ -183,15 +190,7 @@ Sub genStationList(stname As String, genre As String, info As String, width As I
 	
 	pnl_stationname.Tag						= $"stationname-${stname}"$
 	p.Tag = $"stationname-${stname}"$
-	edt_station_name.Enabled				= True
-	edt_station_name.CaseInsensitive		= True
-	edt_station_name.Text					= stname
-	edt_station_name.TextToHighlight		= vFind
-	edt_station_name.TextHighlightColor		= "#C5C5C5"
-	edt_station_name.highlight
-	edt_station_name.TextSize				= 18
-	edt_station_name.TextColor				= Colors.Black
-
+	lbl_dispStationName.Text = stname
 	p.Tag	= rdoId
 
 	If vStreamLst.Size > 3 Then
@@ -214,7 +213,7 @@ Sub lblStationInfo_Click
 End Sub
 
 Sub nowPlaying(playing As String)
-	lblSongPlaying.Text	= playing
+	'lblSongPlaying.Text	= playing
 	panelLabelPlaying.Text = playing
 	nowPlayingText = playing
 	
@@ -236,25 +235,23 @@ Sub checkAarPlaying
 	CallSub(Starter, "StopPlayer")
 
 	Starter.playerUsed	= ""
-	lblSongPlaying.Text	= ""
+'	lblSongPlaying.Text	= ""
 	lblStreamBitrate.Text = ""
 End Sub
 
 Sub streamPlaying(playing As Boolean)
 	If playing = False Then
-		Log(Starter.vStationUrl)
+'		Log(Starter.vStationUrl)
 		
-		If Starter.playerUsed	= "aac" Then
-			CallSub(Starter, "StopPlayer")
-			ToastMessageShow("Unable to play stream..", False)
-			lblStreamBitrate.Text = ""
-			'RESET PLAY BUTTON
-			restorePanelPlayButton
-			Return
-	
-		End If
+		CallSub(Starter, "StopPlayer")
+		ToastMessageShow("Unable to play stream..", False)
+		lblStreamBitrate.Text = ""
+		panelLabelPlaying.Text = "Click to start"'panelLabelplayingText
+		'RESET PLAY BUTTON
+		restorePanelPlayButton
+		
+		lblStreamBitrate.Text = ""
 	End If
-	lblStreamBitrate.Text = ""
 End Sub
 
 Sub showSnackbar(msg As String)
@@ -270,7 +267,7 @@ End Sub
 
 
 Sub getsearchStation(params As List) As Cursor
-	Dim curs As Cursor = genDb.getSearchStation(params.Get(0), params.Get(1), params.Get(2))
+	Dim curs As Cursor = genDb.getSearchStation(params.Get(0), params.Get(1), params.Get(2), params.Get(3))
 	
 	Return curs
 End Sub
@@ -341,16 +338,24 @@ End Sub
 Private Sub setStationTextColor(color As Int, index As Int)
 	Dim i As Int
 	Dim pnl As Panel
+	Dim lblTag As String
 	
 	For i = 0 To clvStationList.Size-1
 		Dim pnl As Panel = clvStationList.GetPanel(i)
 		For Each v As B4XView In pnl.GetAllViewsRecursive
+			lblTag =  v.Tag
 			If v Is Label Then
-				If v.TextColor = 0xFF0098FF Then
+'			Log(lblTag)
+				If lblTag.IndexOf("stationname") > -1 Then
+				'If v.TextColor = 0xFF0098FF Then
+					If v.Color = 0xFF004ba0 Then
 					v.TextColor = Colors.Black
+					v.Color = 0x00FFFFFF
 				End If
 				If i = index Then
-				v.TextColor = 0xFF0098FF
+					v.Color = 0xFF004ba0
+					v.TextColor = 0xFFFFFFFF'0xFF0098FF
+				End If
 				End If
 			End If
 		Next
@@ -363,9 +368,9 @@ Private Sub resetPanels
 	pnl_stream1.Tag = ""
 	pnl_stream2.Tag = ""
 	pnl_stream3.Tag = ""
-	lbl_stream1.Text = "Stream 1"
-	lbl_stream2.Text = "Stream 2"
-	lbl_stream3.Text = "Stream 3"
+	lbl_stream1.Text = "Click to start"
+	lbl_stream2.Text = "Click to start"
+	lbl_stream3.Text = "Click to start"
 	
 	pnl_stream1.SetElevationAnimated(0, 1dip)
 	pnl_stream2.SetElevationAnimated(0, 1dip)
@@ -386,7 +391,7 @@ Sub getStationInfo(index As Int)
 		If v Is Panel Then
 			pnlTag = v.Tag
 			If pnlTag.IndexOf("stationname-") > -1 Then
-				lbl_stationname.Text = Starter.clsFunc.stringSplit("-", pnlTag, 1, True, -1, False)
+			'	lbl_stationname.Text = Starter.clsFunc.stringSplit("-", pnlTag, 1, True, -1, False)
 				Exit
 			End If
 		End If
@@ -425,13 +430,13 @@ Sub getStationInfo(index As Int)
 	For i = 0 To lstStream.Size -1
 		If i = 0 Then
 			pnl_stream1.Tag = lstStream.Get(i)
-			pnl_stream1.SetElevationAnimated(100, 4dip)
+			pnl_stream1.SetElevationAnimated(100, 1dip)
 		else If i = 1 Then
 			pnl_stream2.Tag = lstStream.Get(i)
-			pnl_stream2.SetElevationAnimated(210, 4dip)
+			pnl_stream2.SetElevationAnimated(210, 1dip)
 		Else
 			pnl_stream3.Tag = lstStream.Get(i)
-			pnl_stream3.SetElevationAnimated(300, 4dip)
+			pnl_stream3.SetElevationAnimated(300, 1dip)
 		End If
 	Next
 	Sleep(300)
@@ -453,6 +458,7 @@ End Sub
 Sub playSelectedStream(selectedStream As String)
 	Starter.playerUsed	= "aac"
 	checkStreamplaying
+
 	
 	CallSub2(Starter, "StartPlayer", selectedStream)
 	Sleep(1000)
@@ -460,10 +466,10 @@ Sub playSelectedStream(selectedStream As String)
 End Sub
 
 Sub checkStreamplaying
-	If modGlobal.PlayerStarted = True Then 
+'	If modGlobal.PlayerStarted = True Then 
 		CallSub(Starter, "StopPlayer")
-		Sleep(1000)
-	End If
+'		Sleep(1000)
+'	End If
 		
 End Sub
 
@@ -506,10 +512,14 @@ Sub edt_find_EnterPressed
 	Dim vText As String	= edt_find.Text
 	Dim params As List
 	Dim streamCount As Int
-	Dim genre As String = ""
+	Dim genre, lang As String = ""
 	
 	If lblGenre.Text <> "Genre" Then
 		genre = lblGenre.Text
+	End If
+	
+	If lblLanguage.Text <> "Language" Then
+		lang = "%"&lblLanguage.Text&"%"
 	End If
 	params.Initialize
 
@@ -519,7 +529,7 @@ Sub edt_find_EnterPressed
 	
 	
 	checkAarPlaying
-	ProgressBar1.Visible = True
+'	ProgressBar1.Visible = True
 	Sleep(10)
 '	If vText.Length > 0 Then
 		vText	= "%"&vText&"%"
@@ -529,7 +539,10 @@ Sub edt_find_EnterPressed
 		
 		clvStationList.Clear
 		clvStationList.sv.Visible = False
-		Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, genre)
+		Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, genre, lang)
+		
+		pnlNoSearch.Visible = rs.RowCount = 0
+		
 		
 		For i = 0 To rs.RowCount-1
 			rs.Position = i
@@ -545,13 +558,13 @@ Sub edt_find_EnterPressed
 		rs.Close
 		clvStationList.sv.Visible = True
 		If clvStationList.Size = 0 Then
-			ProgressBar1.Visible	= False
+'			ProgressBar1.Visible	= False
 			ToastMessageShow("Nothing found..", False)
 			Return
 		End If
 		
 		clvStationList.ScrollToItem(0)
-		ProgressBar1.Visible	= False
+'		ProgressBar1.Visible	= False
 		panelIndex		= 0
 		Sleep(0)
 		getStationInfo(0)
@@ -597,7 +610,7 @@ Sub btn_clear_search_Click
 	edt_find.Text = ""
 	clvStationList.Clear
 	edt_find.Hint = "station name"
-	lbl_stationname.Text = "Tap above to search"
+'	lbl_stationname.Text = "Tap above to search"
 	reflect.Target = edt_find
 	reflect.RunMethod("clearFocus")
 	edt_dummy.RequestFocus
@@ -644,7 +657,7 @@ Private Sub panel_clicked(tag As String) As Boolean
 		CallSub(Starter, "StopPlayer")
 		'Sleep(500)
 		
-		lblSongPlaying.Text = ""
+'		lblSongPlaying.Text = ""
 		lblStreamBitrate.Text = ""
 		clsScrllLabel.runMarquee(panelLabelPlaying, panelLabelPlaying.Tag, "MARQUEE")
 		clsScrllLabel.Initialize
@@ -661,15 +674,16 @@ Sub pnl_stream1_Click
 	
 	Sleep(500)
 	If(panelIsPanel) Then Return
-	
-
+	lbl_stream1.Text = "Loading stream.."
 	If pnl_stream1.tag = "" Then Return
 	panelPlaying = "pnl_stream1"
 	lbl_stream1.Tag = "Stream 1"
 	panelLabelPlaying = lbl_stream1
 	panelLabelPlaying.Tag = lbl_stream1.Tag
+	panelLabelplayingText = lbl_stream1.Text
 	createPanelStopButton(iv_start_stop1)
-	Log(pnl_stream1.Tag)
+	
+	
 	playSelectedStream(pnl_stream1.Tag)
 End Sub
 
@@ -686,11 +700,12 @@ Sub pnl_stream2_Click
 	
 	Sleep(500)
 	If(panelIsPanel) Then Return
-
+	lbl_stream2.Text = "Loading stream.."
 	If pnl_stream2.tag = "" Then Return
 	panelPlaying = "pnl_stream2"
 	lbl_stream2.Tag = "Stream 2"
 	panelLabelPlaying = lbl_stream2
+	panelLabelplayingText = lbl_stream2.Text
 	createPanelStopButton(iv_start_stop2)
 	playSelectedStream(pnl_stream2.Tag)
 	
@@ -710,11 +725,12 @@ Sub pnl_stream3_Click
 	
 	Sleep(500)
 	If(panelIsPanel) Then Return
-	
+	lbl_stream3.Text = "Loading stream.."
 	If pnl_stream3.tag = "" Then Return
 	panelPlaying = "pnl_stream3"
 	lbl_stream3.Tag = "Stream 3"
 	panelLabelPlaying = lbl_stream3
+	panelLabelplayingText = lbl_stream3.Text
 	createPanelStopButton(iv_start_stop3)
 	playSelectedStream(pnl_stream3.Tag)
 End Sub
@@ -806,7 +822,7 @@ Sub clvCountryGenre_ItemClick (Index As Int, Value As Object)
 	Dim pnl As Panel = clvCountryGenre.GetPanel(Index)
 	lblGenre.Text = pnl.Tag
 	
-	tsSearchMain.ScrollTo(0, True)
+	tsSearchMain.ScrollTo(0, False)
 	lblGenreClear.Visible = True
 End Sub
 
@@ -814,4 +830,48 @@ Sub lblGenreClear_Click
 	lblGenre.Text = "Genre"
 	
 	lblGenreClear.Visible = False
+End Sub
+
+Sub genLanguage
+	Dim curs As Cursor = genDb.languageCountry(vDefCountry)
+	
+	For i = 0 To curs.RowCount-1
+		curs.Position = i
+		clv_language.Add(genListGenre(curs.GetString("language"), clv_language.AsView.Width),"")
+	Next
+	
+End Sub
+
+Sub genListLanguage(lang As String, width As Int ) As Panel
+	
+	Dim p As Panel
+	p.Initialize("")
+	p.SetLayout(0,0, width, 61dip)
+	p.LoadLayout("lstLanguage") 
+	
+	p.Tag = lang
+	lbl_language.Text = lang
+	Return p
+End Sub
+
+
+Sub pnl_language_Click
+	
+End Sub
+
+Sub lblLanguage_Click
+	tsSearchMain.ScrollTo(2, True)
+End Sub
+
+Sub clv_language_ItemClick (Index As Int, Value As Object)
+	Dim pnl As Panel = clv_language.GetPanel(Index)
+	lblLanguage.Text = pnl.Tag
+	
+	tsSearchMain.ScrollTo(0, False)
+	lblLanguageClear.Visible = True
+End Sub
+
+Sub lblLanguageClear_Click
+	lblLanguageClear.Visible = False
+	lblLanguage.Text = "Language"
 End Sub
