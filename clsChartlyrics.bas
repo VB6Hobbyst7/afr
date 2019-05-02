@@ -40,7 +40,8 @@ End Sub
 Private Sub processUrl As ResumableSub
 	reverseSearch = False
 	Dim j As HttpJob
-	If url = "" Or Starter.clsFunc.checkUrl(url) = False Then
+	
+	If url = "" Or Starter.clsFunc.checkUrl(url) = False Or url = "http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=&song=" Then
 		Return False
 	End If
 	
