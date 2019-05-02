@@ -227,7 +227,7 @@ Sub processFandom(page As String)
 	Starter.lyricFound		= True
 	Starter.vSong = vSong
 	CallSub2(Starter, "setSongLyric", vSong)
-	CallSub2(player, "showLyricProviderImage", LoadBitmap(File.DirAssets, "lod.png"))
+'	CallSub2(player, "showLyricProviderImage", LoadBitmap(File.DirAssets, "lod.png"))
 	Starter.chartDataFound = True
 End Sub
 
@@ -245,13 +245,16 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 		Return True
 	End If
 		
-		
+	
 	mJob.Initialize("", Me)
 	mJob.Download(url)
 	mJob.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 	
-	
-	Wait For (mJob) jobDone(mJob As HttpJob)
+	Try
+		Wait For (mJob) jobDone(mJob As HttpJob)
+	Catch
+		LogColor("HTTP ERROR "&mJob.ErrorMessage, Colors.Red)	
+	End Try
 	If mJob.Success = False Then
 		If reverse = False Then
 			pullDataFromOndemand(True)

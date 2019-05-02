@@ -31,7 +31,6 @@ Public Sub checkAlbumart As ResumableSub
 		reverseCount = reverseCount+1
 		url = $"http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=${Starter.chartArtist}&song=${Starter.chartSong}"$
 	End If
-
 	wait for (processUrl) Complete (result As Boolean)
 	Return result
 	

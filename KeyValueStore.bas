@@ -218,7 +218,7 @@ Private Sub complete(success As Boolean) As Boolean
 	If success Then
 		sql1.TransactionSuccessful
 	Else
-		Starter.clsFunc.showLog("Error saving object: " & LastException, Colors.Red)
+		Starter.clsFunc.showLog(">>>Error saving object: " & LastException, Colors.Red)
 	End If
 	sql1.EndTransaction
 	Return success

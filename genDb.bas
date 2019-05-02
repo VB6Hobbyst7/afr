@@ -220,20 +220,32 @@ Sub getStationIdByName(vStation As String) As String
 		vCurs.Position	= 0
 		Return vCurs.GetString("pref_id")
 	Else
-		return "null"
+		Return "null"
 	End If
 End Sub
 
 
-Sub getSearchStation(vStation As String, vUseCountry As String) As Cursor
+Sub getSearchStation(vStation As String, vUseCountry As String, genre As String, lang as String) As Cursor
 	Dim vQry As String
 	Dim vCurs As Cursor
 	
+	If vStation = "" Then
+		vStation = "%"
+	End If
+	If genre = "" Then
+		genre = "%"
+	Else 
+		genre = $"%${genre}%"$	
+	End If
+	If lang = "" Then
+		lang = "%"
+	End If
 	initDB
 	
-	vQry	= "SELECT * FROM rdolist WHERE stname LIKE ? AND country = ? COLLATE NOCASE ORDER BY stname ASC"
 	
-	vCurs	= vSql.ExecQuery2(vQry, Array As String(vStation, vUseCountry))
+	vQry	= "SELECT * FROM rdolist WHERE stname LIKE ? AND country = ? and genre like ? AND language like ? COLLATE NOCASE ORDER BY stname ASC"
+	
+	vCurs	= vSql.ExecQuery2(vQry, Array As String(vStation, vUseCountry, genre, lang))
 	
 	Return vCurs
 End Sub
@@ -530,10 +542,28 @@ End Sub
 
 Public Sub genrneCountry(country As String) As Cursor
 	initDB
-	Dim sql As String = "select distinct genre from rdolist where country = ? order by genre"
+	Dim sql As String = $"select distinct genre from rdolist where
+country = ? 
+and (genre <> '-' 
+and genre <> '' 
+and genre is NOT NULL)
+order by genre"$
 	
 	Return vSql.ExecQuery2(sql, Array As String(country))
 	
+End Sub
+
+Public Sub languageCountry (country As String) As Cursor
+	initDB
+	Dim sql As String = $"select distinct language from rdolist where
+country = ? 
+and (language <> '-' 
+and language <> '' 
+and language is NOT NULL)
+order by language"$
+
+
+	Return vSql.ExecQuery2(sql, Array As String(country))
 End Sub
 
 
