@@ -225,7 +225,7 @@ Sub getStationIdByName(vStation As String) As String
 End Sub
 
 
-Sub getSearchStation(vStation As String, vUseCountry As String, genre As String, lang) As Cursor
+Sub getSearchStation(vStation As String, vUseCountry As String, genre As String, lang as String) As Cursor
 	Dim vQry As String
 	Dim vCurs As Cursor
 	

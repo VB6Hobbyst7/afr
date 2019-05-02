@@ -12,7 +12,7 @@ Sub Class_Globals
 	Private cbEN As String
 	Private songReversed As Boolean = False
 	Dim SpotToken1, SpotGrant1, SpotBase64, SpotClientID1, SpotClientSecret1 As String
-	Dim SpotQuery1, SourceWeb1, SourceText1 As String
+	Dim SourceWeb1, SourceText1 As String
 	
 	Private clsGeneral_ As clsGeneral
 	Private clsFunc As clsFunctions
@@ -77,7 +77,6 @@ Sub spBearer(artist As String, song As String)
 		n=SourceText1.IndexOf2(":",0)+2            'Dubbele punt en aanhalingsteken moeten weg!
 		m=SourceText1.IndexOf2(Chr(34),n+8)
 		SpotToken1=SourceText1.SubString2(n,m)
-		'SpotQuery1 = song.Replace(" - ", " ")'"queen i want it all"
 		'SourceWeb1 = "https://api.spotify.com/v1/search?query=" & SpotQuery1 & "&type=track&access_token=" & SpotToken1 & "&token_type=Bearer&expires_in=3600&limit=1"
 		'SourceWeb1 = "https://api.spotify.com/v1/search?query=" & SpotQuery1 & "&type=track&access_token=" & SpotToken1 & "&token_type=Bearer&expires_in=3600&limit=1"
 		artist = artist.Replace(" ", "%20")
@@ -218,11 +217,23 @@ Sub getSpotifySongData(jsonData As String)
 			Dim spSong As String = Starter.spotMap.Get("artistsong")
 			
 			If Starter.vSongLyric = "noLyric" Then
-				wait for(getSongLyrics) Complete (result As Boolean)
+				Try
+					wait for(getSongLyrics) Complete (result As Boolean)
+				Catch
+					Starter.vSongLyric = "noLyric"
+				End Try
 				If Starter.vSongLyric = "noLyric" Then
-					wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+					Try
+						wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+					Catch
+						Starter.vSongLyric = "noLyric"
+					End Try	
 					If Starter.vSongLyric = "noLyric" Then
-						wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+						Try
+							wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+						Catch
+							Starter.vSongLyric = "noLyric"
+						End Try		
 					End If
 				End If
 			End If
@@ -309,6 +320,7 @@ Private Sub processUrl(url As String) As ResumableSub
 	
 	j.Initialize("",  Me)
 	j.Download(url)
+	
 	Wait For (j) JobDone(j As HttpJob)
 	
 	If j.Success Then

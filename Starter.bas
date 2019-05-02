@@ -316,7 +316,7 @@ Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ign
 		If MethodName = "playerPCMFeedBuffer" Then
 			If Args(0) = False Then
 				ToastMessageShow("Stream active, but no audio", True)
-				CallSubDelayed2(player, "showStreamWarning", True)
+'				CallSubDelayed2(player, "showStreamWarning", True)
 				restartStream
 			End If
 		End If
@@ -333,7 +333,7 @@ Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ign
 					streamWebSite	= Args(1)
 					Dim stUrl As String = Args(1)
 					If activeActivity = "searchStation" And stUrl.Length > 0 Then
-						CallSub2(searchStation, "pullStationUrl", stUrl)
+						'CallSub2(searchStation, "pullStationUrl", stUrl)
 					End If
 					If IsPaused(player) = False Then
 						vStationUrl = Args(1)
@@ -583,7 +583,7 @@ Public Sub restartStream
 	Else
 		tryRestartStream = False
 		Sleep(3000)
-		CallSubDelayed2(player, "showStreamWarning", False)
+'		CallSubDelayed2(player, "showStreamWarning", False)
 		tryRestartCount = 0
 		run_streamTimer(True)
 	End If
@@ -600,7 +600,7 @@ Private Sub streamEnded
 	Sleep(2000)
 	If IsPaused(player) = False Then
 		CallSubDelayed2(player, "streamLostText", $"STREAM LOST.... at $DateTime{DateTime.Now}"$)
-		CallSubDelayed2(player, "showStreamWarning", True)
+'		CallSubDelayed2(player, "showStreamWarning", True)
 	End If
 	clearNotif($"Connection to stream lost at $DateTime{DateTime.Now}"$)
 End Sub

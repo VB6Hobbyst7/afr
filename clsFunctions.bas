@@ -269,17 +269,28 @@ Public Sub FormatFileSize(passedBytes As Float) As String
 	If passedBytes = 0 Then
 		Return "0 Bytes"
 	Else
-		Private Po, Si As Double
+		Private Po, si As Double
 		Private I As Int
        
 		passedBytes = Abs(passedBytes)
                             
 		I = Floor(Logarithm(passedBytes, 1024))
 		Po = Power(1024, I)
-		Si = passedBytes / Po
+		si = passedBytes / Po
        
-		Return NumberFormat2(Si, 1, 2, 2, False) & Unit(I)
+		Return NumberFormat2(si, 1, 2, 2, False) & Unit(I)
        
 	End If
    
+End Sub
+
+Public Sub singularPlural(str As String, count As Int) As String
+	If count <= 0 Then
+		Return $"${str}s"$
+	End If
+	If count > 1 Then
+		Return $"${str}s"$
+	End If
+
+	Return $"${str}"$
 End Sub

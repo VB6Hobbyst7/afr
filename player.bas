@@ -36,7 +36,6 @@ Sub Globals
 	Private stationinfo As String
 	Private pnlSongText As Panel
 	Private pnlStation As Panel
-	Private clockTime As clsTimer
 	Private imgUrlRetry As Int = 0
 	Private clvPlayer As irp_CustomListView'expClv
 	Private dirArrow As ImageView
@@ -99,7 +98,7 @@ Sub Globals
 	Private Label1 As Label
 	Private lblbtnopenurl As Label
 	Private lblNavDrawerHeader As Label
-	Private ImgSvg As ImageView
+'	Private ImgSvg As ImageView
 	Private svgInfo As ImageView
 	Private img_close As ImageView
 	Private pnl_volume As Panel
@@ -120,7 +119,7 @@ Sub Globals
 	Private lblSpotTrackNr As Label
 	Private lblSpotReleaseDate As Label
 	
-	Private lblSpotSongNow As Label
+'	Private lblSpotSongNow As Label
 	Private btnSpotOpenInBrowser As Button
 	Private lblSpotArtist As Label
 	Private lblSpotSong As Label
@@ -832,7 +831,7 @@ Sub setPanelElevation(index As Int)
 End Sub
 
 Sub start_stopStream(index As Int) As ResumableSub
-	showStreamWarning(False)
+'	showStreamWarning(False)
 	CallSub(Starter, "StopPlayer")	
 	
 	CallSub(Starter,"initPlayerVars")
@@ -925,7 +924,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		End If
 		
 		Starter.clsFunc.shadowLayer(lblArtistNowPlaying, 2, 3dip, 2dip,0xFFE7E7E7)
-		showStreamWarning(False)
+'		showStreamWarning(False)
 		Starter.streamLost = False
 		Starter.streamLostInfo = ""
 		CallSub2(Starter, "run_streamTimer", True)
@@ -1462,9 +1461,9 @@ Sub lbl_stop_playing_Click
 End Sub
 
 
-Sub showStreamWarning (show As Boolean)
-	'lbl_stream_lost.Visible	= show
-End Sub
+'Sub showStreamWarning (show As Boolean)
+'	'lbl_stream_lost.Visible	= show
+'End Sub
 
 Sub clearLabels
 	lblNowPlayingDataRate.Text	= ""
@@ -1482,29 +1481,10 @@ Sub setStationBitrate(bitrate As String)
 End Sub
 
 
-Sub createToolbarClock
-	
-	lbl_toolbar_clock.Initialize("")
-	lbl_toolbar_clock.Width		= 80dip
-	lbl_toolbar_clock.Height	= 20dip
-	lbl_toolbar_clock.Text		= "123"
-	lbl_toolbar_clock.Padding	= Array As Int(0dip, 0dip, 10dip, 0dip)
-	lbl_toolbar_clock.Gravity	= Gravity.RIGHT
-	lbl_toolbar_clock.TextColor = Colors.White
-	lbl_toolbar_clock.Typeface	= Typeface.DEFAULT
-	lbl_toolbar_clock.TextSize	= 16
-	toolbar.AddView(lbl_toolbar_clock, lbl_toolbar_clock.Width, lbl_toolbar_clock.Height, Gravity.RIGHT)
-	clockTime.Initialize(5000, lbl_toolbar_clock)
-End Sub
 
 
 Sub pnl_store_song_button_Click
 	iets
-	Return
-
-	If Starter.vAlbumName = "" Then Return
-	Dim albumFoundOn As String= $"Name : ${Starter.vAlbumName}${CRLF}Track : ${Starter.vAlbumTrack} ${CRLF}Released : ${Starter.vAlbumReleaseDate}"$
-	Msgbox2Async(albumFoundOn, "Song found on album", "OK", "", "",Null, False)
 End Sub
 
 Sub sw_response_onConfirm()
@@ -1904,9 +1884,9 @@ Sub btnSpotOpenInBrowser_Click
 	StartActivity(intent1)
 End Sub
 
-Sub showLyricProviderImage(img As Bitmap)
-	'lbl_stream_lost.SetBackgroundImage(img)
-End Sub
+'Sub showLyricProviderImage(img As Bitmap)
+'	'lbl_stream_lost.SetBackgroundImage(img)
+'End Sub
 
 Sub lblNowPlayingStation_Click
 	'StartActivity(checkStationUpdate)

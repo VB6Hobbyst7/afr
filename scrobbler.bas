@@ -229,5 +229,5 @@ Sub createLyricsOnDemand(reverse As Boolean) As String
 		Return $"https://www.lyricsondemand.com/${song.SubString2(0,1)}/${song}/${artist}lyrics.html"$
 	End If
 	
-	Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1).ToLowerCase}/${artist}lyrics/${song}lyrics.html"$
+'	Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1).ToLowerCase}/${artist}lyrics/${song}lyrics.html"$
 End Sub
