@@ -22,36 +22,41 @@ Public Sub stringSplit(splitChar As String, stringToSplit As String, startPos As
 	Dim retString="", splitString As String
 	Dim splitList As List
 	Dim i As Int
-	
+
+	If stringToSplit.Length < 3 Then
+		Return stringToSplit
+	End If
 	splitList.Initialize
 	splitList =Regex.Split(splitChar, stringToSplit)
 	
+	Try
 	
-	
-	If returnCount = True Then
-		Return splitList.Size +1
-	End If
-	
-	If returnIndex > -1 Then
-		Return splitList.Get(returnIndex)
-	End If
-	
-	For i = startPos To splitList.Size -1
-		If splitString = "" Then
-			splitString = splitList.Get(i)
-			retString = splitString.Trim
-		Else
-			splitString = splitList.Get(i)
-			If addSplitChar = True Then
-				retString = $"${retString} - ${splitString.Trim}"$
-			Else
-				retString = $"${retString} ${splitString.Trim}"$
-			End If
+		If returnCount = True Then
+			Return splitList.Size +1
 		End If
-		
-	Next
 	
-			
+		If returnIndex > -1 Then
+			Return splitList.Get(returnIndex)
+		End If
+	
+		For i = startPos To splitList.Size -1
+			If splitString = "" Then
+				splitString = splitList.Get(i)
+				retString = splitString.Trim
+			Else
+				splitString = splitList.Get(i)
+				If addSplitChar = True Then
+					retString = $"${retString} - ${splitString.Trim}"$
+				Else
+					retString = $"${retString} ${splitString.Trim}"$
+				End If
+			End If
+		
+		Next
+	
+	Catch
+		Starter.clsFunc.showLog(LastException, 0)
+	End Try
 	Return retString
 
 End Sub
@@ -149,7 +154,15 @@ Sub ReplaceRaros(p_strText As String) As String
 	strTemp=strTemp.Replace("?m","'m")
 	strTemp	= strTemp.Replace(" ft", "")
 	strTemp	= strTemp.Replace(" ft.", "")
-
+	strTemp	= strTemp.Replace("TOPSONG: ", "")
+	strTemp	= strTemp.Replace("Nu:Straks:", "")
+	strTemp	= strTemp.Replace("Nu:Straks:", "")
+	strTemp	= strTemp.Replace("Straks:", "")
+	strTemp	= strTemp.Replace("Now Playing: ", "")
+	If strTemp.SubString2(0,3) = " - " Then
+		strTemp = strTemp.SubString2(3,strTemp.Length)
+	End If
+	
 	Return strTemp
 End Sub
 

@@ -381,6 +381,7 @@ Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ign
 					If Args(1) <> ""  Then
 						
 						vSong	= Args(1)
+						
 						vSong	= clsFunc.ReplaceRaros(vSong)
 						If lastSong = "" Or lastSong <> vSong Then
 							'DISABLE SONG-INFO & SONG-LYRICS BUTTON
@@ -553,17 +554,30 @@ Sub StartPlayer (RadioStationURL As String)
 	Try
 		AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 128))
 		Sleep(2000)
+		setWakeLock(True)
 	Catch
+		setWakeLock(False)
 		Log(LastException)
 	End Try
 	
 End Sub
 
 Sub StopPlayer
+	setWakeLock(False)
 	AacMp3Player.RunMethod("stop", Null)
 	Sleep(2000)
 End Sub
 
+Sub setWakeLock(keepAlive As Boolean)
+	If keepAlive = True Then
+		phoneKeepAlive.KeepAlive(True)
+		phoneKeepAlive.PartialLock
+	Else	
+		phoneKeepAlive.ReleaseKeepAlive
+		phoneKeepAlive.ReleasePartialLock
+	End If
+	
+End Sub
 
 Public Sub restartStream
 	run_streamTimer(False)

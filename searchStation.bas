@@ -93,6 +93,7 @@ Sub Globals
 	Private lblStationCount As Label
 	Private lblPnlNoFind As Label
 	Private ivNothingFound As ImageView
+	Private chkIgnoreCountry As ACCheckBox
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -528,8 +529,13 @@ Sub edt_find_EnterPressed
 	Dim vText As String	= edt_find.Text
 	Dim params As List
 	Dim streamCount, rowCnt As Int
-	Dim genre, lang As String = ""
+	Dim genre, lang, vCountry As String = ""
 	
+	If chkIgnoreCountry.Checked Then
+		vCountry = "%"
+	Else 
+		vCountry = $"%${vDefCountry}%"$	
+	End If
 	lblStationCount.Text = ""
 	
 	If lblGenre.Text <> "Genre" Then
@@ -557,7 +563,9 @@ Sub edt_find_EnterPressed
 		
 	clvStationList.Clear
 	clvStationList.sv.Visible = False
-	Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, genre, lang)
+	'Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, genre, lang)
+	Dim rs As Cursor = genDb.getSearchStation(vText, vCountry, genre, lang)
+	Log($"ROW COUNT ${rs.RowCount}"$)
 	If rs.RowCount < 0 Then
 		rowCnt = 0
 	Else

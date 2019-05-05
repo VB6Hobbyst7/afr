@@ -225,7 +225,7 @@ Sub getStationIdByName(vStation As String) As String
 End Sub
 
 
-Sub getSearchStation(vStation As String, vUseCountry As String, genre As String, lang as String) As Cursor
+Sub getSearchStation(vStation As String, vUseCountry As String, genre As String, lang As String) As Cursor
 	Dim vQry As String
 	Dim vCurs As Cursor
 	
@@ -243,7 +243,7 @@ Sub getSearchStation(vStation As String, vUseCountry As String, genre As String,
 	initDB
 	
 	
-	vQry	= "SELECT * FROM rdolist WHERE stname LIKE ? AND country = ? and genre like ? AND language like ? COLLATE NOCASE ORDER BY stname ASC"
+	vQry	= "SELECT * FROM rdolist WHERE stname LIKE ? AND country LIKE ? and genre like ? AND language like ? COLLATE NOCASE ORDER BY stname ASC"
 	
 	vCurs	= vSql.ExecQuery2(vQry, Array As String(vStation, vUseCountry, genre, lang))
 	

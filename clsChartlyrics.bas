@@ -18,6 +18,7 @@ End Sub
 
 
 Public Sub checkAlbumart As ResumableSub
+'	Log("CHARTLYRICS")
 	If reverseCount = 1 Then
 		reverseCount = 0
 		reverseSearch = False
@@ -72,6 +73,12 @@ Private Sub processXml()
 End Sub
 
 Sub Parser_EndElement (Uri As String, Name As String, Text As StringBuilder)
+	'Log(Name)
+	If Name = "Lyric" Then
+		Starter.vSongLyric = Text.ToString
+		CallSubDelayed2(Starter, "setSongLyric", Text.ToString)
+		'Log(Text.ToString)
+	End If
 	If Name = "LyricCovertArtUrl" Then
 		coverArtUrl = Text.ToString
 		If coverArtUrl.IndexOf(".jpg") > -1 Or coverArtUrl.IndexOf(".png") > -1 Then

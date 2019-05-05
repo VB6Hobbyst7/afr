@@ -188,6 +188,7 @@ Sub getSpotifySongData(jsonData As String)
 			End Try
 			Starter.spotMap.Put("duration", colitems.Get("duration_ms"))
 			Starter.spotMap.Put("album",album.Get("name"))
+'			Log($"ALBUM ${album.Get("name")}"$)
 			Starter.spotMap.Put("url", spotify)
 			Starter.spotMap.Put("track",colitems.Get("track_number"))
 			Starter.spotMap.Put("date",album.Get("release_date"))
@@ -216,24 +217,40 @@ Sub getSpotifySongData(jsonData As String)
 			Starter.spotMap.Put("artistsong",colitems.Get("name"))
 			Dim spSong As String = Starter.spotMap.Get("artistsong")
 			
+			
+			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
 				Try
+'					LogColor("getSongLyrics", Colors.Red)
 					wait for(getSongLyrics) Complete (result As Boolean)
 				Catch
 					Starter.vSongLyric = "noLyric"
 				End Try
 				If Starter.vSongLyric = "noLyric" Then
 					Try
-						wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+'						LogColor("clsLyrics.checkAlbumart", Colors.Red)
+						wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
 					Catch
 						Starter.vSongLyric = "noLyric"
 					End Try	
 					If Starter.vSongLyric = "noLyric" Then
 						Try
-							wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+'							LogColor("clsGeneral_.pullDataFromOndemand(False)", Colors.Red)
+							wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+							
+							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
 						Catch
 							Starter.vSongLyric = "noLyric"
 						End Try		
+					End If
+					If Starter.vSongLyric = "noLyric" Then
+						Try
+'							LogColor("clsGeneral_.pullDataFromFandom(False)", Colors.Red)
+							wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+						Catch
+							Starter.vSongLyric = "noLyric"
+						End Try
 					End If
 				End If
 			End If
@@ -292,6 +309,7 @@ public Sub getSongLyrics As ResumableSub
 	http = "https://lyric-api.herokuapp.com/api/find/"
 	
 	urlStream	= scrobbler.processLyrics(CallSub(Starter,"getSongPlaying"), False)
+	Log(urlStream)
 	Starter.clsFunc.showLog(urlStream, Colors.Green)
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
 

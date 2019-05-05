@@ -8,13 +8,14 @@ Version=8.5
 Sub Class_Globals
 	Private xmlparser As SaxParser
 	Private url As String
-	
 
 	Public chartDataFound As Boolean = False
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
+	
+	
 End Sub
 
 public Sub setChartDataFound(value As Boolean)
@@ -239,6 +240,9 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 	Dim page As String
 	Dim url As String
 
+	
+	
+
 	url= scrobbler.createLyricsOnDemand(reverse)
 	Starter.clsFunc.showLog(url, Colors.Blue)
 	If url = "noUrl" Then
@@ -246,6 +250,7 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 	End If
 		
 	
+	Log(url)
 	mJob.Initialize("", Me)
 	mJob.Download(url)
 	mJob.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")

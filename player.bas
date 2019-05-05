@@ -23,6 +23,7 @@ End Sub
 
 
 Sub Globals
+	
 	Private DetailsDialog As CustomLayoutDialog
 	Dim dialog As B4XDialog
 	Dim selectedStationName, stream As String
@@ -153,6 +154,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	xSlider.SetRotationAnimated(0, -90)
 	setVolumePanel
 	clsGen.Initialize
+	
 	setCtrlButtonsBorder
 	
 	
@@ -178,7 +180,6 @@ Sub Activity_Create(FirstTime As Boolean)
 	Dim pdg As Label
 	pdg.Initialize("")
 	
-	'initKvs
 	NavDrawer.NavigationView.LoadLayout("slidingMenu", NavDrawer.DefaultHeaderHeight)
 	NavDrawer.NavigationView.Menu.AddWithGroup2(2, 10, 1000, "Add station", xml.GetDrawable("ic_radio_black_24dp"))
 	NavDrawer.NavigationView.Menu.AddWithGroup2(2, 20, 1001, "Suggest station", xml.GetDrawable("outline_playlist_add_black_24"))
@@ -217,7 +218,8 @@ Sub Activity_Create(FirstTime As Boolean)
 '	setSvg(ivTimer, "sleeptimer.svg")
 	lbl_stop_playing.Gravity		= Gravity.CENTER
 
-	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+	'---->kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+	
 	getSetSettings
 	
 	
@@ -844,6 +846,8 @@ Sub start_stopStream(index As Int) As ResumableSub
 		Return False
 	End If
 	
+	
+
 	Try
 		Try
 			'initPlayStopButton
@@ -1401,9 +1405,10 @@ End Sub
 Sub exitPlayer
 	
 	'***END WAKELOCK
-	Dim phWakeLock As PhoneWakeState
-	phWakeLock.ReleaseKeepAlive
-	phWakeLock.ReleasePartialLock
+'	Dim phWakeLock As PhoneWakeState
+'	phWakeLock.ReleaseKeepAlive
+'	phWakeLock.ReleasePartialLock
+	CallSub2(Starter, "setWakeLock", False)
 	
 	'***END ACTIVITIES***
 	CallSub(getSetStation,"endActivity")
@@ -1860,10 +1865,10 @@ Sub iets
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
 	DetailsDialog.SetSize(100%X, 500dip)
 	Dim minute, second As String
-	
+	If Starter.spotMap.Get("duration") <> "" Then
 	minute = NumberFormat2(DateTime.GetMinute(Starter.spotMap.Get("duration")), 2, 2, 0, False)
 	second = NumberFormat2(DateTime.GetSecond(Starter.spotMap.Get("duration")), 2, 2, 0, False)
-	
+	End If
 	
 	Wait For (sf) Dialog_Ready(pnl As Panel)
 	pnl.LoadLayout("dlgSOngInfo")
@@ -1890,4 +1895,13 @@ End Sub
 
 Sub lblNowPlayingStation_Click
 	'StartActivity(checkStationUpdate)
+End Sub
+
+Public Sub SetElevation(v As View, e As Float)
+	Dim jo As JavaObject
+	Dim p As Phone
+	If p.SdkVersion >= 21 Then
+		jo = v
+		jo.RunMethod("setElevation", Array As Object(e))
+	End If
 End Sub
