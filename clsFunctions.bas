@@ -8,6 +8,7 @@ Version=8.5
 Sub Class_Globals
 '	Dim rsip As RSImageProcessing
 	Private mlWifi As MLwifi
+	dim sf as StringFunctions
 
 End Sub
 
@@ -274,6 +275,12 @@ Public Sub replacetekens(str As String) As String
 	str	= str.Replace("?", "")
 	
 	Return str
+End Sub
+
+Public Sub properString(txt As String) As String
+	txt = txt.ToLowerCase
+	
+	return sf.Proper(txt)
 End Sub
 
 Public Sub FormatFileSize(passedBytes As Float) As String

@@ -58,13 +58,14 @@ Sub spBearer(artist As String, song As String)
 	SpotGrant1       	= "client_credentials"
 	SpotClientID1    	= Starter.SpotClientID1'  'Use your own Spotify Client ID!
 	SpotClientSecret1	= Starter.SpotClientSecret1 '  'Use your own Spotify Client Secret key!
-	SourceWeb1        	= Starter.SourceWeb1 '"https://accounts.spotify.com/api/token"
+	SourceWeb1        	= "https://accounts.spotify.com/api/token" 'Starter.SourceWeb1 '"https://accounts.spotify.com/api/token"
 
 	If clsFunc.checkUrl(SourceWeb1) = False Then
 		Return
 	End If
 
-	SpotBase64 = B64.EncodeStoS(SpotClientID1 & ":" & SpotClientSecret1,"UTF8")
+	'SpotBase64 = B64.EncodeStoS(SpotClientID1 & ":" & SpotClientSecret1,"UTF8")
+	SpotBase64 = B64.EncodeStoS("91f924c1eace4879ba9c4c0f5061e925" & ":" & "b4fb29e9e2b0490bad9489c28dae6b89","UTF8")
 	Dim j As HttpJob
 	
 	j.Initialize("", Me)
@@ -119,8 +120,9 @@ Sub spBearer(artist As String, song As String)
 			End If
 		End If
 		Else 
+			Log(j.ErrorMessage)
 			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(Starter.sStationLogoPath, ""))
-			
+			j.Release
 	End If
 	
 	Return

@@ -34,6 +34,7 @@ Sub Process_Globals
 	Public dbL, Username, Password, activeActivity, playerUsed, lastfmapi, countryCode, updateFile As String
 	Public SpotClientID1, SpotClientSecret1, SourceWeb1, mManualFolder, vAlbumTrack As String
 	Public vAlbumName, vAlbumReleaseDate, irp_dbFolder, vSong, vStationName As String
+	
 	Public chartArtist, chartSong, streamLostInfo, vSpotError, vSpotUrl, localeDatFormat As String
 	Public selectedStream, currStationId, currStationGerne As String
 	Public streamWebSite, vStationUrl, lastSong As String	= ""
@@ -65,8 +66,9 @@ Sub Process_Globals
 	Dim PE As PhoneEvents
 	Dim PhoneId As PhoneId
 	Public hasWakeLock As Boolean = False
-	Dim tmrInetConnection As Timer
+	Dim tmrInetConnection, tmrGetSong As Timer
 	Dim clsGen As clsGeneral
+	'Private albumTag="91f924c1eace4879ba9c4c0f5061e925" as String, songTag="b4fb29e9e2b0490bad9489c28dae6b89" As String
 End Sub
 
 
@@ -92,6 +94,8 @@ Sub Service_Create
 	
 	'need to disable it as reading from large JdbcResultSet will cause network requests to be sent on the main thread.
 	DisableStrictMode
+	tmrGetSong.Initialize("tmrGetSong", 10*1000)
+	tmrGetSong.Enabled = True
 	connectionTimer.Initialize("connectionTimer", 5*1000)
 	connectionTimer.Enabled	= True
 	setupPlaybackEvent
@@ -140,6 +144,8 @@ Sub Service_Destroy
 	tmrInetConnection.Enabled	= False
 	connectionTimer.Enabled		= True
 End Sub
+
+
 
 Public Sub initPlayerVars
 	vSongAlbumArt	= LoadBitmap(File.DirAssets, "NoImageAvailable.png")
@@ -253,7 +259,31 @@ Sub DisableStrictMode
 End Sub
 
 
+Sub tmrGetSong_tick
+	If clsFunc.IsMusicPlaying = True Then
+		Dim url, url1 As String
+		Dim job As HttpJob
+		Log($"$Time{DateTime.Now}"$)
+		url = $"http://ice.pdeg.nl/getIce.php?name=${selectedStream}"$
+		url1="http://ice.pdeg.nl/getIce.php?name=http://stream.gal.io/arrow"
+		job.Initialize("", Me)
+		'Log("http://ice.pdeg.nl/getIce.php?name="&selectedStream)
+		'Log(selectedStream)
+		
+		job.Download(url)
+		job.GetRequest.Timeout = 5000
+		Wait For (job) JobDone(job As HttpJob)
+		If job.Success Then
+			Log(job.GetString)
+		End If
+		'Log(job.ErrorMessage)
+		job.Release
+	End If
+End Sub
+
 Sub connectionTimer_Tick
+	
+
 	player.bckBtnClickCount = 1
 	clsFunc.getConnectionType
 End Sub
@@ -304,6 +334,8 @@ End Sub
 Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ignore
 	lastAccPlayerTime = DateTime.Now
 	
+	
+	
 '	If Args <> Null Then
 '		Return
 '	Else
@@ -312,6 +344,7 @@ Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ign
 '		'Return Args
 '	End If
 	Try
+		
 		vSong	= "No song information"
 		If MethodName = "playerPCMFeedBuffer" Then
 			If Args(0) = False Then
@@ -321,10 +354,12 @@ Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ign
 			End If
 		End If
 		If MethodName = "playerMetadata" Then
-		
 			streamWebSite = ""
 			If Args(0) <> Null And Args(1) <> Null Then
-					
+				'Log("ARGS : "&Args(0) &"  " & Args(1))
+			
+				If Args(0) = "StreamUrl" Then
+				End If
 				If Args(0) = "icy-genre" Then
 					CallSub2(player, "setGenre", Args(1))
 				End If
@@ -383,6 +418,7 @@ Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ign
 						vSong	= Args(1)
 						
 						vSong	= clsFunc.ReplaceRaros(vSong)
+						vSong	= clsFunc.properString(vSong)
 						If lastSong = "" Or lastSong <> vSong Then
 							'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 							spotMap.Clear

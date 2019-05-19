@@ -685,17 +685,16 @@ Library14=json
 Library15=stringfunctions
 Library16=encryption
 Library17=okhttputils2
-Library18=sv_irp
-Library19=xmllayoutbuilder
+Library18=xmllayoutbuilder
+Library19=datacollection
 Library2=appcompat
-Library20=datacollection
-Library21=xmlsax
-Library22=network
-Library23=ioxsvg
-Library24=ime
-Library25=xui views
-Library26=dialogs
-Library27=tabstripviewpager
+Library20=xmlsax
+Library21=network
+Library22=ioxsvg
+Library23=ime
+Library24=xui views
+Library25=dialogs
+Library26=tabstripviewpager
 Library3=xui
 Library4=sql
 Library5=stringutils
@@ -705,8 +704,8 @@ Library8=javaobject
 Library9=designsupport
 ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	~\n~	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'SetApplicationAttribute(android:icon, "@drawable/radio")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~CreateResource(values-v21, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~	~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~
 Module1=player
-Module10=clsChartlyrics
-Module11=irp_CustomListView
+Module10=scrobbler
+Module11=KeyValueStore
 Module12=cmGen
 Module13=stored_songs
 Module14=addNewStations
@@ -722,15 +721,15 @@ Module22=modGlobal
 Module23=clsScrollLabel
 Module24=phdetect
 Module25=clsRandomImage
-Module3=KeyValueStore
-Module4=searchStation
-Module5=clsFunctions
+Module3=searchStation
+Module4=genDb
+Module5=irp_CustomListView
 Module6=clsHttp
-Module7=genDb
+Module7=clsChartlyrics
 Module8=clsGeneral
-Module9=scrobbler
+Module9=clsFunctions
 NumberOfFiles=337
-NumberOfLibraries=27
+NumberOfLibraries=26
 NumberOfModules=25
 Version=9.01
 @EndOfDesignText@
@@ -741,7 +740,7 @@ Version=9.01
 
 #Region  Project Attributes
 	#ApplicationLabel: AdFree Radio
-	#VersionCode: 30052032
+	#VersionCode: 30052033
 	#VersionName: 0.99
 	 'SupportedOrientations possible values: unspecified, landscape or portrait
 	#SupportedOrientations: portrait
@@ -776,7 +775,7 @@ Sub Globals
 	Private lblDbConnected As Label
 	Private pnlMain As Panel
 	Private kvs As KeyValueStore
-	Private svIrp As MySecVault
+	'Private svIrp As MySecVault
 	Dim M1 As Map
 	Dim CollSer As dcCollectionSerializer
 	Private btnContinue As Button
@@ -934,7 +933,7 @@ Sub startIRP
 	If pnlMain.IsInitialized Then
 		pnlMain.Visible = False
 	End If
-	getSetVaultData
+	'getSetVaultData
 	'genDb.vacuumDB
 	If genDb.tableExists("stored_songs") = False Then
 		genDb.genStoredSongTable
@@ -1032,37 +1031,37 @@ Sub Activity_PermissionResult (Permission As String, Result As Boolean)
 End Sub
 
 
-Private Sub getSetVaultData
-	Dim arrMap() As Byte = svIrp.MyMap
-	If arrMap <> Null Then
-		Dim M1 As Map = CollSer.CompressedBytesToMap(arrMap)
-		
-		For i = 0 To M1.Size - 1
-			If M1.GetKeyAt(i) = "spoturl" Then
-				Starter.SourceWeb1	= M1.GetValueAt(i)
-			End If
-			If M1.GetKeyAt(i) = "spotclient" Then
-				Starter.SpotClientID1 = M1.GetValueAt(i)
-			End If
-			If M1.GetKeyAt(i) = "spotsecret" Then
-				Starter.SpotClientSecret1	=  M1.GetValueAt(i)
-			End If
-
-			If M1.GetKeyAt(i) = "dburel" Then
-				Starter.dbL	= M1.GetValueAt(i)
-			End If
-
-			If M1.GetKeyAt(i) = "dbpass" Then
-				Starter.Password	= M1.GetValueAt(i)
-			End If
-
-			If M1.GetKeyAt(i) = "dbuser" Then
-				Starter.Username	= M1.GetValueAt(i)
-			End If
-		Next
-	End If
-
-End Sub
+'Private Sub getSetVaultData
+'	Dim arrMap() As Byte = svIrp.MyMap
+'	If arrMap <> Null Then
+'		Dim M1 As Map = CollSer.CompressedBytesToMap(arrMap)
+'		
+'		For i = 0 To M1.Size - 1
+'			If M1.GetKeyAt(i) = "spoturl" Then
+'				Starter.SourceWeb1	= M1.GetValueAt(i)
+'			End If
+'			If M1.GetKeyAt(i) = "spotclient" Then
+'				Starter.SpotClientID1 = M1.GetValueAt(i)
+'			End If
+'			If M1.GetKeyAt(i) = "spotsecret" Then
+'				Starter.SpotClientSecret1	=  M1.GetValueAt(i)
+'			End If
+'
+'			If M1.GetKeyAt(i) = "dburel" Then
+'				Starter.dbL	= M1.GetValueAt(i)
+'			End If
+'
+'			If M1.GetKeyAt(i) = "dbpass" Then
+'				Starter.Password	= M1.GetValueAt(i)
+'			End If
+'
+'			If M1.GetKeyAt(i) = "dbuser" Then
+'				Starter.Username	= M1.GetValueAt(i)
+'			End If
+'		Next
+'	End If
+'
+'End Sub
 
 
 Sub btnContinue_Click
