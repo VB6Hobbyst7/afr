@@ -68,7 +68,7 @@ Sub Process_Globals
 	Dim PE As PhoneEvents
 	Dim PhoneId As PhoneId
 	Public hasWakeLock As Boolean = False
-	Dim tmrInetConnection, tmrGetSong As Timer
+	Public tmrInetConnection, tmrGetSong As Timer
 	Dim clsGen As clsGeneral
 	'Private albumTag="91f924c1eace4879ba9c4c0f5061e925" as String, songTag="b4fb29e9e2b0490bad9489c28dae6b89" As String
 End Sub
@@ -97,7 +97,7 @@ Sub Service_Create
 	
 	'need to disable it as reading from large JdbcResultSet will cause network requests to be sent on the main thread.
 	DisableStrictMode
-	tmrGetSong.Initialize("tmrGetSong", 10*1000)
+	tmrGetSong.Initialize("tmrGetSong", 5*1000)
 	tmrGetSong.Enabled = True
 	connectionTimer.Initialize("connectionTimer", 5*1000)
 	connectionTimer.Enabled	= True
@@ -264,6 +264,34 @@ End Sub
 
 
 Public Sub tmrGetSong_tick
+'	If clsFunc.IsMusicPlaying = True Then
+'		Dim url, nSong, newSong As String
+'		Dim job As HttpJob
+'		
+'		url = $"http://ice.pdeg.nl/getIce.php?name=${selectedStream}"$
+'		
+'		job.Initialize("", Me)
+'		nSong = "empty"
+'		job.Download(url)
+'		job.GetRequest.Timeout = 5000
+'		Wait For (job) JobDone(job As HttpJob)
+'		If job.Success Then
+'			nSong = job.GetString
+'			Log(nSong)
+'			Dim index As Int = nSong.IndexOf("|")
+'			newSong = nSong.SubString2(index+1, nSong.Length).Trim
+'			If(newSong.Length > 2) Then
+'				processSong(newSong)
+'			End If
+'		End If
+'		job.Release
+'	Else
+'		Return
+'	End If
+	icyMetaData
+End Sub
+
+Sub icyMetaData
 	If clsFunc.IsMusicPlaying = True Then
 		Dim url, nSong, newSong As String
 		Dim job As HttpJob
@@ -277,7 +305,7 @@ Public Sub tmrGetSong_tick
 		Wait For (job) JobDone(job As HttpJob)
 		If job.Success Then
 			nSong = job.GetString
-			Log(nSong)
+			'Log(nSong)
 			Dim index As Int = nSong.IndexOf("|")
 			newSong = nSong.SubString2(index+1, nSong.Length).Trim
 			If(newSong.Length > 2) Then

@@ -365,7 +365,8 @@ Sub Activity_Resume
 		restorePlayingInfo
 		Dim songdata As clsHttp
 		songdata.Initialize(Starter, "peter")
-		CallSubDelayed3(songdata,"spBearer", Starter.chartArtist, Starter.chartSong)'scrobbler.processPlaying(Starter.lastSong))
+		'CallSubDelayed3(songdata,"spBearer", Starter.chartArtist, Starter.chartSong)'scrobbler.processPlaying(Starter.lastSong))
+		CallSubDelayed(Starter, "icyMetaData")
 	Else
 		If Starter.stationAdded = 1 Then
 			restorePlayingInfo
@@ -397,6 +398,7 @@ Sub Activity_Pause (UserClosed As Boolean)
 		exitPlayer
 	Else
 		'TRY TO RESTORE LAST SONG PLAYING
+		kvs.PutSimple("app_started", 1)
 		pnl_volume_slider.Visible = False
 		pnlSongText.SetVisibleAnimated(0, False)
 		
@@ -920,7 +922,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		
 		'CallSub2(Starter, "StartPlayer", stream)
 		Starter.clsExoPlayer.startPlayer(stream)
-		CallSub(Starter, "tmrGetSong_tick")
+		CallSubDelayed(Starter, "icyMetaData")
 		setPanelElevation(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
 			ivNowPlayingStation.Bitmap = LoadBitmap(stationLogoPath,"")
@@ -1443,6 +1445,8 @@ Sub exitPlayer
 	CallSub(Starter, "Service_Destroy")
 	CallSub2(Starter, "run_streamTimer", False)
 	CallSub(Starter, "endForeGround")
+	Starter.tmrGetSong.Enabled = False
+	Starter.clsExoPlayer.stopPlayer
 	Activity.Finish
 	
 End Sub

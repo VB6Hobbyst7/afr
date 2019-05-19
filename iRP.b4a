@@ -829,14 +829,13 @@ Sub Activity_Create(FirstTime As Boolean)
 	getSetrdoDatabase
 	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
 	initKvs
-	
-	If kvs.GetSimple("app_normal_exit") <> 1 Then
-		kvs.PutSimple("app_started", 0)
-	End If
-	kvs.PutSimple("app_normal_exit", 0)
-	
-'	ph.KeepAlive(True)
-'	ph.PartialLock
+'	Log("PPPPP " &kvs.GetSimple("app_normal_exit"))
+'	If kvs.GetSimple("app_normal_exit") <> 1 Then
+'		kvs.PutSimple("app_started", 0)
+'		Else
+'		kvs.PutSimple("app_started", 1)
+'	End If
+'	kvs.PutSimple("app_normal_exit", 0)
 	
 	Wait For (clsGen.CheckConnected) Complete(result As Boolean)
 	If result = False Then
@@ -927,7 +926,7 @@ Sub startIRP
 
 		pnlMain.LoadLayout("welcome")
 	End If
-
+Log("APP STARTED" & appStarted)
 	If appStarted = 0 Then
 		wait for (showWelcome) Complete (result As Boolean)
 	End If
@@ -943,7 +942,7 @@ Sub startIRP
 	If genDb.tableExists("stUpdate") = False Then
 		genDb.genUpdateTable
 	End If
-	genDb.truncateTable("stUpdate")
+	'genDb.truncateTable("stUpdate")
 	
 	
 	startPlayer
@@ -1135,7 +1134,7 @@ Sub initKvs
 	End If
 
 	If kvs.ContainsKey("app_started") = False Then
-		kvs.PutSimple("app_started", 0)
+	'	kvs.PutSimple("app_started", 0)
 	End If
 
 	If kvs.ContainsKey("lblNowPlayingDataRate") = False Then
