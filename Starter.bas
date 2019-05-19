@@ -11,6 +11,8 @@ Version=7.8
 
 
 Sub Process_Globals
+	
+	Public clsExoPlayer As clsExo
 	Public sleepTimerDuration As Long
 	Public AacMp3Player As JavaObject
 	Private logs As StringBuilder
@@ -78,6 +80,7 @@ Sub Service_Create
 	clsImage.Initialize
 	spotMap.Initialize
 	clsGen.Initialize
+	clsExoPlayer.Initialize
 	Service.AutomaticForegroundMode = Service.AUTOMATIC_FOREGROUND_ALWAYS
 
 	If rp.Check(rp.PERMISSION_READ_PHONE_STATE) Then 
@@ -102,6 +105,7 @@ Sub Service_Create
 	tmrInetConnection.Initialize("inetConnected", 1000)
 	tmrInetConnection.Enabled = False
 	localeDatFormat = GetDeviceDateFormatSettings
+	
 End Sub
 
 
@@ -259,25 +263,79 @@ Sub DisableStrictMode
 End Sub
 
 
-Sub tmrGetSong_tick
+Public Sub tmrGetSong_tick
 	If clsFunc.IsMusicPlaying = True Then
-		Dim url, url1 As String
+		Dim url, nSong As String
 		Dim job As HttpJob
-		Log($"$Time{DateTime.Now}"$)
-		url = $"http://ice.pdeg.nl/getIce.php?name=${selectedStream}"$
-		url1="http://ice.pdeg.nl/getIce.php?name=http://stream.gal.io/arrow"
-		job.Initialize("", Me)
-		'Log("http://ice.pdeg.nl/getIce.php?name="&selectedStream)
-		'Log(selectedStream)
 		
+		url = $"http://ice.pdeg.nl/getIce.php?name=${selectedStream}"$
+		
+		job.Initialize("", Me)
+		nSong = "empty"
 		job.Download(url)
 		job.GetRequest.Timeout = 5000
 		Wait For (job) JobDone(job As HttpJob)
 		If job.Success Then
-			Log(job.GetString)
+			nSong = job.GetString
+			Dim index As Int = nSong.IndexOf("|")
+			processSong(nSong.SubString2(index+1, nSong.Length).Trim)
 		End If
-		'Log(job.ErrorMessage)
 		job.Release
+		
+		
+		'nSong= nSong.SubString2(index+1, nSong.Length).Trim
+	Else 
+		Return	
+	End If
+	
+	
+	
+	
+'	Log(nSong)
+End Sub
+
+Sub processSong(song As String)
+	song	= clsFunc.ReplaceRaros(song)
+	song	= clsFunc.properString(song)
+	If lastSong = "" Or lastSong <> song Then
+		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
+		spotMap.Clear
+		CallSub(player, "disableInfoPanels")
+		setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		lastSong = song
+		setSongPlaying(song)
+		clearNotif(song)
+		If activeActivity = "player" Then
+			CallSub2(Me, "setSongPlaying", song)
+			CallSub2(Me, "setSongLyric", "noLyric")
+			CallSub(player, "hideLyrics")
+			vAlbumName  		= ""
+			vAlbumTrack 		= ""
+			vAlbumReleaseDate	= ""
+			vSpotUrl			= ""
+			albumArtSet = False
+						
+			Dim mySong As String		= scrobbler.processPlaying(song)
+			
+								
+			'If IsPaused(player) Then Return True
+			'CallSubDelayed2(songdata,"spBearer", mySong)
+			CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
+			CallSubDelayed(player, "enableAlbumInfo")
+'									If spotMap.Size > 0 Then
+'										CallSub2(Me, "setSongPlaying", $"${spotMap.Get("artistname")} - ${spotMap.Get("artistsong")}"$)
+'									End If
+									
+			If albumArtSet Then
+				CallSub2(player, "enableAlbumButton", False)
+			Else 'TRY CHARTLYRICS
+				If albumArtSet = False Then
+					'clsImage.newRandomImage
+				End If
+			End If
+									
+			
+		End If
 	End If
 End Sub
 
@@ -314,7 +372,7 @@ Sub streamTimer_tick
 	
 	If clsFunc.IsMusicPlaying = False Or tickDiff > 4 Then
 		tryRestartStream = True
-		StartPlayer(selectedStream)
+'		StartPlayer(selectedStream)
 	Else
 		streamTimer.Enabled = True
 		tryRestartStream = False	
@@ -587,8 +645,10 @@ Sub setupPlaybackEvent
 End Sub
 
 Sub StartPlayer (RadioStationURL As String)
+	
 	Try
-		AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 128))
+	'	clsExo.startPlayer(RadioStationURL)
+		'AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 128))
 		Sleep(2000)
 		setWakeLock(True)
 	Catch
@@ -599,12 +659,13 @@ Sub StartPlayer (RadioStationURL As String)
 End Sub
 
 Sub StopPlayer
-	setWakeLock(False)
+	'clsExo.stopPlayer
+	'setWakeLock(False)
 	AacMp3Player.RunMethod("stop", Null)
 	Sleep(2000)
 End Sub
 
-Sub setWakeLock(keepAlive As Boolean)
+Public Sub setWakeLock(keepAlive As Boolean)
 	If keepAlive = True Then
 		phoneKeepAlive.KeepAlive(True)
 		phoneKeepAlive.PartialLock

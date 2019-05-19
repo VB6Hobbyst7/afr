@@ -8,7 +8,7 @@ Version=8.5
 Sub Class_Globals
 '	Dim rsip As RSImageProcessing
 	Private mlWifi As MLwifi
-	dim sf as StringFunctions
+	Dim sf As StringFunctions
 
 End Sub
 

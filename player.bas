@@ -835,7 +835,7 @@ End Sub
 Sub start_stopStream(index As Int) As ResumableSub
 '	showStreamWarning(False)
 	CallSub(Starter, "StopPlayer")	
-	
+	Starter.clsExoPlayer.stopPlayer
 	CallSub(Starter,"initPlayerVars")
 	showHideLyricsButton(False)
 	enableAlbumButton(False)
@@ -918,7 +918,9 @@ Sub start_stopStream(index As Int) As ResumableSub
 
 		handleControlButtons(True, 8dip, 500)
 		
-		CallSub2(Starter, "StartPlayer", stream)
+		'CallSub2(Starter, "StartPlayer", stream)
+		Starter.clsExoPlayer.startPlayer(stream)
+		CallSub(Starter, "tmrGetSong_tick")
 		setPanelElevation(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
 			ivNowPlayingStation.Bitmap = LoadBitmap(stationLogoPath,"")
