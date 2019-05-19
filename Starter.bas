@@ -265,7 +265,7 @@ End Sub
 
 Public Sub tmrGetSong_tick
 	If clsFunc.IsMusicPlaying = True Then
-		Dim url, nSong As String
+		Dim url, nSong, newSong As String
 		Dim job As HttpJob
 		
 		url = $"http://ice.pdeg.nl/getIce.php?name=${selectedStream}"$
@@ -277,21 +277,17 @@ Public Sub tmrGetSong_tick
 		Wait For (job) JobDone(job As HttpJob)
 		If job.Success Then
 			nSong = job.GetString
+			Log(nSong)
 			Dim index As Int = nSong.IndexOf("|")
-			processSong(nSong.SubString2(index+1, nSong.Length).Trim)
+			newSong = nSong.SubString2(index+1, nSong.Length).Trim
+			If(newSong.Length > 2) Then
+				processSong(newSong)
+			End If
 		End If
 		job.Release
-		
-		
-		'nSong= nSong.SubString2(index+1, nSong.Length).Trim
-	Else 
-		Return	
+	Else
+		Return
 	End If
-	
-	
-	
-	
-'	Log(nSong)
 End Sub
 
 Sub processSong(song As String)
