@@ -29,7 +29,7 @@ Public Sub startPlayer(url As String)
 End Sub
 
 Public Sub stopPlayer
-	Log("STOP PLAYER")
+'	Log("STOP PLAYER")
 	exoPlayer.Pause
 	exoPlayer.Release
 	CallSub2(Starter, "setWakeLock", False)

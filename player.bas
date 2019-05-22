@@ -362,11 +362,12 @@ Sub Activity_Resume
 	Starter.activeActivity	= "player"
 	
 	If Starter.vPlayerSelectedPanel <> 999 Then
+		Starter.lastSong = "resume"
+		CallSub(Starter, "icyMetaData")
 		restorePlayingInfo
 		Dim songdata As clsHttp
 		songdata.Initialize(Starter, "peter")
 		'CallSubDelayed3(songdata,"spBearer", Starter.chartArtist, Starter.chartSong)'scrobbler.processPlaying(Starter.lastSong))
-		CallSubDelayed(Starter, "icyMetaData")
 	Else
 		If Starter.stationAdded = 1 Then
 			restorePlayingInfo
@@ -550,11 +551,12 @@ End Sub
 Sub streamPlaying(playing As Boolean)
 	
 	If playing = False Then
-		If Starter.playerUsed	= "aac" Then
-			CallSub(Starter,"StopPlayer")
+'		If Starter.playerUsed	= "aac" Then
+'			CallSub(Starter,"StopPlayer")
+			Starter.clsExoPlayer.stopPlayer
 			showSnackbar("Unable to play stream..")
 			Return
-		End If
+'		End If
  	End If
 End Sub
 
@@ -836,8 +838,9 @@ End Sub
 
 Sub start_stopStream(index As Int) As ResumableSub
 '	showStreamWarning(False)
-	CallSub(Starter, "StopPlayer")	
+'	CallSub(Starter, "StopPlayer")	
 	Starter.clsExoPlayer.stopPlayer
+	Starter.lastSong = ""
 	CallSub(Starter,"initPlayerVars")
 	showHideLyricsButton(False)
 	enableAlbumButton(False)
@@ -1247,7 +1250,8 @@ Sub NavDrawer_NavigationItemSelected (MenuItem As ACMenuItem, DrawerGravity As I
 	else If MenuItem.Title = "Add station" Then
 		NavDrawer.CloseDrawer
 		
-		CallSub(Starter,"StopPlayer")
+		'CallSub(Starter,"StopPlayer")
+		Starter.clsExoPlayer.stopPlayer
 		startOrStopStream(Starter.vPlayerSelectedPanel)
 		Starter.vPlayerSelectedPanel = 999
 		If genDb.getCountryBookmark = "" Then
@@ -1418,7 +1422,8 @@ Sub exitPlayer
 	CallSub(getSetStation,"endActivity")
 	CallSub(searchStation, "endActivity")
 	'***STOP PLAYER***
-	CallSub(Starter,"StopPlayer")
+	'CallSub(Starter,"StopPlayer")
+	Starter.clsExoPlayer.stopPlayer
 	resetKvsPnlButtons
 	kvs.PutSimple("app_started", 0)
 	kvs.PutSimple("app_normal_exit", 1)
@@ -1604,6 +1609,7 @@ Private Sub disableClickTimer_Tick
 End Sub
 
 Sub freeze(show As Boolean) 
+	Log("FREEZE ENABLED : "& show)
 	tmr.Enabled = show
 	pnl_block.Visible = show
 End Sub
@@ -1811,7 +1817,8 @@ End Sub
 'CONNECTION LOST HANDLE SETTINGS
 Public Sub connectionLost
 	'modGlobal.StopPlayer
-	CallSub(Starter,"StopPlayer")
+	'CallSub(Starter,"StopPlayer")
+	Starter.clsExoPlayer.stopPlayer
 	startOrStopStream(Starter.vPlayerSelectedPanel)
 	'MUST BE GLOBAL CODE
 	pg_playing	= ""

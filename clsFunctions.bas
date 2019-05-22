@@ -6,15 +6,20 @@ Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 9, 1
 Sub Class_Globals
-'	Dim rsip As RSImageProcessing
 	Private mlWifi As MLwifi
-	Dim sf As StringFunctions
-
+	Private Delimeters,Exclude As List
+	Private RomanRegexALL As String = "([ivxlcdm]*(?:th|rd|\b))*"
+	Private RomanRegexNUM As String = "[ivxlcdm]*"
 End Sub
 
-'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
-'	rsip.Initialize
+	Delimeters.Initialize
+	Exclude.Initialize
+	'Always capitalize after one of these
+	Delimeters.AddAll(Array As String("'","Mc","-"))
+
+	'We want these words in the name to always appear in lower case.
+	Exclude.AddAll(Array As String("van","von","de"))
 	
 End Sub
 
@@ -160,8 +165,13 @@ Sub ReplaceRaros(p_strText As String) As String
 	strTemp	= strTemp.Replace("Nu:Straks:", "")
 	strTemp	= strTemp.Replace("Straks:", "")
 	strTemp	= strTemp.Replace("Now Playing: ", "")
+	
 	If strTemp.SubString2(0,3) = " - " Then
 		strTemp = strTemp.SubString2(3,strTemp.Length)
+	End If
+	
+	If strTemp.SubString2(strTemp.Length-1, strTemp.Length) = " " Then
+'		strTemp.SubString2(0, strTemp.Length-1)
 	End If
 	
 	Return strTemp
@@ -188,7 +198,8 @@ Public Sub getConnectionType
 If Starter.vWifiOnly = True And Starter.vWifiConnected = False Then
 		If modGlobal.PlayerStarted = True Then
 			modGlobal.PlayerStarted = False
-			CallSub(Starter, "StopPlayer")
+			'CallSub(Starter, "StopPlayer")
+			Starter.clsExoPlayer.stopPlayer
 			CallSub(player, "checkWifiOnly")
 		End If
 	End If
@@ -269,7 +280,7 @@ Public Sub replacetekens(str As String) As String
 	str	= str.Replace(")", "")
 	str	= str.Replace(".", "")
 	str	= str.Replace("-", "")
-	'str	= str.Replace("the", "")
+	str	= str.Replace("|", " ")
 	str	= str.Replace(",", "")
 	str	= str.Replace("!", "")
 	str	= str.Replace("?", "")
@@ -277,11 +288,67 @@ Public Sub replacetekens(str As String) As String
 	Return str
 End Sub
 
-Public Sub properString(txt As String) As String
-	txt = txt.ToLowerCase
-	
-	return sf.Proper(txt)
+
+Public Sub NameToProperCase(Name As String) As String
+	Dim Pos As Int
+	Dim Result As String
+	'Set the whole string to lowercase
+	Name = Name.ToLowerCase
+	'Make sure there is no more than one space between words.
+	Do While Name.Contains("  ")
+		Name = Name.Replace("  "," ")
+	Loop
+	'Process
+	'Break the name into words
+	Dim Words() As String = Regex.Split(" ",Name)
+	For i = 0 To Words.Length - 1
+		Dim Word As String = Words(i)
+		'Ignore excluded words
+		If Exclude.IndexOf(Word) > -1 Then Continue
+		For Each Delim As String In Delimeters
+			'Check for Roman Numerals
+			Dim M As Matcher
+			M = Regex.Matcher2(RomanRegexALL,Regex.CASE_INSENSITIVE,Word)
+			If M.Find And M.Match <> "" Then
+				'Capitalize just the Numerals
+				M = Regex.Matcher2(RomanRegexNUM,Regex.CASE_INSENSITIVE,Word)
+				If M.Find And M.Match <> "" Then
+					Dim W As String = M.Match.ToUpperCase
+					'Add the suffix
+					W = W & Word.SubString(W.Length).ToLowerCase
+					Word = W
+					Pos = Word.IndexOf(Delim)
+					If Pos > -1 Then
+						If Word.Length > Pos + Delim.Length Then
+							Word = Word.SubString2(0,Pos + Delim.Length) & Word.SubString2(Pos + Delim.Length,Pos + Delim.Length + 1).ToUpperCase & Word.SubString(Pos + Delim.Length + 1).ToLowerCase
+						End If
+					End If
+				End If
+			Else
+				'Capitalize the first letter of each word
+				If Word.Length = 1 Then
+					Word = Word.ToUpperCase
+				Else
+					'If the word is longer than 1 character, capitalize after each delimiter it contains
+					Word = Word.SubString2(0,1).ToUpperCase & Word.SubString(1)
+					Pos = Word.IndexOf(Delim)
+					If Pos > -1 Then
+						If Word.Length > Pos + Delim.Length Then
+							Word = Word.SubString2(0,Pos + Delim.Length) & Word.SubString2(Pos + Delim.Length,Pos + Delim.Length + 1).ToUpperCase & Word.SubString(Pos + Delim.Length + 1).ToLowerCase
+						End If
+					End If
+				End If
+			End If
+		Next
+		Words(i) = Word
+	Next
+	For i = 0 To Words.Length - 1
+		Result = Result & Words(i)
+		If i < Words.Length - 1 Then Result = Result & " "
+	Next
+	Return Result
 End Sub
+
 
 Public Sub FormatFileSize(passedBytes As Float) As String
 	Private Unit() As String = Array As String(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB")
@@ -313,4 +380,37 @@ Public Sub singularPlural(str As String, count As Int) As String
 	End If
 
 	Return $"${str}"$
+End Sub
+
+Public Sub parseIcy(metaData As String) As String
+	Dim parser As JSONParser
+	parser.Initialize(metaData)
+
+
+	Dim root As Map = parser.NextObject
+	If root.ContainsKey("error") Then
+		Return ""
+	End If
+	
+	Dim icy_by As String = root.Get("icy-by")
+	Dim icy_name As String = root.Get("icy-name")
+	Dim icy_playing As String = root.Get("icy-playing")
+	Dim icy_genre As String = root.Get("icy-genre")
+	Dim icy_br As String = root.Get("icy-br")
+	Dim icy_url As String = root.Get("icy-url")
+	
+	CallSub2(player, "setGenre", icy_genre)
+	CallSub2(player, "getStationLogo", icy_url)
+	Starter.vStationName	= icy_name
+	If Starter.vStationName = "" Then
+		Starter.vStationName = "AdFree Radio"
+	End If
+	
+	If Starter.activeActivity = "searchStation" Then
+		CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & icy_br)
+	Else
+		CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
+	End If
+	
+	Return icy_playing
 End Sub

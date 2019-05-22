@@ -705,8 +705,8 @@ Library8=javaobject
 Library9=designsupport
 ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	~\n~	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'SetApplicationAttribute(android:icon, "@drawable/radio")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~CreateResource(values-v21, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~	~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~
 Module1=player
-Module10=clsGeneral
-Module11=clsFunctions
+Module10=genDb
+Module11=irp_CustomListView
 Module12=scrobbler
 Module13=KeyValueStore
 Module14=cmGen
@@ -723,13 +723,13 @@ Module23=NB6
 Module24=clsScrollLabel
 Module25=phdetect
 Module26=clsRandomImage
-Module3=searchStation
-Module4=genDb
-Module5=irp_CustomListView
-Module6=clsExo
+Module3=clsExo
+Module4=clsHttp
+Module5=clsFunctions
+Module6=searchStation
 Module7=modGlobal
-Module8=clsHttp
-Module9=clsChartlyrics
+Module8=clsChartlyrics
+Module9=clsGeneral
 NumberOfFiles=337
 NumberOfLibraries=27
 NumberOfModules=26
@@ -742,7 +742,7 @@ Version=9.01
 
 #Region  Project Attributes
 	#ApplicationLabel: AdFree Radio
-	#VersionCode: 30052033
+	#VersionCode: 30052036
 	#VersionName: 0.99
 	 'SupportedOrientations possible values: unspecified, landscape or portrait
 	#SupportedOrientations: portrait
@@ -750,7 +750,6 @@ Version=9.01
 
 '	#LibraryName: OkHttpUtils2
 '	#AdditionalJar: Java-Json
-	#AdditionalJar: aacdecoder-android-0.8
 	#MultiDex: False
 	#additionaljar: com.android.support:support-v4
 #End Region
@@ -777,7 +776,7 @@ Sub Globals
 	Private lblDbConnected As Label
 	Private pnlMain As Panel
 	Private kvs As KeyValueStore
-	'Private svIrp As MySecVault
+'	Private svIrp As MySecVault
 	Dim M1 As Map
 	Dim CollSer As dcCollectionSerializer
 	Private btnContinue As Button
@@ -804,38 +803,22 @@ Sub Globals
 End Sub
 
 
-#If JAVA
-	public void RegisterIcyURLStreamHandler(){
-	try {
-	        java.net.URL.setURLStreamHandlerFactory( new java.net.URLStreamHandlerFactory(){
-	            public java.net.URLStreamHandler createURLStreamHandler( String protocol ) {
-	                if ("icy".equals( protocol )) return new com.spoledge.aacdecoder.IcyURLStreamHandler();
-	                return null;
-	            }
-	        });
-	    }
-	    catch (Throwable t) {
-
-	    }
-	}
-#End If
-
-
 Sub Activity_Create(FirstTime As Boolean)
 	
 	Activity.LoadLayout("main")
-
+	
 	clsGen.Initialize
 	getSetrdoDatabase
 	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+	Dim appExitStatus As Int = kvs.GetSimple("app_normal_exit")
 	initKvs
 '	Log("PPPPP " &kvs.GetSimple("app_normal_exit"))
-'	If kvs.GetSimple("app_normal_exit") <> 1 Then
-'		kvs.PutSimple("app_started", 0)
-'		Else
-'		kvs.PutSimple("app_started", 1)
-'	End If
-'	kvs.PutSimple("app_normal_exit", 0)
+	If appExitStatus = 1 Then
+		kvs.PutSimple("app_started", 0)
+	Else
+		kvs.PutSimple("app_started", 1)
+	End If
+	kvs.PutSimple("app_normal_exit", 0)
 	
 	Wait For (clsGen.CheckConnected) Complete(result As Boolean)
 	If result = False Then
@@ -926,9 +909,10 @@ Sub startIRP
 
 		pnlMain.LoadLayout("welcome")
 	End If
-Log("APP STARTED" & appStarted)
+'Log("APP STARTED" & appStarted)
 	If appStarted = 0 Then
 		wait for (showWelcome) Complete (result As Boolean)
+		Sleep(3000)
 	End If
 	
 	If pnlMain.IsInitialized Then

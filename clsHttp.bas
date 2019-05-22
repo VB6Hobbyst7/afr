@@ -94,6 +94,7 @@ Sub spBearer(artist As String, song As String)
 		Dim j1 As HttpJob
 		j1.Initialize("", Me)
 		j1.Download(SourceWeb1)
+		j1.GetRequest.Timeout = 5*1000
 	
 		Wait For (j1) JobDone(j1 As HttpJob)
 		If j1.Success Then
@@ -311,15 +312,15 @@ public Sub getSongLyrics As ResumableSub
 	http = "https://lyric-api.herokuapp.com/api/find/"
 	
 	urlStream	= scrobbler.processLyrics(CallSub(Starter,"getSongPlaying"), False)
-	Log(urlStream)
-	Starter.clsFunc.showLog(urlStream, Colors.Green)
+	'Log(urlStream)
+	'Starter.clsFunc.showLog(urlStream, Colors.Green)
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
 
 	If result Then Return result
 	
 	'****TRY REVERSE
 	urlStream	= scrobbler.processLyrics(CallSub(Starter,"getSongPlaying"), True)
-	Starter.clsFunc.showLog(urlStream, Colors.Green)
+	'Starter.clsFunc.showLog(urlStream, Colors.Green)
 	
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
 	
@@ -340,7 +341,7 @@ Private Sub processUrl(url As String) As ResumableSub
 	
 	j.Initialize("",  Me)
 	j.Download(url)
-	
+	j.GetRequest.Timeout = 5*1000
 	Wait For (j) JobDone(j As HttpJob)
 	
 	If j.Success Then

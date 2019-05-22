@@ -149,7 +149,8 @@ End Sub
 Sub Activity_KeyPress (KeyCode As Int) As Boolean 'Return True to consume the event
 	
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-		CallSub(Starter, "StopPlayer")
+		Starter.clsExoPlayer.stopPlayer
+		'CallSub(Starter, "StopPlayer")
 		Activity.Finish
 		Return False
 	End If
@@ -236,7 +237,8 @@ Private Sub scrollTimer_Tick
 End Sub
 
 Sub checkAarPlaying
-	CallSub(Starter, "StopPlayer")
+	Starter.clsExoPlayer.stopPlayer
+	'CallSub(Starter, "StopPlayer")
 
 	Starter.playerUsed	= ""
 '	lblSongPlaying.Text	= ""
@@ -246,8 +248,8 @@ End Sub
 Sub streamPlaying(playing As Boolean)
 	If playing = False Then
 '		Log(Starter.vStationUrl)
-		
-		CallSub(Starter, "StopPlayer")
+		Starter.clsExoPlayer.stopPlayer
+		'CallSub(Starter, "StopPlayer")
 		ToastMessageShow("Unable to play stream..", False)
 		lblStreamBitrate.Text = ""
 		panelLabelPlaying.Text = "Click to start"'panelLabelplayingText
@@ -475,16 +477,18 @@ End Sub
 Sub playSelectedStream(selectedStream As String)
 	Starter.playerUsed	= "aac"
 	checkStreamplaying
-
-	
-	CallSub2(Starter, "StartPlayer", selectedStream)
+	Starter.lastSong = ""
+	Starter.selectedStream = selectedStream
+	Starter.clsExoPlayer.startPlayer(selectedStream)
+	'CallSub2(Starter, "StartPlayer", selectedStream)
 	Sleep(1000)
 	
 End Sub
 
 Sub checkStreamplaying
+	Starter.clsExoPlayer.stopPlayer
 '	If modGlobal.PlayerStarted = True Then 
-		CallSub(Starter, "StopPlayer")
+'		CallSub(Starter, "StopPlayer")
 '		Sleep(1000)
 '	End If
 		
@@ -615,7 +619,7 @@ Sub lblSelectedCountry_Click
 End Sub
 
 Private Sub showCountryList
-	CallSub(Starter,"StopPlayer")
+	'CallSub(Starter,"StopPlayer")
 	StartActivity(getSetStation)
 	Activity.Finish
 End Sub
@@ -688,7 +692,8 @@ Private Sub panel_clicked(tag As String) As Boolean
 	End If
 	
 	If Starter.clsFunc.IsStreamActive(3) = True Then
-		CallSub(Starter, "StopPlayer")
+		Starter.clsExoPlayer.stopPlayer
+		'CallSub(Starter, "StopPlayer")
 		'Sleep(500)
 		
 '		lblSongPlaying.Text = ""
@@ -708,6 +713,7 @@ Sub pnl_stream1_Click
 	
 	Sleep(500)
 	If(panelIsPanel) Then Return
+	
 	lbl_stream1.Text = "Loading stream.."
 	If pnl_stream1.tag = "" Then Return
 	panelPlaying = "pnl_stream1"

@@ -253,6 +253,7 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 	Log(url)
 	mJob.Initialize("", Me)
 	mJob.Download(url)
+	mJob.GetRequest.Timeout = 5*1000
 	mJob.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 	
 	Try

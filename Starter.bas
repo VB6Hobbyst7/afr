@@ -101,7 +101,6 @@ Sub Service_Create
 	tmrGetSong.Enabled = True
 	connectionTimer.Initialize("connectionTimer", 5*1000)
 	connectionTimer.Enabled	= True
-	setupPlaybackEvent
 	tmrInetConnection.Initialize("inetConnected", 1000)
 	tmrInetConnection.Enabled = False
 	localeDatFormat = GetDeviceDateFormatSettings
@@ -264,64 +263,49 @@ End Sub
 
 
 Public Sub tmrGetSong_tick
-'	If clsFunc.IsMusicPlaying = True Then
-'		Dim url, nSong, newSong As String
-'		Dim job As HttpJob
-'		
-'		url = $"http://ice.pdeg.nl/getIce.php?name=${selectedStream}"$
-'		
-'		job.Initialize("", Me)
-'		nSong = "empty"
-'		job.Download(url)
-'		job.GetRequest.Timeout = 5000
-'		Wait For (job) JobDone(job As HttpJob)
-'		If job.Success Then
-'			nSong = job.GetString
-'			Log(nSong)
-'			Dim index As Int = nSong.IndexOf("|")
-'			newSong = nSong.SubString2(index+1, nSong.Length).Trim
-'			If(newSong.Length > 2) Then
-'				processSong(newSong)
-'			End If
-'		End If
-'		job.Release
-'	Else
-'		Return
-'	End If
-	icyMetaData
-End Sub
-
-Sub icyMetaData
-	If clsFunc.IsMusicPlaying = True Then
-		Dim url, nSong, newSong As String
-		Dim job As HttpJob
-		
-		url = $"http://ice.pdeg.nl/getIce.php?name=${selectedStream}"$
-		
-		job.Initialize("", Me)
-		nSong = "empty"
-		job.Download(url)
-		job.GetRequest.Timeout = 5000
-		Wait For (job) JobDone(job As HttpJob)
-		If job.Success Then
-			nSong = job.GetString
-			'Log(nSong)
-			Dim index As Int = nSong.IndexOf("|")
-			newSong = nSong.SubString2(index+1, nSong.Length).Trim
-			If(newSong.Length > 2) Then
-				processSong(newSong)
-			End If
-		End If
-		job.Release
-	Else
+	If clsFunc.IsStreamActive(3) = False Then 
 		Return
+	End If
+	'LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
+	If clsFunc.IsMusicPlaying = True Then
+		icyMetaData
 	End If
 End Sub
 
+Public Sub icyMetaData
+	If activeActivity = "player" And IsPaused(player)Then Return
+	'If activeActivity = "searchStation" Then
+	Dim url, nSong, newSong As String
+	Dim job As HttpJob
+		
+	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
+		
+	job.Initialize("", Me)
+	'nSong = "empty"
+	job.Download(url)
+	job.GetRequest.Timeout = 5000
+	Wait For (job) JobDone(job As HttpJob)
+	If job.Success Then
+		nSong = job.GetString
+		newSong = clsFunc.parseIcy(nSong)
+			
+		'If(newSong.Length > 2) Then
+			If newSong <> lastSong Or lastSong = "" Then
+				processSong(newSong)
+			End If
+		'End If
+	End If
+	job.Release
+			
+End Sub
+
 Sub processSong(song As String)
+	If(song.Length > 2) Then
 	song	= clsFunc.ReplaceRaros(song)
-	song	= clsFunc.properString(song)
+	song	= clsFunc.NameToProperCase(song)
+	End If
 	If lastSong = "" Or lastSong <> song Then
+		
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 		spotMap.Clear
 		CallSub(player, "disableInfoPanels")
@@ -329,6 +313,7 @@ Sub processSong(song As String)
 		lastSong = song
 		setSongPlaying(song)
 		clearNotif(song)
+		If song = "" Then song = "No 'Artist - song' information found"
 		If activeActivity = "player" Then
 			CallSub2(Me, "setSongPlaying", song)
 			CallSub2(Me, "setSongLyric", "noLyric")
@@ -338,34 +323,30 @@ Sub processSong(song As String)
 			vAlbumReleaseDate	= ""
 			vSpotUrl			= ""
 			albumArtSet = False
-						
-			Dim mySong As String		= scrobbler.processPlaying(song)
-			
+				
+			If song <> "No information found" Then
+				Dim mySong As String		= scrobbler.processPlaying(song)
 								
-			'If IsPaused(player) Then Return True
-			'CallSubDelayed2(songdata,"spBearer", mySong)
-			CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
-			CallSubDelayed(player, "enableAlbumInfo")
-'									If spotMap.Size > 0 Then
-'										CallSub2(Me, "setSongPlaying", $"${spotMap.Get("artistname")} - ${spotMap.Get("artistsong")}"$)
-'									End If
+				If IsPaused(player) Then Return
+				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
+				CallSubDelayed(player, "enableAlbumInfo")
 									
-			If albumArtSet Then
-				CallSub2(player, "enableAlbumButton", False)
-			Else 'TRY CHARTLYRICS
-				If albumArtSet = False Then
-					'clsImage.newRandomImage
+				If albumArtSet Then
+					CallSub2(player, "enableAlbumButton", False)
+				Else
 				End If
 			End If
-									
-			
+		End If
+		If activeActivity = "searchStation" Then
+			CallSub2(activeActivity, "nowPlaying", song)
 		End If
 	End If
 End Sub
 
-Sub connectionTimer_Tick
-	
 
+
+
+Sub connectionTimer_Tick
 	player.bckBtnClickCount = 1
 	clsFunc.getConnectionType
 End Sub
@@ -413,195 +394,181 @@ public Sub IsStreamActive(Stream As Int) As Boolean
 End Sub
 
 
-Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ignore
-	lastAccPlayerTime = DateTime.Now
-	
-	
-	
-'	If Args <> Null Then
-'		Return
-'	Else
-'		Dim dummyObj As Object
+'Sub PlayerCallback_Event (MethodName As String, Args() As Object) As Object 'ignore
+'	lastAccPlayerTime = DateTime.Now
+'	
+'	
+'	
+''	If Args <> Null Then
+''		Return
+''	Else
+''		Dim dummyObj As Object
+''		
+''		'Return Args
+''	End If
+'	Try
 '		
-'		'Return Args
-'	End If
-	Try
-		
-		vSong	= "No song information"
-		If MethodName = "playerPCMFeedBuffer" Then
-			If Args(0) = False Then
-				ToastMessageShow("Stream active, but no audio", True)
-'				CallSubDelayed2(player, "showStreamWarning", True)
-				restartStream
-			End If
-		End If
-		If MethodName = "playerMetadata" Then
-			streamWebSite = ""
-			If Args(0) <> Null And Args(1) <> Null Then
-				'Log("ARGS : "&Args(0) &"  " & Args(1))
-			
-				If Args(0) = "StreamUrl" Then
-				End If
-				If Args(0) = "icy-genre" Then
-					CallSub2(player, "setGenre", Args(1))
-				End If
-			
-				If Args(0) = "icy-url" Then
-					streamWebSite	= Args(1)
-					Dim stUrl As String = Args(1)
-					If activeActivity = "searchStation" And stUrl.Length > 0 Then
-						'CallSub2(searchStation, "pullStationUrl", stUrl)
-					End If
-					If IsPaused(player) = False Then
-						vStationUrl = Args(1)
-						CallSub2(player, "getStationLogo", Args(1))
-					End If
-				End If
-			End If
-			Try
-				If Args(0) <> Null And Args(1) <> Null And Args(0) = "icy-br" Then
-					If activeActivity = "searchStation" Then
-						CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & Args(1))
-					Else
-						CallSub2(player,"setStationBitrate", "Station bitrate : "& Args(1))
-					End If
-				End If
-				If Args(0) <> Null And Args(1) <> Null And Args(0) = "ice-audio-info" Then
-					If activeActivity = "searchStation" Then
-						CallSub2(searchStation, "setStreamBitRate", Args(1))
-					End If
-				End If
-			
-				If Args(0) <> Null And Args(1) <> Null And Args(0) = "icy-name" Then
-					vStationName	= Args(1)
-					If activeActivity = "searchStation" Then
-						'CallSub2(searchStation, "getStationUrl", vStationUrl)
-						'CallSub2(searchStation, "pullStationUrl", vStationUrl)
-						searchStation.stationUrl = vStationUrl
-					End If
-
-					If vStationName = "" Then
-						vStationName = "AdFree Radio"
-					End If
-								
-				
-				End If
-			Catch
-				Log("")
-			End Try
-		
-			Try
-				If Args = Null Or Args.Length = 0 Then
-				End If
-			
-				If Args(0) <> Null And Args(1) <> Null And Args(0) = "StreamTitle" Or Args(0) = "StreamNext" Then ' And vIsPreset = False Then
-					If Args(1) <> ""  Then
-						
-						vSong	= Args(1)
-						
-						vSong	= clsFunc.ReplaceRaros(vSong)
-						vSong	= clsFunc.properString(vSong)
-						If lastSong = "" Or lastSong <> vSong Then
-							'DISABLE SONG-INFO & SONG-LYRICS BUTTON
-							spotMap.Clear
-							CallSub(player, "disableInfoPanels")
-							setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-							lastSong = vSong
-							setSongPlaying(vSong)
-							clearNotif(vSong)
-							If activeActivity = "player" Then
-								CallSub2(Me, "setSongPlaying", vSong)
-								CallSub2(Me, "setSongLyric", "noLyric")
-								CallSub(player, "hideLyrics")
-								vAlbumName  		= ""
-								vAlbumTrack 		= ""
-								vAlbumReleaseDate	= ""
-								vSpotUrl			= ""
-								albumArtSet = False
-						
-								Dim mySong As String		= scrobbler.processPlaying(vSong)
-								Try
-								
-									If IsPaused(player) Then Return True
-									'CallSubDelayed2(songdata,"spBearer", mySong)
-									CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
-									CallSubDelayed(player, "enableAlbumInfo")
-'									If spotMap.Size > 0 Then
-'										CallSub2(Me, "setSongPlaying", $"${spotMap.Get("artistname")} - ${spotMap.Get("artistsong")}"$)
+'		vSong	= "No song information"
+'		If MethodName = "playerPCMFeedBuffer" Then
+'			If Args(0) = False Then
+'				ToastMessageShow("Stream active, but no audio", True)
+''				CallSubDelayed2(player, "showStreamWarning", True)
+'				restartStream
+'			End If
+'		End If
+'		If MethodName = "playerMetadata" Then
+'			streamWebSite = ""
+'			If Args(0) <> Null And Args(1) <> Null Then
+'				'Log("ARGS : "&Args(0) &"  " & Args(1))
+'			
+'				If Args(0) = "StreamUrl" Then
+'				End If
+'				If Args(0) = "icy-genre" Then
+'					CallSub2(player, "setGenre", Args(1))
+'				End If
+'			
+'				If Args(0) = "icy-url" Then
+'					streamWebSite	= Args(1)
+'					Dim stUrl As String = Args(1)
+'					If activeActivity = "searchStation" And stUrl.Length > 0 Then
+'						'CallSub2(searchStation, "pullStationUrl", stUrl)
+'					End If
+'					If IsPaused(player) = False Then
+'						vStationUrl = Args(1)
+'						CallSub2(player, "getStationLogo", Args(1))
+'					End If
+'				End If
+'			End If
+'			Try
+'				If Args(0) <> Null And Args(1) <> Null And Args(0) = "icy-br" Then
+'					If activeActivity = "searchStation" Then
+'						CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & Args(1))
+'					Else
+'						CallSub2(player,"setStationBitrate", "Station bitrate : "& Args(1))
+'					End If
+'				End If
+'				If Args(0) <> Null And Args(1) <> Null And Args(0) = "ice-audio-info" Then
+'					If activeActivity = "searchStation" Then
+'						CallSub2(searchStation, "setStreamBitRate", Args(1))
+'					End If
+'				End If
+'			
+'				If Args(0) <> Null And Args(1) <> Null And Args(0) = "icy-name" Then
+'					vStationName	= Args(1)
+'					If activeActivity = "searchStation" Then
+'						'CallSub2(searchStation, "getStationUrl", vStationUrl)
+'						'CallSub2(searchStation, "pullStationUrl", vStationUrl)
+'						searchStation.stationUrl = vStationUrl
+'					End If
+'
+'					If vStationName = "" Then
+'						vStationName = "AdFree Radio"
+'					End If
+'								
+'				
+'				End If
+'			Catch
+'				Log("")
+'			End Try
+'		
+'			Try
+'				If Args = Null Or Args.Length = 0 Then
+'				End If
+'			
+'				If Args(0) <> Null And Args(1) <> Null And Args(0) = "StreamTitle" Or Args(0) = "StreamNext" Then ' And vIsPreset = False Then
+'					If Args(1) <> ""  Then
+'						
+'						vSong	= Args(1)
+'						
+'						vSong	= clsFunc.ReplaceRaros(vSong)
+'						vSong	= clsFunc.properString(vSong)
+'						If lastSong = "" Or lastSong <> vSong Then
+'							'DISABLE SONG-INFO & SONG-LYRICS BUTTON
+'							spotMap.Clear
+'							CallSub(player, "disableInfoPanels")
+'							setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+'							lastSong = vSong
+'							setSongPlaying(vSong)
+'							clearNotif(vSong)
+'							If activeActivity = "player" Then
+'								CallSub2(Me, "setSongPlaying", vSong)
+'								CallSub2(Me, "setSongLyric", "noLyric")
+'								CallSub(player, "hideLyrics")
+'								vAlbumName  		= ""
+'								vAlbumTrack 		= ""
+'								vAlbumReleaseDate	= ""
+'								vSpotUrl			= ""
+'								albumArtSet = False
+'						
+'								Dim mySong As String		= scrobbler.processPlaying(vSong)
+'								Try
+'								
+'									If IsPaused(player) Then Return True
+'									'CallSubDelayed2(songdata,"spBearer", mySong)
+'									CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
+'									CallSubDelayed(player, "enableAlbumInfo")
+''									If spotMap.Size > 0 Then
+''										CallSub2(Me, "setSongPlaying", $"${spotMap.Get("artistname")} - ${spotMap.Get("artistsong")}"$)
+''									End If
+'									
+'									If albumArtSet Then
+'										CallSub2(player, "enableAlbumButton", False)
+'									Else 'TRY CHARTLYRICS
+'										If albumArtSet = False Then
+'											'clsImage.newRandomImage
+'										End If
 '									End If
-									
-									If albumArtSet Then
-										CallSub2(player, "enableAlbumButton", False)
-									Else 'TRY CHARTLYRICS
-										If albumArtSet = False Then
-											'clsImage.newRandomImage
-										End If
-									End If
-									
-								Catch
-									LogColor($"ERROR IN SPBEARER ${LastException}"$, Colors.Magenta)
-								End Try
-							End If
-						End If
-						If IsPaused(player) = False Or IsPaused(searchStation) = False Then
-							CallSub2(activeActivity, "nowPlaying", vSong) 'Starter.activeActivity holds active activity
-						
-						End If
-					Else
-						CallSub2(activeActivity, "nowPlaying", "No artist information")
-						CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-					End If
-			
-				End If
-			Catch
-				clsFunc.showLog(">>> " & LastException.Message, 0)
-			End Try
-		End If
-		
-		If MethodName = "playerStarted" Then ' Player START playing
-			modGlobal.PlayerStarted = True
-		End If
-		
-		If MethodName = "playerStopped" Then ' Player STOP playing
-			modGlobal.PlayerStarted = False
-		End If
-	
-		If MethodName = "playerException" Then ' Player EXCEPTION, check LOG for errors
-			Try
-				If Args(0) <> Null Then
-					If activeActivity = "searchStation" Then
-						CallSub2(searchStation,"streamPlaying", False)
-					End If
-					If activeActivity = "player" Then
-					End If
-				End If
-			Catch
-				clsFunc.showLog("srvPlayer--Error--", 0)
-			End Try
-			modGlobal.PlayerError = "playing"
-		End If
-	Catch
-		clsFunc.showLog("srvPlayer--Error--", 0)
-		Log(LastException)
-	End Try
-End Sub
+'									
+'								Catch
+'									LogColor($"ERROR IN SPBEARER ${LastException}"$, Colors.Magenta)
+'								End Try
+'							End If
+'						End If
+'						If IsPaused(player) = False Or IsPaused(searchStation) = False Then
+'							CallSub2(activeActivity, "nowPlaying", vSong) 'Starter.activeActivity holds active activity
+'						
+'						End If
+'					Else
+'						CallSub2(activeActivity, "nowPlaying", "No artist information")
+'						CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+'					End If
+'			
+'				End If
+'			Catch
+'				clsFunc.showLog(">>> " & LastException.Message, 0)
+'			End Try
+'		End If
+'		
+'		If MethodName = "playerStarted" Then ' Player START playing
+'			modGlobal.PlayerStarted = True
+'		End If
+'		
+'		If MethodName = "playerStopped" Then ' Player STOP playing
+'			modGlobal.PlayerStarted = False
+'		End If
+'	
+'		If MethodName = "playerException" Then ' Player EXCEPTION, check LOG for errors
+'			Try
+'				If Args(0) <> Null Then
+'					If activeActivity = "searchStation" Then
+'						CallSub2(searchStation,"streamPlaying", False)
+'					End If
+'					If activeActivity = "player" Then
+'					End If
+'				End If
+'			Catch
+'				clsFunc.showLog("srvPlayer--Error--", 0)
+'			End Try
+'			modGlobal.PlayerError = "playing"
+'		End If
+'	Catch
+'		clsFunc.showLog("srvPlayer--Error--", 0)
+'		Log(LastException)
+'	End Try
+'End Sub
 
 
-'#If JAVA
-'	public void RegisterIcyURLStreamHandler(){
-'	try {
-'	        java.net.URL.setURLStreamHandlerFactory( new java.net.URLStreamHandlerFactory(){
-'	            public java.net.URLStreamHandler createURLStreamHandler( String protocol ) {
-'	                if ("icy".equals( protocol )) return new com.spoledge.aacdecoder.IcyURLStreamHandler();
-'	                return null;
-'	            }
-'	        });
-'	    }
-'	    catch (Throwable t) {
-'	     
-'	    }
-'	}
-'#End If
+
 
 
 
@@ -658,36 +625,28 @@ End Sub
 #End Region
 
 
-Sub setupPlaybackEvent
-	Dim jo As JavaObject
-	jo =  jo.InitializeStatic("com.spoledge.aacdecoder.PlayerCallback") ' initialize PlayerCallback
-	PlayerCallback = jo.CreateEvent("com.spoledge.aacdecoder.PlayerCallback", "PlayerCallback", Null) ' Set PlayerCallback
-	'modGlobal.AacMp3Player = jo.InitializeNewInstance("com.spoledge.aacdecoder.MultiPlayer", Array As Object(PlayerCallback)) ' Set MultiPlayer (AAC + MPEG/MP3 decode)
-	'modGlobal.AacMp3Player.RunMethod("setMetadataCharEnc", Array("ISO-8859-1")) ' 99% of radio station use Western charset, if you comment this line UTF-8 will be used
-	AacMp3Player = jo.InitializeNewInstance("com.spoledge.aacdecoder.MultiPlayer", Array As Object(PlayerCallback)) ' Set MultiPlayer (AAC + MPEG/MP3 decode)
-	'AacMp3Player.RunMethod("setMetadataCharEnc", Array("ISO-8859-1")) ' 99% of radio station use Western charset, if you comment this line UTF-8 will be used
-End Sub
 
-Sub StartPlayer (RadioStationURL As String)
-	
-	Try
-	'	clsExo.startPlayer(RadioStationURL)
-		'AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 128))
-		Sleep(2000)
-		setWakeLock(True)
-	Catch
-		setWakeLock(False)
-		Log(LastException)
-	End Try
-	
-End Sub
 
-Sub StopPlayer
-	'clsExo.stopPlayer
-	'setWakeLock(False)
-	AacMp3Player.RunMethod("stop", Null)
-	Sleep(2000)
-End Sub
+'Sub StartPlayer (RadioStationURL As String)
+'	
+'	Try
+'	'	clsExo.startPlayer(RadioStationURL)
+'		'AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 128))
+'		Sleep(2000)
+'		setWakeLock(True)
+'	Catch
+'		setWakeLock(False)
+'		Log(LastException)
+'	End Try
+'	
+'End Sub
+
+'Sub StopPlayer
+'	'clsExo.stopPlayer
+'	'setWakeLock(False)
+'	AacMp3Player.RunMethod("stop", Null)
+'	Sleep(2000)
+'End Sub
 
 Public Sub setWakeLock(keepAlive As Boolean)
 	If keepAlive = True Then
@@ -710,8 +669,10 @@ Public Sub restartStream
 	End If
 
 	tryRestartCount = tryRestartCount + 1
-	StopPlayer
-	StartPlayer(selectedStream)
+	'StopPlayer
+	clsExoPlayer.stopPlayer
+	'StartPlayer(selectedStream)
+	clsExoPlayer.startPlayer(selectedStream)
 	If clsFunc.IsMusicPlaying = False And tryRestartCount < 5 Then
 		streamEnded
 		Return
