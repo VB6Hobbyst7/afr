@@ -20,8 +20,9 @@ Public Sub startPlayer(url As String)
 	exoPlayer.Initialize("")
 	Dim sources As List
 	sources.Initialize
-	sources.Add(exoPlayer.CreateUriSource(url))
-	exoPlayer.Prepare(exoPlayer.CreateUriSource(url))
+	'sources.Add(exoPlayer.CreateUriSource(url))
+	'exoPlayer.Prepare(exoPlayer.CreateUriSource(url))
+	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	
 	exoPlayer.Volume = 1
 	exoPlayer.Play

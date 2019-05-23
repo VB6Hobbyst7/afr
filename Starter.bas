@@ -279,17 +279,18 @@ Public Sub icyMetaData
 	Dim job As HttpJob
 		
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
-		
+'	Log(url)	
 	job.Initialize("", Me)
 	'nSong = "empty"
 	job.Download(url)
-	job.GetRequest.Timeout = 5000
+	'job.GetRequest.Timeout = 5000
 	Wait For (job) JobDone(job As HttpJob)
 	If job.Success Then
 		nSong = job.GetString
 		newSong = clsFunc.parseIcy(nSong)
 			
 		'If(newSong.Length > 2) Then
+'		Log(newSong & "   " & lastSong)
 			If newSong <> lastSong Or lastSong = "" Then
 				processSong(newSong)
 			End If
@@ -313,7 +314,7 @@ Sub processSong(song As String)
 		lastSong = song
 		setSongPlaying(song)
 		clearNotif(song)
-		If song = "" Then song = "No 'Artist - song' information found"
+		If song = "" Then song = "No information found"
 		If activeActivity = "player" Then
 			CallSub2(Me, "setSongPlaying", song)
 			CallSub2(Me, "setSongLyric", "noLyric")

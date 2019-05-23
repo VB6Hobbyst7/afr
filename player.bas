@@ -1609,7 +1609,7 @@ Private Sub disableClickTimer_Tick
 End Sub
 
 Sub freeze(show As Boolean) 
-	Log("FREEZE ENABLED : "& show)
+'	Log("FREEZE ENABLED : "& show)
 	tmr.Enabled = show
 	pnl_block.Visible = show
 End Sub
