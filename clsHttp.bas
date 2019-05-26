@@ -224,7 +224,7 @@ Sub getSpotifySongData(jsonData As String)
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
 				Try
-'					LogColor("getSongLyrics", Colors.Red)
+				'	LogColor("getSongLyrics", Colors.Red)
 					wait for(getSongLyrics) Complete (result As Boolean)
 				Catch
 					Starter.vSongLyric = "noLyric"
@@ -232,14 +232,14 @@ Sub getSpotifySongData(jsonData As String)
 				If Starter.vSongLyric = "noLyric" Then
 					Try
 						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
-'						LogColor("clsLyrics.checkAlbumart", Colors.Red)
+					'	LogColor("clsLyrics.checkAlbumart", Colors.Red)
 						wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
 					Catch
 						Starter.vSongLyric = "noLyric"
 					End Try	
 					If Starter.vSongLyric = "noLyric" Then
 						Try
-'							LogColor("clsGeneral_.pullDataFromOndemand(False)", Colors.Red)
+							'LogColor("clsGeneral_.pullDataFromOndemand(False)", Colors.Red)
 							wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
 							
 							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
@@ -249,7 +249,7 @@ Sub getSpotifySongData(jsonData As String)
 					End If
 					If Starter.vSongLyric = "noLyric" Then
 						Try
-'							LogColor("clsGeneral_.pullDataFromFandom(False)", Colors.Red)
+							'LogColor("clsGeneral_.pullDataFromFandom(False)", Colors.Red)
 							wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
 						Catch
 							Starter.vSongLyric = "noLyric"

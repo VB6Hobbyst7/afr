@@ -8,7 +8,7 @@ Version=7.8
 	#StartAtBoot: False
 	#ExcludeFromLibrary: True
 #End Region
-
+#IgnoreWarnings: 9
 
 Sub Process_Globals
 	
@@ -262,6 +262,10 @@ Sub DisableStrictMode
 End Sub
 
 
+Sub tmrGetSongEnable(isEnabled As Boolean)
+	tmrGetSong.Enabled = isEnabled
+End Sub
+
 Public Sub tmrGetSong_tick
 	If clsFunc.IsStreamActive(3) = False Then 
 		Return
@@ -273,7 +277,7 @@ Public Sub tmrGetSong_tick
 End Sub
 
 Public Sub icyMetaData
-	If activeActivity = "player" And IsPaused(player)Then Return
+'	If activeActivity = "player" And IsPaused(player)Then Return
 	'If activeActivity = "searchStation" Then
 	Dim url, nSong, newSong As String
 	Dim job As HttpJob
@@ -288,9 +292,8 @@ Public Sub icyMetaData
 	If job.Success Then
 		nSong = job.GetString
 		newSong = clsFunc.parseIcy(nSong)
-			
+'		Log(newSong)	
 		'If(newSong.Length > 2) Then
-'		Log(newSong & "   " & lastSong)
 			If newSong <> lastSong Or lastSong = "" Then
 				processSong(newSong)
 			End If
@@ -339,6 +342,7 @@ Sub processSong(song As String)
 			End If
 		End If
 		If activeActivity = "searchStation" Then
+'			Log("searchStation")
 			CallSub2(activeActivity, "nowPlaying", song)
 		End If
 	End If

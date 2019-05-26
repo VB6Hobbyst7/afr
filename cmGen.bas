@@ -80,9 +80,12 @@ Sub openStationUrl(stationName As String)
 		ToastMessageShow("Invalid Url", True)
 		Return
 	End If
-	StartActivity(ph.OpenBrowser(url))
-	
-End Sub
+	Try
+		StartActivity(ph.OpenBrowser(url))
+	Catch
+		Log(LastException)
+	End Try
+	End Sub
 
 
 Sub getStationRecord(stationName As String, column As String) As String

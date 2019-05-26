@@ -705,10 +705,10 @@ Library8=javaobject
 Library9=designsupport
 ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	~\n~	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'SetApplicationAttribute(android:icon, "@drawable/radio")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~CreateResource(values-v21, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~	~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~
 Module1=player
-Module10=KeyValueStore
-Module11=genDb
-Module12=irp_CustomListView
-Module13=scrobbler
+Module10=clsChartlyrics
+Module11=KeyValueStore
+Module12=genDb
+Module13=irp_CustomListView
 Module14=cmGen
 Module15=stored_songs
 Module16=addNewStations
@@ -724,12 +724,12 @@ Module24=clsScrollLabel
 Module25=phdetect
 Module26=clsRandomImage
 Module3=clsExo
-Module4=clsHttp
-Module5=clsFunctions
-Module6=searchStation
-Module7=modGlobal
-Module8=clsChartlyrics
-Module9=clsGeneral
+Module4=searchStation
+Module5=modGlobal
+Module6=clsGeneral
+Module7=scrobbler
+Module8=clsFunctions
+Module9=clsHttp
 NumberOfFiles=337
 NumberOfLibraries=27
 NumberOfModules=26
@@ -742,7 +742,7 @@ Version=9.01
 
 #Region  Project Attributes
 	#ApplicationLabel: AdFree Radio
-	#VersionCode: 30052036
+	#VersionCode: 30052038
 	#VersionName: 0.99
 	 'SupportedOrientations possible values: unspecified, landscape or portrait
 	#SupportedOrientations: portrait
@@ -878,10 +878,30 @@ End Sub
 Sub startIRP
 '	genDb.truncateTable("rdolist")
 	
-	Dim appStarted As Int = 0
+	Dim appStarted, dataUsageShown As Int = 0
+	
 	If kvs.ContainsKey("app_started") = True Then
 		appStarted = kvs.GetSimple("app_started")
 	End If
+	If kvs.ContainsKey("data_usage_warning_shown") = True Then
+		dataUsageShown = kvs.GetSimple("data_usage_warning_shown")
+	End If
+	
+	If dataUsageShown = 0 Then
+		showUserDataUsageWarning
+'		Msgbox2Async($"This application connects to the internet, to avoid usage charges, use Wi-Fi only"$, Starter.vAppname, "OK, I understand", "", "Get me out of here", Null, False)
+'	
+'		Wait For Msgbox_Result (result As Int)
+'	
+'		If result = DialogResponse.POSITIVE Then
+'			kvs.PutSimple("data_usage_warning_shown", 1)
+'		Else
+'			kvs.PutSimple("data_usage_warning_shown", 0)
+'			Activity.Finish	
+'		End If
+		
+	End If
+	
 	
 	Dim rdoCount As Int  = genDb.countRecords("rdolist")
 	wait for (checkUpdate) Complete(r As Boolean)
@@ -930,6 +950,20 @@ Sub startIRP
 	
 	
 	startPlayer
+End Sub
+
+Sub showUserDataUsageWarning
+	Dim result As Int = Msgbox2($"This application connects to the internet, to avoid usage charges, use Wi-Fi only"$, Starter.vAppname, "OK, I understand", "", "Get me out of here", Null)
+	
+	If result = DialogResponse.POSITIVE Then
+		kvs.PutSimple("data_usage_warning_shown", 1)
+	Else
+		kvs.PutSimple("data_usage_warning_shown", 0)
+		StopService(Starter)
+	
+		CallSub(Starter, "Service_Destroy")
+		Activity.Finish
+	End If
 End Sub
 
 Sub checkUpdate As ResumableSub
@@ -1077,6 +1111,10 @@ Sub initKvs
 		kvs.Initialize(Starter.irp_dbFolder, "settings", True)
 	Else
 		kvs.Initialize(Starter.irp_dbFolder, "settings", False)
+	End If
+
+	If kvs.ContainsKey("data_usage_warning_shown") = False Then
+		kvs.PutSimple("data_usage_warning_shown", 0)
 	End If
 
 	If kvs.ContainsKey("stationsTimestamp") = False Then

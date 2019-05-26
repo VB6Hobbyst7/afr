@@ -363,6 +363,7 @@ Sub Activity_Resume
 	
 	If Starter.vPlayerSelectedPanel <> 999 Then
 		Starter.lastSong = "resume"
+		CallSub2(Starter, "tmrGetSongEnable", True)
 		CallSub(Starter, "icyMetaData")
 		restorePlayingInfo
 		Dim songdata As clsHttp
@@ -399,6 +400,7 @@ Sub Activity_Pause (UserClosed As Boolean)
 		exitPlayer
 	Else
 		'TRY TO RESTORE LAST SONG PLAYING
+		'CallSub2(Starter, "tmrGetSongEnable", False)
 		kvs.PutSimple("app_started", 1)
 		pnl_volume_slider.Visible = False
 		pnlSongText.SetVisibleAnimated(0, False)
@@ -1449,6 +1451,7 @@ Sub exitPlayer
 	
 	CallSub(Starter, "Service_Destroy")
 	CallSub2(Starter, "run_streamTimer", False)
+	CallSub2(Starter, "tmrGetSongEnable", False)
 	CallSub(Starter, "endForeGround")
 	Starter.tmrGetSong.Enabled = False
 	Starter.clsExoPlayer.stopPlayer

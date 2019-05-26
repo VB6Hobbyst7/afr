@@ -685,10 +685,9 @@ End Sub
 Private Sub panel_clicked(tag As String) As Boolean
 	Dim retVal As Boolean = False
 	
-	
+		
 	If Starter.clsFunc.IsStreamActive(3) = True And tag = panelLabelPlaying.Tag Then
 		retVal = True
-		
 	End If
 	
 	If Starter.clsFunc.IsStreamActive(3) = True Then
@@ -857,6 +856,20 @@ Sub pnlGenre_Click
 	tsSearchMain.ScrollTo(1, True)
 End Sub
 
+Sub showUserGettingRDS
+	panelLabelPlaying.Text = "Search for song playing.."
+	Sleep(10)
+End Sub
+
+Sub showUserTryingToStartStream (tryCount As Int)
+	panelLabelPlaying.Text = $"Opening stream [ ${tryCount} ]"$
+	Sleep(0)
+End Sub
+
+Sub unableToPlaySTream
+	ToastMessageShow("Unable to play stream..", False)
+	panelLabelPlaying.Text = "Click to start"
+End Sub
 
 Sub clvCountryGenre_ItemClick (Index As Int, Value As Object)
 	Dim pnl As Panel = clvCountryGenre.GetPanel(Index)
@@ -864,6 +877,7 @@ Sub clvCountryGenre_ItemClick (Index As Int, Value As Object)
 	
 	tsSearchMain.ScrollTo(0, False)
 	lblGenreClear.Visible = True
+	edt_find_EnterPressed
 End Sub
 
 Sub lblGenreClear_Click
@@ -909,6 +923,7 @@ Sub clv_language_ItemClick (Index As Int, Value As Object)
 	
 	tsSearchMain.ScrollTo(0, False)
 	lblLanguageClear.Visible = True
+	edt_find_EnterPressed
 End Sub
 
 Sub lblLanguageClear_Click
