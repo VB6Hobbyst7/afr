@@ -152,6 +152,7 @@ Sub Activity_KeyPress (KeyCode As Int) As Boolean 'Return True to consume the ev
 		Starter.clsExoPlayer.stopPlayer
 		'CallSub(Starter, "StopPlayer")
 		Activity.Finish
+		StartActivity(player)
 		Return False
 	End If
 	Return True
@@ -569,7 +570,7 @@ Sub edt_find_EnterPressed
 	clvStationList.sv.Visible = False
 	'Dim rs As Cursor = genDb.getSearchStation(vText, vDefCountry, genre, lang)
 	Dim rs As Cursor = genDb.getSearchStation(vText, vCountry, genre, lang)
-	Log($"ROW COUNT ${rs.RowCount}"$)
+'	Log($"ROW COUNT ${rs.RowCount}"$)
 	If rs.RowCount < 0 Then
 		rowCnt = 0
 	Else

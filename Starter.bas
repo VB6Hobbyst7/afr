@@ -18,9 +18,9 @@ Sub Process_Globals
 	Private logs As StringBuilder
 	Private logcat As LogCat
 	Private const emailAddress As String = "pieter09@gmail.com"
-	Private streamTimer As Timer
+	Public streamTimer As Timer
 	Public clsFunc As clsFunctions
-	Private vSongPlaying As String	= "Click on a station to start streaming"
+	Private vSongPlaying As String	= "Click station to start streaming"
 	Public vSongLyric As String	= "noLyric"
 	Private vSongTitle As String
 	Private songdata As clsHttp
@@ -145,12 +145,13 @@ Sub Service_Destroy
 	
 	streamTimer.Enabled			= False
 	tmrInetConnection.Enabled	= False
-	connectionTimer.Enabled		= True
+	connectionTimer.Enabled		= False
 End Sub
 
 
 
 Public Sub initPlayerVars
+	vSongAlbumArt.Initialize(File.DirAssets, "NoImageAvailable.png")
 	vSongAlbumArt	= LoadBitmap(File.DirAssets, "NoImageAvailable.png")
 	vSongLyric		= "noLyric"
 	vSongLyric		= ""
@@ -184,6 +185,10 @@ End Sub
 
 Public Sub setAlbumArt(vAlbum As Bitmap)
 	If IsPaused(player) Then 
+		Return
+		If vSongAlbumArt.IsInitialized = False Then
+			vSongAlbumArt.Initialize(File.DirAssets, "NoImageAvailable.png")
+		End If
 		vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
 		Dim Out As OutputStream
 		

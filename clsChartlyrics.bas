@@ -81,6 +81,7 @@ Sub Parser_EndElement (Uri As String, Name As String, Text As StringBuilder)
 	End If
 	If Name = "LyricCovertArtUrl" Then
 		coverArtUrl = Text.ToString
+		Starter.clsFunc.showLog($"ALBUMART ${Text.ToString}"$, 0)
 		If coverArtUrl.IndexOf(".jpg") > -1 Or coverArtUrl.IndexOf(".png") > -1 Then
 			wait for (processAlbumArt) Complete (result As Boolean)
 			
@@ -97,6 +98,10 @@ End Sub
 Sub processAlbumArt As ResumableSub
 	Dim j As HttpJob
 	Dim bm As Bitmap
+	Starter.clsFunc.showLog($"ALBUMART FOUND IS ${Starter.albumArtSet}"$, 0)
+	If Starter.albumArtSet = True Then
+		Return True
+	End If
 	
 	j.Initialize("",  Me)
 	j.Download(coverArtUrl)

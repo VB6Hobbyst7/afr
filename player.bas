@@ -125,6 +125,7 @@ Sub Globals
 	Private lblSpotArtist As Label
 	Private lblSpotSong As Label
 	Private lblSpotDuration As Label
+	Private ivSpotify As ImageView
 End Sub
 
 
@@ -239,10 +240,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	Sleep(2)
 	
 	If FirstTime Or Starter.vPlayerSelectedPanel = 999 Then
-		'rsip.Initialize
-		
 		restorePlayingInfo
-	
 	End If
 	
 	pnl_new_station_button.Visible	= False
@@ -255,7 +253,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	getSetButtonState(False)
 	
 	clsScroll.Initialize
-	clsScroll.runMarquee(lblArtistNowPlaying, "Click on a station to start streaming", "MARQUEE")
+	clsScroll.runMarquee(lblArtistNowPlaying, "Click station to start streaming", "MARQUEE")
 	dialog.Initialize(Activity)
 	
 	
@@ -385,7 +383,7 @@ Sub Activity_Resume
 		If Starter.streamLost = True Then
 			Starter.streamLost = False
 		Else
-			lblArtistNowPlaying.Text	= "Click on a station to start streaming"
+			lblArtistNowPlaying.Text	= "Click station to start streaming"
 		End If
 		lblNowPlayingDataRate.Text	= ""
 	End If
@@ -803,7 +801,7 @@ Sub start_stopStreamResetLabels
 	CallSub2(Starter, "setSongLyric", "noLyric")
 	
 	lblNowPlayingStation.Text	= "Not Playing"'Application.LabelName & " v" & Application.VersionName
-	lblArtistNowPlaying.Text	= "Click on a station to start streaming"
+	lblArtistNowPlaying.Text	= "Click station to start streaming"
 	lblNowPlayingDataRate.Text	= ""
 	CallSub2(Starter, "setSongTitle", "Select Station")
 End Sub
@@ -1455,6 +1453,7 @@ Sub exitPlayer
 	CallSub(Starter, "endForeGround")
 	Starter.tmrGetSong.Enabled = False
 	Starter.clsExoPlayer.stopPlayer
+	Starter.streamTimer.Enabled = False
 	Activity.Finish
 	
 End Sub
@@ -1878,12 +1877,18 @@ End Sub
 
 
 Sub iets
+	If Starter.spotMap.Size < 1 Then
+		Return
+	End If
+	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
 	DetailsDialog.SetSize(100%X, 500dip)
 	Dim minute, second As String
+	minute = "00"
+	second = "00"
 	If Starter.spotMap.Get("duration") <> "" Then
-	minute = NumberFormat2(DateTime.GetMinute(Starter.spotMap.Get("duration")), 2, 2, 0, False)
-	second = NumberFormat2(DateTime.GetSecond(Starter.spotMap.Get("duration")), 2, 2, 0, False)
+		minute = NumberFormat2(DateTime.GetMinute(Starter.spotMap.Get("duration")), 2, 2, 0, False)
+		second = NumberFormat2(DateTime.GetSecond(Starter.spotMap.Get("duration")), 2, 2, 0, False)
 	End If
 	
 	Wait For (sf) Dialog_Ready(pnl As Panel)
@@ -1920,4 +1925,10 @@ Public Sub SetElevation(v As View, e As Float)
 		jo = v
 		jo.RunMethod("setElevation", Array As Object(e))
 	End If
+End Sub
+
+Sub ivSpotify_Click
+	Dim intent1 As Intent
+	intent1.Initialize(intent1.ACTION_VIEW, Starter.vSpotUrl)
+	StartActivity(intent1)
 End Sub

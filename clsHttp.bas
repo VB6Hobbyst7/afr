@@ -137,6 +137,7 @@ Sub getSpotifySongData(jsonData As String)
 	Dim root As Map =Parser1.NextObject
 	
 	Dim mDate As String
+	Starter.albumArtSet = False
 	If Starter.spotMap.IsInitialized Then
 		Starter.spotMap.Clear
 	Else
