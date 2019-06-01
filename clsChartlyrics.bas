@@ -81,7 +81,7 @@ Sub Parser_EndElement (Uri As String, Name As String, Text As StringBuilder)
 	End If
 	If Name = "LyricCovertArtUrl" Then
 		coverArtUrl = Text.ToString
-		Starter.clsFunc.showLog($"ALBUMART ${Text.ToString}"$, 0)
+	'	Starter.clsFunc.showLog($"ALBUMART ${Text.ToString}"$, 0)
 		If coverArtUrl.IndexOf(".jpg") > -1 Or coverArtUrl.IndexOf(".png") > -1 Then
 			wait for (processAlbumArt) Complete (result As Boolean)
 			

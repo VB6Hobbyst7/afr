@@ -119,7 +119,7 @@ Sub Globals
 	Private lblSpotAlbumName As Label
 	Private lblSpotTrackNr As Label
 	Private lblSpotReleaseDate As Label
-	
+	Private smallStationLogo As Bitmap
 '	Private lblSpotSongNow As Label
 	Private btnSpotOpenInBrowser As Button
 	Private lblSpotArtist As Label
@@ -130,6 +130,7 @@ End Sub
 
 
 Sub Activity_Create(FirstTime As Boolean)
+	
 	tmr.Initialize("disableClickTimer", 1000)
 	tmr.Enabled = False
 	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
@@ -137,6 +138,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_END)
 	
 	Activity.LoadLayout("player")
+	
+	
 	
 	pnl_volume_slider.BringToFront
 	pnlPlayingStation.SetVisibleAnimated(0, False)
@@ -362,6 +365,7 @@ Sub Activity_Resume
 	If Starter.vPlayerSelectedPanel <> 999 Then
 		Starter.lastSong = "resume"
 		CallSub2(Starter, "tmrGetSongEnable", True)
+		Starter.streamTimer.Enabled = True
 		CallSub(Starter, "icyMetaData")
 		restorePlayingInfo
 		Dim songdata As clsHttp
@@ -397,8 +401,7 @@ Sub Activity_Pause (UserClosed As Boolean)
 		resetKvsPnlButtons
 		exitPlayer
 	Else
-		'TRY TO RESTORE LAST SONG PLAYING
-		'CallSub2(Starter, "tmrGetSongEnable", False)
+		Starter.streamTimer.Enabled = False
 		kvs.PutSimple("app_started", 1)
 		pnl_volume_slider.Visible = False
 		pnlSongText.SetVisibleAnimated(0, False)
@@ -437,7 +440,6 @@ Sub getStations
 		
 		clvPlayer.Add(setStation(list),"")
 	Loop
-	
 End Sub
 
 
@@ -928,6 +930,8 @@ Sub start_stopStream(index As Int) As ResumableSub
 		CallSubDelayed(Starter, "icyMetaData")
 		setPanelElevation(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
+			smallStationLogo.Initialize(stationLogoPath,"")
+		
 			ivNowPlayingStation.Bitmap = LoadBitmap(stationLogoPath,"")
 			showHideSmallStationLogo(True)
 		Else
@@ -1086,6 +1090,8 @@ Sub getStationLogo(link As String)
 	Dim url As String
 
 	Try
+		
+		
 		Dim stationName As String	 = getStation
 		If stationName = "" Then
 			Return

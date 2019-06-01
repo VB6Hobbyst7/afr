@@ -690,16 +690,15 @@ Library15=stringfunctions
 Library16=encryption
 Library17=okhttputils2
 Library18=xmllayoutbuilder
-Library19=datacollection
+Library19=xmlsax
 Library2=appcompat
-Library20=xmlsax
-Library21=network
-Library22=ioxsvg
-Library23=ime
-Library24=xui views
-Library25=dialogs
-Library26=tabstripviewpager
-Library27=exoplayer
+Library20=network
+Library21=ioxsvg
+Library22=ime
+Library23=xui views
+Library24=dialogs
+Library25=tabstripviewpager
+Library26=exoplayer
 Library3=xui
 Library4=sql
 Library5=stringutils
@@ -735,7 +734,7 @@ Module7=scrobbler
 Module8=clsFunctions
 Module9=clsHttp
 NumberOfFiles=339
-NumberOfLibraries=27
+NumberOfLibraries=26
 NumberOfModules=26
 Version=9.01
 @EndOfDesignText@
@@ -746,7 +745,7 @@ Version=9.01
 
 #Region  Project Attributes
 	#ApplicationLabel: AdFree Radio
-	#VersionCode: 30052039
+	#VersionCode: 30052040
 	#VersionName: 0.99
 	 'SupportedOrientations possible values: unspecified, landscape or portrait
 	#SupportedOrientations: portrait
@@ -774,15 +773,15 @@ End Sub
 Sub Globals
 	Private dbTimestamp As Long
 	Dim clsGen As clsGeneral
-	Private NativeMe As JavaObject
+'	Private NativeMe As JavaObject
 	Private toolbar As ACToolBarDark
 	Private rp As RuntimePermissions
 	Private lblDbConnected As Label
 	Private pnlMain As Panel
 	Private kvs As KeyValueStore
 '	Private svIrp As MySecVault
-	Dim M1 As Map
-	Dim CollSer As dcCollectionSerializer
+'	Dim M1 As Map
+'	Dim CollSer As dcCollectionSerializer
 	Private btnContinue As Button
 	Private ImageView1 As ImageView
 	Private ImageView2 As ImageView
@@ -791,7 +790,7 @@ Sub Globals
 	Private acExitButton As ACColoredButton
 	Private clsGen As clsGeneral
 	Private lbl_welcome_msg As Label
-	Private ph As PhoneWakeState
+'	Private ph As PhoneWakeState
 	Private stCount As Int
 	Private stImportPerc As Float
 	Private lbl_data As Label
@@ -816,7 +815,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
 	initKvs
 	Dim appExitStatus As Int = kvs.GetSimple("app_normal_exit")
-'	Log("PPPPP " &kvs.GetSimple("app_normal_exit"))
+
 	If appExitStatus = 1 Then
 		kvs.PutSimple("app_started", 0)
 	Else
@@ -840,8 +839,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	DateTime.DateFormat =  DateTime.DeviceDefaultDateFormat
 	
 	If FirstTime Then
-'		NativeMe.InitializeContext
-'		NativeMe.RunMethod("RegisterIcyURLStreamHandler", Null)
+
 	End If
 
 	If rp.Check(rp.PERMISSION_READ_PHONE_STATE) = False Then

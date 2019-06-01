@@ -8,13 +8,13 @@ Version=7.8
 	#StartAtBoot: False
 	#ExcludeFromLibrary: True
 #End Region
-#IgnoreWarnings: 9
+#IgnoreWarnings: 
 
 Sub Process_Globals
 	
 	Public clsExoPlayer As clsExo
 	Public sleepTimerDuration As Long
-	Public AacMp3Player As JavaObject
+	'Public AacMp3Player As JavaObject
 	Private logs As StringBuilder
 	Private logcat As LogCat
 	Private const emailAddress As String = "pieter09@gmail.com"
@@ -25,7 +25,7 @@ Sub Process_Globals
 	Private vSongTitle As String
 	Private songdata As clsHttp
 	Private clsChart As clsChartlyrics
-	Private PlayerCallback As Object
+'	Private PlayerCallback As Object
 	'Private logo As Bitmap = LoadBitmapResize(File.DirAssets, "radio_flat.png", 24dip, 24dip, False)
 	Private logo As Bitmap = LoadBitmapResize(File.DirAssets, "radio_notif.png", 24dip, 24dip, False)
 	Public phoneKeepAlive As PhoneWakeState
@@ -186,6 +186,7 @@ End Sub
 Public Sub setAlbumArt(vAlbum As Bitmap)
 	If IsPaused(player) Then 
 		Return
+	
 		If vSongAlbumArt.IsInitialized = False Then
 			vSongAlbumArt.Initialize(File.DirAssets, "NoImageAvailable.png")
 		End If

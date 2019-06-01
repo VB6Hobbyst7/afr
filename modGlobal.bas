@@ -14,14 +14,14 @@ Sub Process_Globals
 End Sub
 
 
-Sub StartPlayer (RadioStationURL As String)
-	
-	AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 64))
-	PlayerStarted = True
-End Sub
+'Sub StartPlayer (RadioStationURL As String)
+'	
+'	AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 64))
+'	PlayerStarted = True
+'End Sub
 
-Sub StopPlayer
-	AacMp3Player.RunMethod("stop", Null)
-End Sub
+'Sub StopPlayer
+'	AacMp3Player.RunMethod("stop", Null)
+'End Sub
 
 

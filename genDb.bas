@@ -20,6 +20,10 @@ Sub Process_Globals
 End Sub
 
 
+Public Sub closeConnection
+	vSql.Close
+End Sub
+
 Private Sub initDB
 	Dim db_path As String = CallSub(Starter, "getDbPath")
 	Try
@@ -292,6 +296,7 @@ Sub getPresetStations As Cursor
 	Catch
 		Log(LastException.Message)
 	End Try
+	'vSql.Close
 	Return vCurs
 End Sub
 
