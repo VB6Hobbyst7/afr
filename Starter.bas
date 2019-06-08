@@ -283,36 +283,29 @@ Public Sub tmrGetSong_tick
 End Sub
 
 Public Sub icyMetaData
-'	If activeActivity = "player" And IsPaused(player)Then Return
-	'If activeActivity = "searchStation" Then
 	Dim url, nSong, newSong As String
 	Dim job As HttpJob
 		
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
-'	Log(url)	
 	job.Initialize("", Me)
-	'nSong = "empty"
 	job.Download(url)
-	'job.GetRequest.Timeout = 5000
 	Wait For (job) JobDone(job As HttpJob)
 	If job.Success Then
 		nSong = job.GetString
 		newSong = clsFunc.parseIcy(nSong)
-'		Log(newSong)	
-		'If(newSong.Length > 2) Then
+		clsFunc.ReplaceRaros(newSong)
 			If newSong <> lastSong Or lastSong = "" Then
 				processSong(newSong)
 			End If
-		'End If
 	End If
 	job.Release
 			
 End Sub
 
 Sub processSong(song As String)
-	If(song.Length > 2) Then
+	If(song.Length > 3) Then
 	song	= clsFunc.ReplaceRaros(song)
-	song	= clsFunc.NameToProperCase(song)
+'	song	= clsFunc.NameToProperCase(song)
 	End If
 	If lastSong = "" Or lastSong <> song Then
 		
@@ -335,7 +328,7 @@ Sub processSong(song As String)
 			albumArtSet = False
 				
 			If song <> "No information found" Then
-				Dim mySong As String		= scrobbler.processPlaying(song)
+				Dim mySong As String		= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
 								
 				If IsPaused(player) Then Return
 				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)

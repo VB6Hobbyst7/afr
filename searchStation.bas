@@ -152,6 +152,9 @@ Sub Activity_KeyPress (KeyCode As Int) As Boolean 'Return True to consume the ev
 		Starter.clsExoPlayer.stopPlayer
 		'CallSub(Starter, "StopPlayer")
 		'StartActivity(player)
+		If IsPaused(player) = True Then
+			StartActivity(player)
+		End If
 		Activity.Finish
 		Return False
 	End If

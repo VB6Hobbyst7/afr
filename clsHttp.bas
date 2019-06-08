@@ -138,6 +138,8 @@ Sub getSpotifySongData(jsonData As String)
 	
 	Dim mDate As String
 	Starter.albumArtSet = False
+	Starter.albumArtFound = False
+	
 	If Starter.spotMap.IsInitialized Then
 		Starter.spotMap.Clear
 	Else
@@ -180,9 +182,9 @@ Sub getSpotifySongData(jsonData As String)
 			lDate = Regex.Split("-", mDate)
 			Try
 				If lDate.Size > 1 Then
-				Dim newTime As Long	= DateUtils.SetDate(lDate.Get(0), lDate.Get(1), lDate.Get(2))
-				DateTime.DateFormat ="dd MMMM yyyy"
-				Starter.vAlbumReleaseDate = $"$Date{newTime}"$
+					Dim newTime As Long	= DateUtils.SetDate(lDate.Get(0), lDate.Get(1), lDate.Get(2))
+					DateTime.DateFormat ="dd MMMM yyyy"
+					Starter.vAlbumReleaseDate = $"$Date{newTime}"$
 				Else
 					Starter.vAlbumReleaseDate = $"${mDate}"$
 				End If
@@ -225,7 +227,7 @@ Sub getSpotifySongData(jsonData As String)
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
 				Try
-				'	LogColor("getSongLyrics", Colors.Red)
+					'	LogColor("getSongLyrics", Colors.Red)
 					wait for(getSongLyrics) Complete (result As Boolean)
 				Catch
 					Starter.vSongLyric = "noLyric"
@@ -233,11 +235,11 @@ Sub getSpotifySongData(jsonData As String)
 				If Starter.vSongLyric = "noLyric" Then
 					Try
 						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
-					'	LogColor("clsLyrics.checkAlbumart", Colors.Red)
+						'	LogColor("clsLyrics.checkAlbumart", Colors.Red)
 						wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
 					Catch
 						Starter.vSongLyric = "noLyric"
-					End Try	
+					End Try
 					If Starter.vSongLyric = "noLyric" Then
 						Try
 							'LogColor("clsGeneral_.pullDataFromOndemand(False)", Colors.Red)
@@ -246,7 +248,7 @@ Sub getSpotifySongData(jsonData As String)
 							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
 						Catch
 							Starter.vSongLyric = "noLyric"
-						End Try		
+						End Try
 					End If
 					If Starter.vSongLyric = "noLyric" Then
 						Try

@@ -117,8 +117,16 @@ End Sub
 
 Sub ReplaceRaros(p_strText As String) As String
 
+	If p_strText.Length < 1 Then
+		Return ""
+	End If
+
 	Dim strTemp As String
 	strTemp = p_strText
+	
+	If strTemp.Length < 3 Then
+		Return ""
+	End If
 
 	strTemp=strTemp.Replace("Ã¡","á")
 	strTemp=strTemp.Replace("Ã©","é")
@@ -165,14 +173,15 @@ Sub ReplaceRaros(p_strText As String) As String
 	strTemp	= strTemp.Replace("Nu:Straks:", "")
 	strTemp	= strTemp.Replace("Straks:", "")
 	strTemp	= strTemp.Replace("Now Playing: ", "")
+	strTemp	= strTemp.Replace("S.S.", "")
 	
 	If strTemp.SubString2(0,3) = " - " Then
 		strTemp = strTemp.SubString2(3,strTemp.Length)
 	End If
 	
-	If strTemp.SubString2(strTemp.Length-1, strTemp.Length) = " " Then
-'		strTemp.SubString2(0, strTemp.Length-1)
-	End If
+'	If strTemp.SubString2(strTemp.Length-1, strTemp.Length) = " " Then
+''		strTemp.SubString2(0, strTemp.Length-1)
+'	End If
 	
 	Return strTemp
 End Sub
@@ -256,13 +265,23 @@ Public Sub checkUrl(url As String) As Boolean
 	If m.Find Then
 		Dim s As String = m.Match
 		If s.StartsWith("http") = False Then
-			Return False
+			Return True
 		End If
 		Return True
 	End If
 	Return False
 End Sub
 
+Public Sub checkUrlHttp(url As String) As String
+	Dim m As Matcher = Regex.Matcher($"(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))"$, url)
+	If m.Find Then
+		Dim s As String = m.Match
+		If s.StartsWith("http") = False Then
+			Return "http://"&url
+		End If
+	End If
+	Return ""
+End Sub
 
 Public Sub shadowLayer(lbl As View, Radius As Float, dx As Float, dy As Float, Color As Int)
 	Dim jo = lbl As JavaObject
@@ -290,6 +309,10 @@ End Sub
 
 
 Public Sub NameToProperCase(Name As String) As String
+	If Name.Length < 4 Then
+		Return Name
+	End If
+	
 	Dim Pos As Int
 	Dim Result As String
 	'Set the whole string to lowercase
@@ -398,19 +421,25 @@ Public Sub parseIcy(metaData As String) As String
 	Dim icy_genre As String = root.Get("icy-genre")
 	Dim icy_br As String = root.Get("icy-br")
 	Dim icy_url As String = root.Get("icy-url")
+	If ReplaceRaros(icy_playing) <> Starter.lastSong Or Starter.lastSong = "" Then
+		Log("parse ICY data")
+		'End If
 	
-	CallSub2(player, "setGenre", icy_genre)
-	CallSub2(player, "getStationLogo", icy_url)
-	Starter.vStationName	= icy_name
-	If Starter.vStationName = "" Then
-		Starter.vStationName = "AdFree Radio"
-	End If
+		CallSub2(player, "setGenre", icy_genre)
+		CallSub2(player, "getStationLogo", icy_url)
+		Starter.vStationName	= icy_name
+		If Starter.vStationName = "" Then
+			Starter.vStationName = "AdFree Radio"
+		End If
 	
-	If Starter.activeActivity = "searchStation" Then
-		CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & icy_br)
+		If Starter.activeActivity = "searchStation" Then
+			CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & icy_br)
+		Else
+			CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
+		End If
+	
+		Return icy_playing
 	Else
-		CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
+		Return Starter.lastSong
 	End If
-	
-	Return icy_playing
 End Sub

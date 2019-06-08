@@ -468,7 +468,7 @@ Sub setStation(lst As List) As Panel
 	pnlStation.Tag			= "headerColor"
 	lblHeaderPlayButton.Tag	= listPlayButton
 	lblStationName.Text 	= lst.Get(0)
-	lblOverflow.Tag			= lst.Get(3)
+'	lblOverflow.Tag			= lst.Get(3)
 	lblGenre.Text			= $"Genre : ${lst.Get(1)}"$
 	svgInfo.Tag				= lst.Get(3)
 	
@@ -476,7 +476,7 @@ Sub setStation(lst As List) As Panel
 	If lst.get(6) <> Null And File.Exists("", lst.get(6))Then
 		Dim bm As Bitmap = LoadBitmap(lst.Get(6),"")
 		iv_station_logo.Bitmap = bm
-		lblStationLogo.Tag	= lst.Get(6)
+'		lblStationLogo.Tag	= lst.Get(6)
 		iv_station_logo.Tag	= lst.Get(6)
 		
 	Else
@@ -686,6 +686,7 @@ Sub setStationLogo(img As Bitmap)
 			ivLogo = pnl_logo.GetView(0)
 			ivNowPlayingStation.Bitmap = img
 			pnlPlayingStation.Visible = True
+			panelStationLogo(img)
 			Exit
 		End If
 	Next
@@ -1086,12 +1087,27 @@ Sub lblDeleteStation_Click
 End Sub
 
 
+Sub panelStationLogo(bm As Bitmap)
+	Dim pnl As Panel = clvPlayer.GetPanel(Starter.vPlayerSelectedPanel)
+	
+	For Each v As View In pnl.GetAllViewsRecursive
+		If v Is ImageView Then
+			Dim stLogo As ImageView
+			stLogo = v
+			stLogo.Initialize("")
+			stLogo.Bitmap = bm
+			clvPlayer.Refresh	
+			Exit
+		End If
+	Next
+End Sub
+
 Sub getStationLogo(link As String)
 	Dim url As String
 
 	Try
-		
-		
+		Log("SELECTED PANEL "&Starter.vPlayerSelectedPanel)
+		Log($"$DateTime{DateTime.Now}"$)
 		Dim stationName As String	 = getStation
 		If stationName = "" Then
 			Return
@@ -1112,6 +1128,7 @@ Sub getStationLogo(link As String)
 	If genDb.checkStationLogo(stationId) = False Then
 		If Starter.vUpdateLogo = False Or hasLogoPath.Length > 0  Then
 			setStationLogo(LoadBitmap(hasLogoPath, ""))
+			'panelStationLogo(LoadBitmap(hasLogoPath, ""))
 			Return
 		End If
 	End If
@@ -1143,7 +1160,8 @@ Sub getStationLogo(link As String)
 		out.Close
 		writePngNameToTable(stationId, stationFolder&"/"&stationPng &".png")
 		setStationLogo(bm)
-'		setPlayerStationLogo(bm)
+		'panelStationLogo(bm)
+		
 	Else
 		'try new url only once
 		If imgUrlRetry = 1 Then

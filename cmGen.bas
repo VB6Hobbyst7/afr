@@ -80,9 +80,14 @@ Sub openStationUrl(stationName As String)
 		ToastMessageShow("Invalid Url", True)
 		Return
 	End If
+	url = Starter.clsFunc.checkUrlHttp(url)
 	Try
+		If Not(Starter.clsFunc.checkUrl(url)) Then
+			Return
+		End If
 		StartActivity(ph.OpenBrowser(url))
 	Catch
+		ToastMessageShow("Station url seems to be invalid", True)
 		Log(LastException)
 	End Try
 	End Sub
