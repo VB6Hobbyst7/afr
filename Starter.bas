@@ -293,11 +293,16 @@ Public Sub icyMetaData
 	Wait For (job) JobDone(job As HttpJob)
 	If job.Success Then
 		nSong = job.GetString
+		'Log(nSong)
 		newSong = clsFunc.parseIcy(nSong)
+		'LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Red)
 		clsFunc.ReplaceRaros(newSong)
-			If newSong <> lastSong Or lastSong = "" Then
-				processSong(newSong)
-			End If
+		If newSong <> lastSong Or lastSong = "" Then
+			processSong(newSong)
+		End If
+	Else
+		'LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
+		processSong(lastSong)
 	End If
 	job.Release
 			
@@ -307,18 +312,23 @@ End Sub
 
 Sub processSong(song As String)
 	If(song.Length > 3) Then
-	song	= clsFunc.ReplaceRaros(song)
+		song	= clsFunc.ReplaceRaros(song)
 '	song	= clsFunc.NameToProperCase(song)
 	End If
-	If lastSong = "" Or lastSong <> song Then
+	'LogColor(song, Colors.Red)
+	If song.Length > 3 Then
+		clearNotif(song)
+	End If
+	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
 		
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 		spotMap.Clear
 		CallSub(player, "disableInfoPanels")
 		setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		lastSong = song
+'		LogColor(song, Colors.Red)
+'		clearNotif(song)
 		setSongPlaying(song)
-		clearNotif(song)
 		If song = "" Then song = "No information found"
 		If activeActivity = "player" Then
 			CallSub2(Me, "setSongPlaying", song)
@@ -333,7 +343,7 @@ Sub processSong(song As String)
 			If song <> "No information found" Then
 				Dim mySong As String		= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
 								
-				If IsPaused(player) Then Return
+'				If IsPaused(player) Then Return
 				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
 				CallSubDelayed(player, "enableAlbumInfo")
 									
@@ -354,7 +364,7 @@ End Sub
 
 
 Sub connectionTimer_Tick
-	If IsPaused(player) Then Return
+'	If IsPaused(player) Then Return
 	player.bckBtnClickCount = 1
 	clsFunc.getConnectionType
 End Sub
@@ -413,6 +423,7 @@ End Sub
 
 #Region notification
 Public Sub clearNotif(nText As String)
+	'Log("NTEXT : " & nText)
 	Dim n As Notification = createNotif(nText)
 	n.Notify(notifId)
 	If nText = "cancel" Then
