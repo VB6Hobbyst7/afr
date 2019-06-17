@@ -301,7 +301,7 @@ Sub restorePlayingInfo
 		If Starter.vStationName <> "" And CallSub(Starter, "getSongPlaying") <> "" Then
 			lblArtistNowPlaying.Text	= CallSub(Starter, "getSongPlaying")
 		
-			lblNowPlayingStation.Text	= pg_station
+			lblNowPlayingStation.Text	= Starter.vStationName  'pg_station
 			ivNowPlaying.Bitmap = img
 		Else
 			ivNowPlaying.Bitmap = img
@@ -341,7 +341,7 @@ End Sub
 
 
 Sub Activity_Resume
-	
+	Starter.clsFunc.showLog($"START ACTIVITY RESUME $Time{DateTime.Now}"$, Colors.Black)
 	Dim in As Intent
 	Starter.activeActivity = "Player"
 	acVolume.Value = clsVol.currVolume
@@ -391,7 +391,7 @@ Sub Activity_Resume
 		End If
 		lblNowPlayingDataRate.Text	= ""
 	End If
-
+	Starter.clsFunc.showLog($"END ACTIVITY RESUME $Time{DateTime.Now}"$, Colors.Black)
 End Sub
 
 
@@ -405,8 +405,8 @@ Sub Activity_Pause (UserClosed As Boolean)
 		kvs.PutSimple("app_started", 1)
 		pnl_volume_slider.Visible = False
 		pnlSongText.SetVisibleAnimated(0, False)
-		
 		getSetButtonState(True)
+		
 		If pg_artistAlbum.IsInitialized Then
 			pg_artistAlbum = CallSub(Starter, "getAlbumArt")
 		End If
@@ -1091,12 +1091,10 @@ Sub panelStationLogo(bm As Bitmap)
 	Dim pnl As Panel = clvPlayer.GetPanel(Starter.vPlayerSelectedPanel)
 	
 	For Each v As View In pnl.GetAllViewsRecursive
-		If v Is ImageView Then
+		If v Is ImageView And v.Tag = "nologo" Then
 			Dim stLogo As ImageView
 			stLogo = v
-			stLogo.Initialize("")
 			stLogo.Bitmap = bm
-			clvPlayer.Refresh	
 			Exit
 		End If
 	Next
@@ -1106,13 +1104,13 @@ Sub getStationLogo(link As String)
 	Dim url As String
 
 	Try
-		Log("SELECTED PANEL "&Starter.vPlayerSelectedPanel)
-		Log($"$DateTime{DateTime.Now}"$)
 		Dim stationName As String	 = getStation
 		If stationName = "" Then
 			Return
 		End If
 		Dim stationId As String		 = genDb.getStationIdByName(stationName)
+		
+		genDb.vCurs.Close
 		If stationId = "null" Then
 			Return
 		End If
@@ -1128,7 +1126,7 @@ Sub getStationLogo(link As String)
 	If genDb.checkStationLogo(stationId) = False Then
 		If Starter.vUpdateLogo = False Or hasLogoPath.Length > 0  Then
 			setStationLogo(LoadBitmap(hasLogoPath, ""))
-			'panelStationLogo(LoadBitmap(hasLogoPath, ""))
+			Starter.sStationLogoPath = hasLogoPath
 			Return
 		End If
 	End If
@@ -1146,9 +1144,10 @@ Sub getStationLogo(link As String)
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
 		Dim stationPng As String	= stationName.Replace(" ", "")
-		Dim stationFolder As String = File.DirDefaultExternal & "/station_logo"
-		If File.Exists(File.DirDefaultExternal, "/station_logo") = False Then
-			File.MakeDir(File.DirDefaultExternal, "station_logo")
+		Dim stationFolder As String = Starter.irp_dbFolder & "/station_logo"
+		
+		If File.Exists(stationFolder, "") = False Then
+			File.MakeDir(Starter.irp_dbFolder, "station_logo")
 		End If
 		
 		Dim bm As Bitmap = j.GetBitmap
@@ -1160,7 +1159,6 @@ Sub getStationLogo(link As String)
 		out.Close
 		writePngNameToTable(stationId, stationFolder&"/"&stationPng &".png")
 		setStationLogo(bm)
-		'panelStationLogo(bm)
 		
 	Else
 		'try new url only once
@@ -1381,7 +1379,7 @@ Sub getSetButtonState(set As Boolean)
 		kvs.PutSimple("pnl_lyric_button",  0)
 		kvs.PutSimple("pnl_store_song_button", 0)
 		kvs.PutSimple("pnl_album_info_button", 0)
-		kvs.PutBitmap("player_station_logo", ivNowPlayingStation.Bitmap)
+		'kvs.PutBitmap("player_station_logo", ivNowPlayingStation.Bitmap)
 		kvs.PutSimple("lbl_time_now", lbl_time_now.Text)
 		kvs.PutSimple("lblNowPlayingDataRate", lblNowPlayingDataRate.Text)
 		
@@ -1437,22 +1435,21 @@ End Sub
 Sub exitPlayer
 	
 	'***END WAKELOCK
-'	Dim phWakeLock As PhoneWakeState
-'	phWakeLock.ReleaseKeepAlive
-'	phWakeLock.ReleasePartialLock
 	CallSub2(Starter, "setWakeLock", False)
 	
 	'***END ACTIVITIES***
 	CallSub(getSetStation,"endActivity")
 	CallSub(searchStation, "endActivity")
 	'***STOP PLAYER***
-	'CallSub(Starter,"StopPlayer")
 	Starter.clsExoPlayer.stopPlayer
+	
+	
+	genDb.closeConnection
 	resetKvsPnlButtons
 	kvs.PutSimple("app_started", 0)
 	kvs.PutSimple("app_normal_exit", 1)
-	File.Delete(Starter.mManualFolder, "imgPlaying.png")
-	Sleep(200)
+	
+	'Sleep(200)
 	pg_playing	= ""
 	pg_playing	= ""
 	pg_station	= ""
@@ -1463,8 +1460,8 @@ Sub exitPlayer
 	lblArtistNowPlaying.Text	= ""
 	lblNowPlayingDataRate.Text	= ""
 	
-	If File.Exists(Starter.mManualFolder, "imgPlaying.png") Then
-		File.Delete(Starter.mManualFolder, "imgPlaying.png")
+	If File.Exists(Starter.irp_dbFolder, "imgPlaying.png") Then
+		File.Delete(Starter.irp_dbFolder, "imgPlaying.png")
 	End If
 		
 	CallSub2(Starter, "setSongLyric", "noLyric")
@@ -1476,8 +1473,9 @@ Sub exitPlayer
 	CallSub2(Starter, "tmrGetSongEnable", False)
 	CallSub(Starter, "endForeGround")
 	Starter.tmrGetSong.Enabled = False
-	Starter.clsExoPlayer.stopPlayer
 	Starter.streamTimer.Enabled = False
+	Starter.tmrInetConnection.Enabled = False
+	Starter.connectionTimer.Enabled = False
 	Activity.Finish
 	
 End Sub
@@ -1618,6 +1616,7 @@ End Sub
 
 
 Sub setGenre(genre As String)
+	
 	lbl_time_now.Text = $"Genre : ${genre}"$
 	Starter.currStationGerne = genre
 	'CHECK IF GERNE MATCHES GERNE IN TABLE, IF NOT UPDATE GENRE IN TABLE
@@ -1754,7 +1753,7 @@ Public Sub LogoFromFile(stationName As String, stationId As Int, pnlIndex As Int
 End Sub
 
 Private Sub cc_Result (Success As Boolean, Dir As String, Filename As String)
-	Dim logoFolder As String = File.DirDefaultExternal & "/station_logo/"
+	Dim logoFolder As String = Starter.irp_dbFolder & "/station_logo/"
 	Dim newFileName As String
 	Dim logo As Bitmap
 	Dim failed As Boolean = False
@@ -1818,8 +1817,8 @@ Private Sub clearLogoVars
 End Sub
 
 Public Sub AppCrash
-	If File.Exists(Starter.mManualFolder, "imgPlaying.png") Then
-		File.Delete(Starter.mManualFolder, "imgPlaying.png")
+	If File.Exists(Starter.irp_dbFolder, "imgPlaying.png") Then
+		File.Delete(Starter.irp_dbFolder, "imgPlaying.png")
 	End If
 		
 	CallSub2(Starter, "setSongLyric", "noLyric")

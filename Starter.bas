@@ -87,8 +87,9 @@ Sub Service_Create
 		PE.InitializeWithPhoneState("PE",PhoneId)
 	End If
 	
-	mManualFolder	= rp.GetSafeDirDefaultExternal("shared")
-	irp_dbFolder	= rp.GetSafeDirDefaultExternal("IRP")
+	'mManualFolder	= rp.GetSafeDirDefaultExternal("shared")
+	'irp_dbFolder	= rp.GetSafeDirDefaultExternal("")
+	irp_dbFolder	= File.DirInternal
 	smallIcon		= LoadBitmapResize(File.DirAssets, "radio_notif.png", 24dip, 24dip, True)
 	logs.Initialize
 #if RELEASE
@@ -193,7 +194,7 @@ Public Sub setAlbumArt(vAlbum As Bitmap)
 		vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
 		Dim Out As OutputStream
 		
-		Out = File.OpenOutput(mManualFolder, "imgPlaying.png", False)
+		Out = File.OpenOutput(irp_dbFolder, "imgPlaying.png", False)
 		vAlbum.WriteToStream(Out, 100, "PNG")
 		Out.Close
 		Return
@@ -276,7 +277,7 @@ Public Sub tmrGetSong_tick
 	If clsFunc.IsStreamActive(3) = False Then 
 		Return
 	End If
-	'LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
+'	LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
 	If clsFunc.IsMusicPlaying = True Then
 		icyMetaData
 	End If
@@ -301,6 +302,8 @@ Public Sub icyMetaData
 	job.Release
 			
 End Sub
+
+
 
 Sub processSong(song As String)
 	If(song.Length > 3) Then
@@ -351,6 +354,7 @@ End Sub
 
 
 Sub connectionTimer_Tick
+	If IsPaused(player) Then Return
 	player.bckBtnClickCount = 1
 	clsFunc.getConnectionType
 End Sub

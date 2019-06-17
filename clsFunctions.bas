@@ -422,7 +422,7 @@ Public Sub parseIcy(metaData As String) As String
 	Dim icy_br As String = root.Get("icy-br")
 	Dim icy_url As String = root.Get("icy-url")
 	If ReplaceRaros(icy_playing) <> Starter.lastSong Or Starter.lastSong = "" Then
-		Log("parse ICY data")
+		'Log("parse ICY data")
 		'End If
 	
 		CallSub2(player, "setGenre", icy_genre)

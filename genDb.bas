@@ -15,7 +15,7 @@ Sub Process_Globals
 	Public vDbName As String = "rdodb.db"
 	
 	Private vSql As SQL
-	Private vCurs As Cursor
+	Public vCurs As Cursor
 	Public myPanelIndex As Int
 End Sub
 
@@ -188,7 +188,7 @@ Sub setBookmark(vParamname As String, vParamvalue As String)
 	
 	vSql.ExecNonQuery2(vQry, Array As String(vParamname, vParamvalue))
 	
-	vSql.Close	
+	'vSql.Close	
 End Sub
 
 
@@ -214,7 +214,7 @@ End Sub
 
 Sub getStationIdByName(vStation As String) As String
 	Dim vQry As String
-	Dim vCurs As Cursor
+	'Dim vCurs As Cursor
 	
 	initDB
 	vQry	= "SELECT pref_id FROM preflist WHERE stname = ?"
@@ -307,7 +307,7 @@ Sub removePreset(vId As String)
 	initDB
 	vQry	= "DELETE FROM preflist WHERE pref_id=?"
 	vSql.ExecNonQuery2(vQry, Array As String(vId))
-	vSql.Close
+	'vSql.Close
 End Sub
 
 Sub getStationNameFromPreflist(vId As String) As String
@@ -507,7 +507,7 @@ Public Sub dropTable(tableName As String)
 	
 	vSql.ExecNonQuery(sql)
 	vacuumDB
-	vSql.Close
+	'vSql.Close
 End Sub
 
 
