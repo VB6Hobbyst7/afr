@@ -725,11 +725,11 @@ Module23=NB6
 Module24=clsScrollLabel
 Module25=phdetect
 Module26=clsRandomImage
-Module3=clsFunctions
-Module4=genDb
-Module5=clsExo
-Module6=modGlobal
-Module7=clsHttp
+Module3=clsHttp
+Module4=clsFunctions
+Module5=genDb
+Module6=clsExo
+Module7=modGlobal
 Module8=clsChartlyrics
 Module9=KeyValueStore
 NumberOfFiles=339
@@ -744,7 +744,7 @@ Version=9.01
 
 #Region  Project Attributes
 	#ApplicationLabel: AdFree Radio
-	#VersionCode: 30052044
+	#VersionCode: 30052045
 	#VersionName: 0.99
 	 'SupportedOrientations possible values: unspecified, landscape or portrait
 	#SupportedOrientations: portrait

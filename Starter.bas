@@ -288,6 +288,7 @@ Public Sub icyMetaData
 	Dim job As HttpJob
 		
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
+'	Log(url)
 	job.Initialize("", Me)
 	job.Download(url)
 	Wait For (job) JobDone(job As HttpJob)
@@ -295,13 +296,13 @@ Public Sub icyMetaData
 		nSong = job.GetString
 		'Log(nSong)
 		newSong = clsFunc.parseIcy(nSong)
-		'LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Red)
+'		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Red)
 		clsFunc.ReplaceRaros(newSong)
 		If newSong <> lastSong Or lastSong = "" Then
 			processSong(newSong)
 		End If
 	Else
-		'LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
+'		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
 		processSong(lastSong)
 	End If
 	job.Release
@@ -345,11 +346,12 @@ Sub processSong(song As String)
 								
 '				If IsPaused(player) Then Return
 				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
-				CallSubDelayed(player, "enableAlbumInfo")
-									
-				If albumArtSet Then
-					CallSub2(player, "enableAlbumButton", False)
-				Else
+				If IsPaused(player) = False Then
+					CallSubDelayed(player, "enableAlbumInfo")
+					If albumArtSet Then
+						CallSub2(player, "enableAlbumButton", False)
+					Else
+					End If
 				End If
 			End If
 		End If
