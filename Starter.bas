@@ -11,8 +11,8 @@ Version=7.8
 #IgnoreWarnings: 
 
 Sub Process_Globals
-	
-	Public clsExoPlayer As clsExo
+	Public exoPlayer As SimpleExoPlayer
+	'Public clsExoPlayer As clsExo
 	Public sleepTimerDuration As Long
 	'Public AacMp3Player As JavaObject
 	Private logs As StringBuilder
@@ -80,7 +80,7 @@ Sub Service_Create
 	clsImage.Initialize
 	spotMap.Initialize
 	clsGen.Initialize
-	clsExoPlayer.Initialize
+	exoPlayer.Initialize("player")
 	Service.AutomaticForegroundMode = Service.AUTOMATIC_FOREGROUND_ALWAYS
 
 	If rp.Check(rp.PERMISSION_READ_PHONE_STATE) Then 
@@ -512,9 +512,11 @@ Public Sub restartStream
 
 	tryRestartCount = tryRestartCount + 1
 	'StopPlayer
-	clsExoPlayer.stopPlayer
+	'clsExoPlayer.stopPlayer
+	stopPlayer
 	'StartPlayer(selectedStream)
-	clsExoPlayer.startPlayer(selectedStream)
+	'clsExoPlayer.startPlayer(selectedStream)
+	startPlayer(selectedStream)
 	If clsFunc.IsMusicPlaying = False And tryRestartCount < 5 Then
 		streamEnded
 		Return
@@ -543,3 +545,25 @@ Private Sub streamEnded
 	clearNotif($"Connection to stream lost at $DateTime{DateTime.Now}"$)
 End Sub
 
+Public Sub startPlayer(url As String)
+	exoPlayer.Initialize("")
+	Dim sources As List
+	sources.Initialize
+	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
+	
+	exoPlayer.Volume = 1
+	exoPlayer.Play
+	setWakeLock(True)
+	''tm.Initialize ("tm",1000)
+	''tm.Enabled = True
+	tmrGetSongEnable(True)
+End Sub
+
+Public Sub stopPlayer
+'	Log("STOP PLAYER")
+	exoPlayer.Pause
+	exoPlayer.Release
+	
+	setWakeLock(False)
+	tmrGetSongEnable(False)
+End Sub

@@ -555,7 +555,7 @@ Sub streamPlaying(playing As Boolean)
 	If playing = False Then
 '		If Starter.playerUsed	= "aac" Then
 '			CallSub(Starter,"StopPlayer")
-			Starter.clsExoPlayer.stopPlayer
+			CallSub(Starter, "stopPlayer")
 			showSnackbar("Unable to play stream..")
 			Return
 '		End If
@@ -842,7 +842,8 @@ End Sub
 Sub start_stopStream(index As Int) As ResumableSub
 '	showStreamWarning(False)
 '	CallSub(Starter, "StopPlayer")	
-	Starter.clsExoPlayer.stopPlayer
+	'Starter.clsExoPlayer.stopPlayer
+	CallSub(Starter, "stopPlayer")
 	Starter.lastSong = ""
 	CallSub(Starter,"initPlayerVars")
 	showHideLyricsButton(False)
@@ -927,7 +928,8 @@ Sub start_stopStream(index As Int) As ResumableSub
 		handleControlButtons(True, 8dip, 500)
 		
 		'CallSub2(Starter, "StartPlayer", stream)
-		Starter.clsExoPlayer.startPlayer(stream)
+		'Starter.clsExoPlayer.startPlayer(stream)
+		CallSub2(Starter, "startPlayer", stream)
 		CallSubDelayed(Starter, "icyMetaData")
 		setPanelElevation(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
@@ -1273,7 +1275,8 @@ Sub NavDrawer_NavigationItemSelected (MenuItem As ACMenuItem, DrawerGravity As I
 		NavDrawer.CloseDrawer
 		
 		'CallSub(Starter,"StopPlayer")
-		Starter.clsExoPlayer.stopPlayer
+		'Starter.clsExoPlayer.stopPlayer
+		CallSub(Starter, "stopPlayer")
 		startOrStopStream(Starter.vPlayerSelectedPanel)
 		Starter.vPlayerSelectedPanel = 999
 		If genDb.getCountryBookmark = "" Then
@@ -1441,7 +1444,8 @@ Sub exitPlayer
 	CallSub(getSetStation,"endActivity")
 	CallSub(searchStation, "endActivity")
 	'***STOP PLAYER***
-	Starter.clsExoPlayer.stopPlayer
+	'Starter.clsExoPlayer.stopPlayer
+	CallSub(Starter, "stopPlayer")
 	
 	
 	genDb.closeConnection
@@ -1843,7 +1847,8 @@ End Sub
 Public Sub connectionLost
 	'modGlobal.StopPlayer
 	'CallSub(Starter,"StopPlayer")
-	Starter.clsExoPlayer.stopPlayer
+	'Starter.clsExoPlayer.stopPlayer
+	CallSub(Starter, "stopPlayer")
 	startOrStopStream(Starter.vPlayerSelectedPanel)
 	'MUST BE GLOBAL CODE
 	pg_playing	= ""

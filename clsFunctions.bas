@@ -208,7 +208,8 @@ If Starter.vWifiOnly = True And Starter.vWifiConnected = False Then
 		If modGlobal.PlayerStarted = True Then
 			modGlobal.PlayerStarted = False
 			'CallSub(Starter, "StopPlayer")
-			Starter.clsExoPlayer.stopPlayer
+			'Starter.clsExoPlayer.stopPlayer
+			CallSub(Starter, "stopPlayer")
 			CallSub(player, "checkWifiOnly")
 		End If
 	End If

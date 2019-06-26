@@ -149,7 +149,8 @@ End Sub
 Sub Activity_KeyPress (KeyCode As Int) As Boolean 'Return True to consume the event
 	
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-		Starter.clsExoPlayer.stopPlayer
+		'Starter.clsExoPlayer.stopPlayer
+		CallSub(Starter, "stopPlayer")
 		'CallSub(Starter, "StopPlayer")
 		'StartActivity(player)
 		If IsPaused(player) = True Then
@@ -241,7 +242,8 @@ Private Sub scrollTimer_Tick
 End Sub
 
 Sub checkAarPlaying
-	Starter.clsExoPlayer.stopPlayer
+	'Starter.clsExoPlayer.stopPlayer
+	CallSub(Starter, "stopPlayer")
 	'CallSub(Starter, "StopPlayer")
 
 	Starter.playerUsed	= ""
@@ -252,7 +254,8 @@ End Sub
 Sub streamPlaying(playing As Boolean)
 	If playing = False Then
 '		Log(Starter.vStationUrl)
-		Starter.clsExoPlayer.stopPlayer
+		'Starter.clsExoPlayer.stopPlayer
+		CallSub(Starter, "stopPlayer")
 		'CallSub(Starter, "StopPlayer")
 		ToastMessageShow("Unable to play stream..", False)
 		lblStreamBitrate.Text = ""
@@ -483,14 +486,16 @@ Sub playSelectedStream(selectedStream As String)
 	checkStreamplaying
 	Starter.lastSong = ""
 	Starter.selectedStream = selectedStream
-	Starter.clsExoPlayer.startPlayer(selectedStream)
+	'Starter.clsExoPlayer.startPlayer(selectedStream)
+	CallSub2(Starter, "startPlayer", selectedStream)
 	'CallSub2(Starter, "StartPlayer", selectedStream)
 	Sleep(1000)
 	
 End Sub
 
 Sub checkStreamplaying
-	Starter.clsExoPlayer.stopPlayer
+	'Starter.clsExoPlayer.stopPlayer
+	CallSub(Starter, "stopPlayer")
 '	If modGlobal.PlayerStarted = True Then 
 '		CallSub(Starter, "StopPlayer")
 '		Sleep(1000)
@@ -695,7 +700,8 @@ Private Sub panel_clicked(tag As String) As Boolean
 	End If
 	
 	If Starter.clsFunc.IsStreamActive(3) = True Then
-		Starter.clsExoPlayer.stopPlayer
+		'Starter.clsExoPlayer.stopPlayer
+		CallSub(Starter, "stopPlayer")
 		'CallSub(Starter, "StopPlayer")
 		'Sleep(500)
 		
