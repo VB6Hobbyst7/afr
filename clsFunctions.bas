@@ -407,11 +407,20 @@ Public Sub singularPlural(str As String, count As Int) As String
 End Sub
 
 Public Sub parseIcy(metaData As String) As String
+	If metaData.SubString2(0,1) <> "{" Then
+		Return "No song information"
+	End If
 	Dim parser As JSONParser
 	parser.Initialize(metaData)
 
-
-	Dim root As Map = parser.NextObject
+Try
+		Dim root As Map = parser.NextObject
+Catch
+	'Log(LastException)
+	Return "No song information"
+End Try
+	
+	'Dim root As Map = parser.NextObject
 	If root.ContainsKey("error") Then
 		Return ""
 	End If

@@ -171,7 +171,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	Dim actionViewItem As ACMenuItem
 	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 2, 2, "Wifi only", xml.GetDrawable("ic_signal_wifi_4_bar_black_18dp"))
 	Switch.Initialize("Switch")
-	actionViewItem.ActionView = Switch
+	actionViewItem.ActionView = Switch'Switch
 	
 	
 	Dim actionViewItem As ACMenuItem

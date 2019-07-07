@@ -277,7 +277,7 @@ Public Sub tmrGetSong_tick
 	If clsFunc.IsStreamActive(3) = False Then 
 		Return
 	End If
-'	LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
+	'LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
 	If clsFunc.IsMusicPlaying = True Then
 		icyMetaData
 	End If
@@ -303,7 +303,10 @@ Public Sub icyMetaData
 		End If
 	Else
 '		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
-		processSong(lastSong)
+		'Log(job.ErrorMessage)
+		If(lastSong) Then
+			processSong(lastSong)
+		End If
 	End If
 	job.Release
 			
@@ -553,6 +556,7 @@ Public Sub startPlayer(url As String)
 	
 	exoPlayer.Volume = 1
 	exoPlayer.Play
+	
 	setWakeLock(True)
 	''tm.Initialize ("tm",1000)
 	''tm.Enabled = True
