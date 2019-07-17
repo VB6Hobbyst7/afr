@@ -243,7 +243,7 @@ Sub getSpotifySongData(jsonData As String)
 					If Starter.vSongLyric = "noLyric" Then
 						Try
 							'LogColor("clsGeneral_.pullDataFromOndemand(False)", Colors.Red)
-							wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+							'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
 							
 							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
 						Catch

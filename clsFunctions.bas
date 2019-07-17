@@ -447,7 +447,7 @@ End Try
 		Else
 			CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
 		End If
-	
+		Log($" $DateTime{DateTime.Now} NOW PLAYING : ${icy_playing}"$)
 		Return icy_playing
 	Else
 		Return Starter.lastSong

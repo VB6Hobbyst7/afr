@@ -111,6 +111,7 @@ Sub processAlbumArt As ResumableSub
 		bm = j.GetBitmap
 		j.Release
 		Starter.albumArtSet = True
+		'Log($"chartlyric song"$)
 		CallSubDelayed2(Starter, "setAlbumArt", bm)
 	End If
 	Return True

@@ -39,7 +39,7 @@ Sub Globals
 	Private pnlStation As Panel
 	Private imgUrlRetry As Int = 0
 	Private clvPlayer As irp_CustomListView'expClv
-	Private dirArrow As ImageView
+'	Private dirArrow As ImageView
 	Private Switch As ACSwitch
 	Private SwitchUpdateLogo As ACSwitch
 	Private NavDrawer As DSNavigationDrawer

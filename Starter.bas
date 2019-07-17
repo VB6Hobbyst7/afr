@@ -286,28 +286,33 @@ End Sub
 Public Sub icyMetaData
 	Dim url, nSong, newSong As String
 	Dim job As HttpJob
-		
-	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
+	Try
+			
+	
+		url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
 '	Log(url)
-	job.Initialize("", Me)
-	job.Download(url)
-	Wait For (job) JobDone(job As HttpJob)
-	If job.Success Then
-		nSong = job.GetString
-		'Log(nSong)
-		newSong = clsFunc.parseIcy(nSong)
+		job.Initialize("", Me)
+		job.Download(url)
+		Wait For (job) JobDone(job As HttpJob)
+		If job.Success Then
+			nSong = job.GetString
+			'Log(nSong)
+			newSong = clsFunc.parseIcy(nSong)
 '		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Red)
-		clsFunc.ReplaceRaros(newSong)
-		If newSong <> lastSong Or lastSong = "" Then
-			processSong(newSong)
-		End If
-	Else
+			clsFunc.ReplaceRaros(newSong)
+			If newSong <> lastSong Or lastSong = "" Then
+				processSong(newSong)
+			End If
+		Else
 '		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
-		'Log(job.ErrorMessage)
-		If(lastSong) Then
-			processSong(lastSong)
+			'Log(job.ErrorMessage)
+			If(lastSong) Then
+				processSong(lastSong)
+			End If
 		End If
-	End If
+	Catch
+		Log($"LAST EXCEPTION : ${LastException}"$)
+	End Try
 	job.Release
 			
 End Sub
