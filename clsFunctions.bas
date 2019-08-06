@@ -417,11 +417,13 @@ Try
 		Dim root As Map = parser.NextObject
 Catch
 	'Log(LastException)
+		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 	Return "No song information"
 End Try
 	
 	'Dim root As Map = parser.NextObject
 	If root.ContainsKey("error") Then
+		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		Return ""
 	End If
 	
@@ -447,7 +449,7 @@ End Try
 		Else
 			CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
 		End If
-		Log($" $DateTime{DateTime.Now} NOW PLAYING : ${icy_playing}"$)
+'		Log($" $DateTime{DateTime.Now} NOW PLAYING : ${icy_playing}"$)
 		Return icy_playing
 	Else
 		Return Starter.lastSong

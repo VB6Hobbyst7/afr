@@ -5,7 +5,7 @@ Type=Activity
 Version=7.8
 @EndOfDesignText@
 #Region  Activity Attributes 
-	#FullScreen: False
+	#FullScreen: true
 	#IncludeTitle: False
 #End Region
 
@@ -446,7 +446,8 @@ End Sub
 Sub setStation(lst As List) As Panel
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0,clvPlayer.AsView.Width, 104dip)
+	'p.SetLayout(0,0,clvPlayer.AsView.Width, 104dip)
+	p.SetLayout(0,0,clvPlayer.AsView.Width, 110dip)
 	p.LoadLayout("playerStation")
 
 	

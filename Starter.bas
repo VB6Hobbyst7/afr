@@ -240,7 +240,8 @@ End Sub
 Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
 'Return true to allow the OS default exceptions handler to handle the uncaught exception.
 	'wait for 500ms to allow the logs to be updated.
-	'Return True
+	LogColor("ERROR", Colors.Red)
+	Return False
 	
 	Dim jo As JavaObject
 	Dim l As Long = 500
@@ -301,12 +302,16 @@ Public Sub icyMetaData
 '		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Red)
 			clsFunc.ReplaceRaros(newSong)
 			If newSong <> lastSong Or lastSong = "" Then
+				Log("SETTING NEW SONG")
+				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(newSong)
 			End If
 		Else
 '		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
 			'Log(job.ErrorMessage)
 			If(lastSong) Then
+				Log("SETTING NEW SONG")
+			CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(lastSong)
 			End If
 		End If
