@@ -236,7 +236,9 @@ Sub getSpotifySongData(jsonData As String)
 					Try
 						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
 						'	LogColor("clsLyrics.checkAlbumart", Colors.Red)
-						wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
+						If Starter.chartLyricsDown = False Then
+							wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
+						End If
 					Catch
 						Starter.vSongLyric = "noLyric"
 					End Try

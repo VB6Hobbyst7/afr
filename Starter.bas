@@ -49,6 +49,7 @@ Sub Process_Globals
 	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound As Boolean
 	Public streamStarted, vIsPreset, pnl_album_info_button, pnl_stop_button, pnl_lyric_button, tryRestartStream As Boolean = False
 	Public chatDataLyric, lyricsOnDemand, pnl_store_song_button, lyricFound, albumArtFound, albumArtSet, streamLost, getUpdate As Boolean = False
+	Public chartLyricsDown as Boolean = False
 	'FLOAT
 	Public vDataUsage, ivAlbumArtHeight, ivAlbumArtwidth As Float
 	'INT
@@ -240,7 +241,7 @@ End Sub
 Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
 'Return true to allow the OS default exceptions handler to handle the uncaught exception.
 	'wait for 500ms to allow the logs to be updated.
-	LogColor("ERROR", Colors.Red)
+'	LogColor("ERROR", Colors.Red)
 	Return False
 	
 	Dim jo As JavaObject

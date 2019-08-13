@@ -126,6 +126,9 @@ Sub Globals
 	Private lblSpotSong As Label
 	Private lblSpotDuration As Label
 	Private ivSpotify As ImageView
+	Private lbl_lyric_title As Label
+	Private wv__lyric_lyric As WebView
+	Private pnl_lyric As Panel
 End Sub
 
 
@@ -1210,12 +1213,12 @@ End Sub
 
 
 Sub hideLyrics
-	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
-	If pnlSongText.Visible = True Then
-		wvLyric.LoadHtml(html)
-		pnlSongText.SetVisibleAnimated(1000, False)
-		Sleep(700)
-	End If
+'	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
+'	If pnlSongText.Visible = True Then
+'		wvLyric.LoadHtml(html)
+'		pnlSongText.SetVisibleAnimated(1000, False)
+'		Sleep(700)
+'	End If
 End Sub
 
 
@@ -1536,22 +1539,7 @@ Sub sw_response_onConfirm()
 End Sub
 
 Sub pnl_lyric_button_Click
-	If pnlSongText.Visible Then
-		pnlSongText.SetVisibleAnimated(500, False)
-		Return
-	End If
-	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
-	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
-	
-	wvLyric.LoadHtml(html)
-	
-	html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
-	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
-	
-	
-	wvLyric.LoadHtml(html)
-	Sleep(100)
-	pnlSongText.SetVisibleAnimated(500, True)
+	showLyricDialog
 End Sub
 
 
@@ -1921,7 +1909,7 @@ Sub iets
 	End If
 	
 	Wait For (sf) Dialog_Ready(pnl As Panel)
-	pnl.LoadLayout("dlgSOngInfo")
+	pnl.LoadLayout("dlgSongInfo")
 	ivSpotAlbum.Bitmap = Starter.vSongAlbumArt
 	lblSpotAlbumName.Text = Starter.vAlbumName
 	lblSpotReleaseDate.Text = Starter.vAlbumReleaseDate
@@ -1960,4 +1948,26 @@ Sub ivSpotify_Click
 	Dim intent1 As Intent
 	intent1.Initialize(intent1.ACTION_VIEW, Starter.vSpotUrl)
 	StartActivity(intent1)
+End Sub
+
+Sub btn_lyric_close_Click
+	
+End Sub
+
+
+Sub showLyricDialog
+	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
+	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
+	
+	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
+	DetailsDialog.SetSize(100%X, 500dip)
+	
+	Wait For (sf) Dialog_Ready(pnl As Panel)
+	pnl.LoadLayout("dlgSongLyric")
+	lbl_lyric_title.Text = Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
+
+	html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
+	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
+	wv__lyric_lyric.LoadHtml(html)
+	
 End Sub

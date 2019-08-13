@@ -18,6 +18,10 @@ End Sub
 
 
 Public Sub checkAlbumart As ResumableSub
+	If Starter.chartLyricsDown = True Then
+		
+		Return False
+	End If
 '	Log("CHARTLYRICS")
 	If reverseCount = 1 Then
 		reverseCount = 0
@@ -56,6 +60,8 @@ Private Sub processUrl As ResumableSub
 		j.Release
 		processXml
 		Return True
+	Else
+		Starter.chartLyricsDown = True	
 	End If
 	
 	Return False
