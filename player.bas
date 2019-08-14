@@ -5,8 +5,8 @@ Type=Activity
 Version=7.8
 @EndOfDesignText@
 #Region  Activity Attributes 
-	#FullScreen: true
-	#IncludeTitle: False
+	#FullScreen: false
+	#IncludeTitle: false
 #End Region
 
 #Extends: android.support.v7.app.AppCompatActivity
@@ -407,7 +407,7 @@ Sub Activity_Pause (UserClosed As Boolean)
 		Starter.streamTimer.Enabled = False
 		kvs.PutSimple("app_started", 1)
 		pnl_volume_slider.Visible = False
-		pnlSongText.SetVisibleAnimated(0, False)
+		'pnlSongText.SetVisibleAnimated(0, False)
 		getSetButtonState(True)
 		
 		If pg_artistAlbum.IsInitialized Then
@@ -637,10 +637,10 @@ Sub Activity_KeyPress (KeyCode As Int) As Boolean 'Return True to consume the ev
 
 	
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-		If pnlSongText.Visible = True Then
-			btnCloseSongText_Click
-			Return True
-		End If
+'		If pnlSongText.Visible = True Then
+'			btnCloseSongText_Click
+'			Return True
+'		End If
 	End If
 
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
@@ -776,7 +776,7 @@ End Sub
 
 
 Sub btnCloseSongText_Click
-	pnlSongText.SetVisibleAnimated(1000, False)
+	'pnlSongText.SetVisibleAnimated(1000, False)
 End Sub
 
 
@@ -878,7 +878,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 			
 			CallSub2(Starter, "clearNotif", "Not streaming")
 			CallSubDelayed2(Starter, "setSongLyric", "noLyric")
-			pnlSongText.SetVisibleAnimated(500, False)
+	'		pnlSongText.SetVisibleAnimated(500, False)
 			hideOverflow
 			
 			CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
@@ -1223,21 +1223,21 @@ End Sub
 
 
 Sub lblNowPlayingLyric_Click
-	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
-
-	If pnlSongText.Visible Then
-		pnlSongText.SetVisibleAnimated(500, False)
-		Return
-	End If
-	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
-	
-	wvLyric.LoadHtml(html)
-	
-	html = html.Replace("_header_", CallSub(Starter,"getSongTitle"))
-	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
-	
-	wvLyric.LoadHtml(html)
-	pnlSongText.SetVisibleAnimated(500, True)
+'	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
+'
+'	If pnlSongText.Visible Then
+'		pnlSongText.SetVisibleAnimated(500, False)
+'		Return
+'	End If
+'	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
+'	
+'	wvLyric.LoadHtml(html)
+'	
+'	html = html.Replace("_header_", CallSub(Starter,"getSongTitle"))
+'	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
+'	
+'	wvLyric.LoadHtml(html)
+'	pnlSongText.SetVisibleAnimated(500, True)
 	
 End Sub
 
@@ -1633,7 +1633,7 @@ Sub freeze(show As Boolean)
 End Sub
 
 Sub pnl_block_Touch (Action As Int, X As Float, Y As Float)
-	Starter.clsFunc.showLog("pnl_lock_Touch", 0)
+	'Starter.clsFunc.showLog("pnl_lock_Touch", 0)
 End Sub
 
 Sub setWifiPhoneImage(isWifi As Boolean, text As String)
@@ -1968,6 +1968,7 @@ Sub showLyricDialog
 
 	html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
 	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
+	Log(html)
 	wv__lyric_lyric.LoadHtml(html)
 	
 End Sub

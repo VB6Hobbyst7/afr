@@ -303,7 +303,7 @@ Public Sub icyMetaData
 '		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Red)
 			clsFunc.ReplaceRaros(newSong)
 			If newSong <> lastSong Or lastSong = "" Then
-				Log("SETTING NEW SONG")
+'				Log("SETTING NEW SONG")
 				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(newSong)
 			End If
@@ -311,7 +311,7 @@ Public Sub icyMetaData
 '		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
 			'Log(job.ErrorMessage)
 			If(lastSong) Then
-				Log("SETTING NEW SONG")
+'				Log("SETTING NEW SONG")
 			CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(lastSong)
 			End If
