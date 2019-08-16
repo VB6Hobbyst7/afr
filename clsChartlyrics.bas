@@ -9,11 +9,12 @@ Sub Class_Globals
 	Dim parser As SaxParser
 	Dim reverseSearch As Boolean = False
 	Dim reverseCount As Int = 0
+	Dim clsFunc As clsFunctions
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
-	
+	clsFunc.Initialize
 End Sub
 
 
@@ -121,4 +122,24 @@ Sub processAlbumArt As ResumableSub
 		CallSubDelayed2(Starter, "setAlbumArt", bm)
 	End If
 	Return True
+End Sub
+
+
+
+Sub checkScrapLyrics As ResumableSub 
+	Dim url As String
+	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.chartSong} - ${Starter.chartArtist}&format=json"$
+	
+	Dim j As HttpJob
+	j.Initialize("", Me)
+	j.Download(url)
+	j.GetRequest.Timeout = 6000
+	Wait For (j) JobDone(j As HttpJob)
+	
+	If j.Success Then
+		clsFunc.parseScrapeData(j.GetString)
+		j.Release
+	End If
+	Return True
+	
 End Sub

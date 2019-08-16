@@ -344,7 +344,6 @@ End Sub
 
 
 Sub Activity_Resume
-	Starter.clsFunc.showLog($"START ACTIVITY RESUME $Time{DateTime.Now}"$, Colors.Black)
 	Dim in As Intent
 	Starter.activeActivity = "Player"
 	acVolume.Value = clsVol.currVolume
@@ -1968,7 +1967,6 @@ Sub showLyricDialog
 
 	html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
 	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
-	Log(html)
 	wv__lyric_lyric.LoadHtml(html)
 	
 End Sub

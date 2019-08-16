@@ -184,13 +184,14 @@ Public Sub pullDataFromFandom(reverse As Boolean) As ResumableSub
 		
 	If j.Success Then
 		processFandom(j.GetString And j.Response.StatusCode <> "404")
-		Starter.clsFunc.showLog($"FANDOM STATUS ${j.Response.StatusCode}"$, Colors.Red)
+		'Starter.clsFunc.showLog($"FANDOM STATUS ${j.Response.StatusCode}"$, Colors.Red)
 	Else
+		j.Release
 		If reverse = False Then
 			pullDataFromFandom(True)
 		End If
-		Starter.clsFunc.showLog($"FANDOM STATUS ${j.Response.StatusCode}"$, Colors.Red)
-		Starter.clsFunc.showLog("FANDOM " & j.ErrorMessage, Colors.Magenta)
+		'Starter.clsFunc.showLog($"FANDOM STATUS ${j.Response.StatusCode}"$, Colors.Red)
+		'Starter.clsFunc.showLog("FANDOM " & j.ErrorMessage, Colors.Magenta)
 	End If
 	j.Release
 	Return True
@@ -250,7 +251,7 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 	End If
 		
 	
-	Log(url)
+	'Log(url)
 	mJob.Initialize("", Me)
 	mJob.Download(url)
 	mJob.GetRequest.Timeout = 5*1000

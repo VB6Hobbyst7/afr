@@ -49,7 +49,7 @@ Sub Process_Globals
 	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound As Boolean
 	Public streamStarted, vIsPreset, pnl_album_info_button, pnl_stop_button, pnl_lyric_button, tryRestartStream As Boolean = False
 	Public chatDataLyric, lyricsOnDemand, pnl_store_song_button, lyricFound, albumArtFound, albumArtSet, streamLost, getUpdate As Boolean = False
-	Public chartLyricsDown as Boolean = False
+	Public chartLyricsDown As Boolean = True
 	'FLOAT
 	Public vDataUsage, ivAlbumArtHeight, ivAlbumArtwidth As Float
 	'INT

@@ -406,12 +406,38 @@ Public Sub singularPlural(str As String, count As Int) As String
 	Return $"${str}"$
 End Sub
 
+Public Sub parseScrapeData (metadata As String)
+	If metadata = "" Then 
+		Log("no data")
+		Return
+	End If
+	
+	Dim parser As JSONParser
+	parser.Initialize(metadata)
+	Dim root As Map = parser.NextObject
+	
+	Dim lyric As String = root.Get("lyrics")
+	Dim source As String = root.Get("source")
+	
+	lyric = lyric.Replace("<p class='verse'>", "")
+	lyric = lyric.Replace("</p>", "")
+	lyric = lyric.Replace("\n<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->", "")
+	Starter.vSong = lyric
+	Starter.vSongLyric = "foundLyric"
+	CallSubDelayed2(Starter, "setSongLyric", lyric)
+	Log(source)
+	'Log(lyric)
+End Sub
+
+
 Public Sub parseIcy(metaData As String) As String
 	If metaData.SubString2(0,1) <> "{" Then
 		Return "No song information"
 	End If
 	Dim parser As JSONParser
 	parser.Initialize(metaData)
+	
+	
 
 Try
 		Dim root As Map = parser.NextObject
