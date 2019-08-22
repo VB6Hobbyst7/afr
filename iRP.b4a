@@ -775,14 +775,17 @@ Sub Globals
 	Private dbTimestamp As Long
 	Dim clsGen As clsGeneral
 '	Private NativeMe As JavaObject
+	
 	Private toolbar As ACToolBarDark
 	Private rp As RuntimePermissions
 	Private lblDbConnected As Label
 	Private pnlMain As Panel
 	Private kvs As KeyValueStore
+
 '	Private svIrp As MySecVault
 '	Dim M1 As Map
 '	Dim CollSer As dcCollectionSerializer
+
 	Private btnContinue As Button
 	Private ImageView1 As ImageView
 	Private ImageView2 As ImageView
