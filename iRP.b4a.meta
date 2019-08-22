@@ -79,6 +79,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=clsChartlyrics,Initialize,10,2,clsChartlyrics,Class_Globals,5,4,clsHttp,processUrl,364,0,clsChartlyrics,processAlbumArt,122,0,clsChartlyrics,checkScrapLyrics,122,6,clsFunctions,parseScrapeData,419,6,clsHttp,Class_Globals,12,0,clsHttp,getSpotifySongData,239,6,clsChartlyrics,checkAlbumart,15,0,Starter,Process_Globals,45,1
+NavigationStack=Starter,setSongPlaying,206,0,clsHttp,Class_Globals,12,0,clsChartlyrics,checkAlbumart,15,0,clsChartlyrics,checkScrapLyrics,122,6,Visual Designer,player.bal,-100,1,player,Globals,111,0,clsHttp,getSpotifySongData,239,6,Starter,Process_Globals,45,1,player,showLyricDialog,1953,0,Starter,processSong,364,1,Starter,icyMetaData,296,4
 SelectedBuild=0
 VisibleModules=1,2,3,4,5,6,7,8,9

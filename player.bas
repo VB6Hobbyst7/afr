@@ -1957,6 +1957,8 @@ End Sub
 Sub showLyricDialog
 	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
 	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
+	html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
+	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
 	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
 	DetailsDialog.SetSize(100%X, 500dip)
@@ -1965,8 +1967,6 @@ Sub showLyricDialog
 	pnl.LoadLayout("dlgSongLyric")
 	lbl_lyric_title.Text = Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
 
-	html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
-	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
 	wv__lyric_lyric.LoadHtml(html)
 	
 End Sub

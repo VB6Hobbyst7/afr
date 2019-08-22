@@ -292,27 +292,21 @@ Public Sub icyMetaData
 			
 	
 		url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
-'	Log(url)
 		job.Initialize("", Me)
 		job.Download(url)
 		Wait For (job) JobDone(job As HttpJob)
 		If job.Success Then
 			nSong = job.GetString
-			'Log(nSong)
 			newSong = clsFunc.parseIcy(nSong)
-'		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Red)
 			clsFunc.ReplaceRaros(newSong)
 			If newSong <> lastSong Or lastSong = "" Then
-'				Log("SETTING NEW SONG")
+			'LogColor(newSong, Colors.Red)
 				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(newSong)
 			End If
 		Else
-'		LogColor($"NEWSONG ${newSong} LASTSONG ${lastSong}"$, Colors.Green)
-			'Log(job.ErrorMessage)
 			If(lastSong) Then
-'				Log("SETTING NEW SONG")
-			CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(lastSong)
 			End If
 		End If
@@ -373,6 +367,8 @@ Sub processSong(song As String)
 '			Log("searchStation")
 			CallSub2(activeActivity, "nowPlaying", song)
 		End If
+	Else 
+		setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 	End If
 End Sub
 
