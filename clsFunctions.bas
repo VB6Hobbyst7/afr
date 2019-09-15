@@ -408,7 +408,7 @@ End Sub
 
 Public Sub parseScrapeData (metadata As String)
 	If metadata = "" Then 
-		Log("no data")
+	'	CallSubDelayed2(player, "setlblTimeNow", "")
 		Return
 	End If
 	
@@ -425,7 +425,8 @@ Public Sub parseScrapeData (metadata As String)
 	Starter.vSong = lyric
 	Starter.vSongLyric = "foundLyric"
 	CallSubDelayed2(Starter, "setSongLyric", lyric)
-	Log(source)
+	Log($"$DateTime{DateTime.Now} : ${source}"$)
+	'CallSubDelayed2(player, "setlblTimeNow", source)
 	'Log(lyric)
 End Sub
 

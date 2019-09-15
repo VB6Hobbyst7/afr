@@ -309,7 +309,7 @@ Sub DownloadImage(Link As String)
 			Starter.albumArtSet = True
 			CallSubDelayed2(Starter, "setAlbumArt", j.GetBitmap)
 		Else
-			clsLyrics.checkAlbumart
+			'clsLyrics.checkAlbumart
 		End If
 	j.Release
 	End If
@@ -385,9 +385,9 @@ End Sub
 
 
 Sub noSongData
-	wait for (clsLyrics.checkAlbumart) Complete (result As Boolean)
-	If result = False Then
-		CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-	End If
+'	wait for (clsLyrics.checkAlbumart) Complete (result As Boolean)
+'	If result = False Then
+'		CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+'	End If
 End Sub
 

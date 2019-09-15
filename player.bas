@@ -1970,3 +1970,7 @@ Sub showLyricDialog
 	wv__lyric_lyric.LoadHtml(html)
 	
 End Sub
+
+Sub setlblTimeNow(txt As String)
+	lbl_time_now.Text = txt
+End Sub

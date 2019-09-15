@@ -24,7 +24,7 @@ Sub Process_Globals
 	Public vSongLyric As String	= "noLyric"
 	Private vSongTitle As String
 	Private songdata As clsHttp
-	Private clsChart As clsChartlyrics
+'	Private clsChart As clsChartlyrics
 '	Private PlayerCallback As Object
 	'Private logo As Bitmap = LoadBitmapResize(File.DirAssets, "radio_flat.png", 24dip, 24dip, False)
 	Private logo As Bitmap = LoadBitmapResize(File.DirAssets, "radio_notif.png", 24dip, 24dip, False)
@@ -77,7 +77,7 @@ End Sub
 
 Sub Service_Create
 	clsFunc.Initialize
-	clsChart.Initialize
+	'clsChart.Initialize
 	clsImage.Initialize
 	spotMap.Initialize
 	clsGen.Initialize
@@ -186,24 +186,26 @@ Public Sub getSetSongLyric As String
 End Sub
 
 Public Sub setAlbumArt(vAlbum As Bitmap)
+	'LogColor("setalbumart", Colors.Red)
 	If IsPaused(player) Then 
 		Return
 	
-		If vSongAlbumArt.IsInitialized = False Then
-			vSongAlbumArt.Initialize(File.DirAssets, "NoImageAvailable.png")
-		End If
-		vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
-		Dim Out As OutputStream
-		
-		Out = File.OpenOutput(irp_dbFolder, "imgPlaying.png", False)
-		vAlbum.WriteToStream(Out, 100, "PNG")
-		Out.Close
-		Return
+'		If vSongAlbumArt.IsInitialized = False Then
+'			vSongAlbumArt.Initialize(File.DirAssets, "NoImageAvailable.png")
+'		End If
+'		vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
+'		Dim Out As OutputStream
+'		
+'		Out = File.OpenOutput(irp_dbFolder, "imgPlaying.png", False)
+'		vAlbum.WriteToStream(Out, 100, "PNG")
+'		Out.Close
+'		Return
 	End If
 	albumArtSet = True
 	vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
 	
-	CallSubDelayed2(player, "setAlbumArtFading", vSongAlbumArt)
+	CallSub2(player, "setAlbumArtFading", vSongAlbumArt)
+	
 End Sub
 
 Public Sub getAlbumArt As Bitmap
@@ -329,7 +331,7 @@ Sub processSong(song As String)
 		clearNotif(song)
 	End If
 	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
-		
+	'	Log("LAST SONG " & lastSong)
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 		spotMap.Clear
 		CallSub(player, "disableInfoPanels")
