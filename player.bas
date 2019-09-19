@@ -129,6 +129,12 @@ Sub Globals
 	Private lbl_lyric_title As Label
 	Private wv__lyric_lyric As WebView
 	Private pnl_lyric As Panel
+	
+	'Private lbl_playing_text As Label
+	
+	Private edt_playing_format As EditText
+	Private lbl_playing_text As B4XView
+	Private lbl_playing_stname As B4XView
 End Sub
 
 
@@ -1186,8 +1192,9 @@ End Sub
 
 
 Sub lblOpenStationUrl_Click
-	cmGen.openStationUrl(getStationByIndex(lblOpenStationUrl.Tag))
-	hideOverflow
+	showNowPlayingFormat
+'	cmGen.openStationUrl(getStationByIndex(lblOpenStationUrl.Tag))
+'	hideOverflow
 End Sub
 
 
@@ -1954,6 +1961,23 @@ Sub btn_lyric_close_Click
 End Sub
 
 
+Sub showNowPlayingFormat
+	Dim sfFormat As Object = DetailsDialog.ShowAsync("", "OK", "CANCEL", "", Null, True)
+	DetailsDialog.SetSize(100%X, 500dip)
+	'lbl_playing_text.Initialize("")
+	Log(lblArtistNowPlaying.Text)
+	
+	Wait For (sfFormat) Dialog_Ready(pnl As Panel)
+	pnl.LoadLayout("player_playing_format")
+	lbl_playing_text.Text = lblArtistNowPlaying.Text
+	lbl_playing_stname.Text = lblNowPlayingStation.Text
+	Wait For (sfFormat) Dialog_Result(Result As Int)
+	If Result = DialogResponse.POSITIVE Then
+		Log(Result)
+	End If
+	Log(Result)
+End Sub
+
 Sub showLyricDialog
 	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
 	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
@@ -1974,3 +1998,4 @@ End Sub
 Sub setlblTimeNow(txt As String)
 	lbl_time_now.Text = txt
 End Sub
+

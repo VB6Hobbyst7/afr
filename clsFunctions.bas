@@ -171,7 +171,7 @@ Sub ReplaceRaros(p_strText As String) As String
 	strTemp	= strTemp.Replace("TOPSONG: ", "")
 	strTemp	= strTemp.Replace("Nu:Straks:", "")
 	strTemp	= strTemp.Replace("Nu:Straks:", "")
-	strTemp	= strTemp.Replace("Straks:", "")
+	'strTemp	= strTemp.Replace("Straks:", "")
 	strTemp	= strTemp.Replace("Now Playing: ", "")
 	strTemp	= strTemp.Replace("S.S.", "")
 	

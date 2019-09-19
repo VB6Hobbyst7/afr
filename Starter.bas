@@ -302,7 +302,7 @@ Public Sub icyMetaData
 			newSong = clsFunc.parseIcy(nSong)
 			clsFunc.ReplaceRaros(newSong)
 			If newSong <> lastSong Or lastSong = "" Then
-			'LogColor(newSong, Colors.Red)
+			LogColor(newSong, Colors.Red)
 				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(newSong)
 			End If
@@ -559,8 +559,8 @@ End Sub
 
 Public Sub startPlayer(url As String)
 	exoPlayer.Initialize("")
-	Dim sources As List
-	sources.Initialize
+'	Dim sources As List
+'	sources.Initialize
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	
 	exoPlayer.Volume = 1
