@@ -137,6 +137,15 @@ Public Sub genUpdateTable
 	vacuumDB
 End Sub
 
+public Sub genSongFormatTable
+	Dim qry As String
+	initDB
+	qry = $"CREATE TABLE IF NOT EXISTS song_format
+		(song_format_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+		station_id INTEGER,	song_format TEXT)"$
+	vSql.ExecNonQuery(qry)
+End Sub
+
 Public Sub genStoredSongTable
 	Dim vQry As String
 	initDB

@@ -135,6 +135,7 @@ Sub Globals
 	Private edt_playing_format As EditText
 	Private lbl_playing_text As B4XView
 	Private lbl_playing_stname As B4XView
+	Private lblForId As B4XView
 End Sub
 
 
@@ -225,7 +226,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	btn_img_lyric.Background		= xml.GetDrawable("outline_subtitles_black_24")
 	btn_img_store_song.Background	= xml.GetDrawable("outline_queue_music_black_24")
 	btn_img_album_info.Background	= xml.GetDrawable("outline_playlist_add_black_24")
-	btn_img_new_station.Background	= xml.GetDrawable("ic_radio_black_24dp")
+	'btn_img_new_station.Background	= xml.GetDrawable("ic_radio_black_24dp")
+	'btn_img_new_station.Background	= xml.GetDrawable("ic_power_settings_new_black_24dp")
 	img_volume.Background	= xml.GetDrawable("outline_volume_up_black_24")
 	setSvg(img_close, "022-power-button.svg")
 '	setSvg(ivTimer, "sleeptimer.svg")
@@ -255,8 +257,8 @@ Sub Activity_Create(FirstTime As Boolean)
 		restorePlayingInfo
 	End If
 	
-	pnl_new_station_button.Visible	= False
-	pnl_new_station_button.SetElevationAnimated(1000, 8dip)
+	'pnl_new_station_button.Visible	= False
+	pnl_new_station_button.SetElevationAnimated(500, 8dip)
 	handleControlButtons(False, 0dip, 500)
 	pnl_lyric_button.Enabled = False
 	pnl_lyric_button.SetElevationAnimated(0, 0dip)
@@ -480,6 +482,9 @@ Sub setStation(lst As List) As Panel
 '	lblOverflow.Tag			= lst.Get(3)
 	lblGenre.Text			= $"Genre : ${lst.Get(1)}"$
 	svgInfo.Tag				= lst.Get(3)
+	lblForId.Tag			= $"stationid_${lst.Get(7)}"$
+	
+	Log($"stationid_${lst.Get(7)}"$)
 	
 	lblHeaderPlayButton.Background	= xml.GetDrawable("outline_play_arrow_black_36")
 	If lst.get(6) <> Null And File.Exists("", lst.get(6))Then
@@ -1006,10 +1011,21 @@ Sub setPlayButton(index As Int) As String
 		
 	Next
 
+	'GET STATION ID
+	Dim tag As String
+	For Each v As View In pnl.GetAllViewsRecursive
+		If v.Tag Is B4XView Then
+			tag = v.Tag
+			If tag.IndexOf("stationid_") > -1 Then
+				Dim idLst As List = Regex.Split("_", tag)
+				Starter.playingStationId = idLst.Get(1)
+				Exit
+			End If
+		End If
+	Next
 	
 			
 	For Each v As View In pnl.GetAllViewsRecursive
-		
 		If v.Tag Is List Then
 			listPlayButton	= v.Tag
 			If listPlayButton.Get(0)= "headerPlayButton" Then
@@ -1025,10 +1041,12 @@ End Sub
 Sub lblOverflow_Click
 	Dim index As Int 	= clvPlayer.GetItemFromView(Sender)
 	Dim lbl As ImageView	= Sender
+	Dim stationId As Int
 	
 	stationinfo				= lbl.Tag
 	lblOpenStationUrl.Tag	= index
 	lblDeleteStation.Tag	= cmGen.getStationRecord(getStationByIndex(index), "pref_id")
+	stationId				= cmGen.getStationRecord(getStationByIndex(index), "pref_id")
 	lbl_station_name.Color	= 0xFF004BA0
 	lbl_station_name.Text	= getStationByIndex(index)
 	
@@ -1628,6 +1646,10 @@ Sub startOrStopStream(index As Int)
 	Wait For(start_stopStream(index)) Complete (result As Boolean)
 End Sub
 
+Sub getStationId(index As Int)
+	
+End Sub
+
 Private Sub disableClickTimer_Tick
 	freeze(False)	
 End Sub
@@ -1963,7 +1985,7 @@ End Sub
 
 Sub showNowPlayingFormat
 	Dim sfFormat As Object = DetailsDialog.ShowAsync("", "OK", "CANCEL", "", Null, True)
-	DetailsDialog.SetSize(100%X, 500dip)
+	'DetailsDialog.SetSize(100%X, 500dip)
 	'lbl_playing_text.Initialize("")
 	Log(lblArtistNowPlaying.Text)
 	
@@ -1999,3 +2021,8 @@ Sub setlblTimeNow(txt As String)
 	lbl_time_now.Text = txt
 End Sub
 
+
+
+Sub btn_img_new_station_Click
+	img_close_Click
+End Sub

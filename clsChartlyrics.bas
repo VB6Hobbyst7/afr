@@ -126,9 +126,10 @@ End Sub
 
 
 
-Sub checkScrapLyrics As ResumableSub 
+Sub checkScrapLyrics(artist As String, song As String) As ResumableSub 
+	'Log (artist & " - " & song)
 	Dim url As String
-	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.chartSong} - ${Starter.chartArtist}&format=json"$
+	url = $"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$
 	
 	Dim j As HttpJob
 	j.Initialize("", Me)
@@ -139,7 +140,9 @@ Sub checkScrapLyrics As ResumableSub
 	If j.Success Then
 		clsFunc.parseScrapeData(j.GetString)
 		j.Release
+		Return True
 	End If
+	'checkScrapLyrics(Starter.chartSong, Starter.chartArtist)
 	Return True
 	
 End Sub

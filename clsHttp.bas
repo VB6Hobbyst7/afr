@@ -90,7 +90,7 @@ Sub spBearer(artist As String, song As String)
 		'SpotTrack1 is te vinden in de json onder item, 0 _> id
 		j.Release
 		
-				
+		songReversed = False
 		Dim j1 As HttpJob
 		j1.Initialize("", Me)
 		j1.Download(SourceWeb1)
@@ -99,6 +99,7 @@ Sub spBearer(artist As String, song As String)
 		Wait For (j1) JobDone(j1 As HttpJob)
 		If j1.Success Then
 			Dim j1String As String = j1.GetString
+			'clsFunc.showLog(j1String, Colors.Red)
 			j1.Release
 			getSpotifySongData(j1String)
 			If Starter.chartDataFound = True Then
@@ -109,7 +110,9 @@ Sub spBearer(artist As String, song As String)
 			j1.Release
 			If songReversed = False Then
 				songReversed	= True
-				spBearer(Starter.chartSong, Starter.chartArtist)
+				clsFunc.showLog("CLSHTTP REVERSE", Colors.green)
+				'spBearer(Starter.chartSong, Starter.chartArtist)
+				spBearer(song, artist)
 			End If
 			Starter.vSpotError = "No data"
 			Starter.clsFunc.Initialize
@@ -226,9 +229,13 @@ Sub getSpotifySongData(jsonData As String)
 			
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
-				wait for(clsLyrics.checkScrapLyrics) Complete (result As Boolean)
-				If result Then
+				wait for(clsLyrics.checkScrapLyrics(Starter.chartArtist, Starter.chartSong)) Complete (result As Boolean)
+				If result = False Then
 					'Return
+					'Log("NOT FOUND.....")
+					wait for(clsLyrics.checkScrapLyrics(Starter.chartSong, Starter.chartArtist)) Complete (result As Boolean)
+				Else
+					'Log("FOUND.....")
 				End If
 				If Starter.vSongLyric = "noLyric" Then
 				Try

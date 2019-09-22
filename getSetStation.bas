@@ -59,9 +59,9 @@ Sub Activity_Create(FirstTime As Boolean)
 	If vDefCountry.Length > 0 Then
 		btnSkip.Text	= "Next"
 		btnSkip.Visible	= True
-	Else 
+	Else
 		lblSkip.Visible	=False
-		btnSkip.Visible	= False	
+		btnSkip.Visible	= False
 	End If
 
 	toolbar.Title	= Starter.vAppname
@@ -72,10 +72,12 @@ Sub Activity_Create(FirstTime As Boolean)
 	setCountryLetters
 
 	If clv_main.Size = 0 Then
-	
-	getCountries("", "")
-	
+			getCountries("", "")
 	End If
+	If vDefCountry.Length < 0 Then
+		Msgbox("Please select a country", Starter.vAppname)
+	End If
+	
 End Sub
 
 

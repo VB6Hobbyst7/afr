@@ -53,7 +53,7 @@ Sub Process_Globals
 	'FLOAT
 	Public vDataUsage, ivAlbumArtHeight, ivAlbumArtwidth As Float
 	'INT
-	Public currentMusicVolume As Int
+	Public currentMusicVolume, playingStationId As Int
 	Public streamRestartCount, stationAdded, tryRestartCount As Int = 0
 	Public vPlayerSelectedPanel As Int = 999
 	Public notifId As Int = 1
@@ -90,7 +90,7 @@ Sub Service_Create
 	
 	'mManualFolder	= rp.GetSafeDirDefaultExternal("shared")
 	'irp_dbFolder	= rp.GetSafeDirDefaultExternal("")
-	irp_dbFolder	= File.DirInternal
+	irp_dbFolder	= rp.GetSafeDirDefaultExternal("irp_files") 'File.DirInternal
 	smallIcon		= LoadBitmapResize(File.DirAssets, "radio_notif.png", 24dip, 24dip, True)
 	logs.Initialize
 #if RELEASE
@@ -149,8 +149,6 @@ Sub Service_Destroy
 	tmrInetConnection.Enabled	= False
 	connectionTimer.Enabled		= False
 End Sub
-
-
 
 Public Sub initPlayerVars
 	vSongAlbumArt.Initialize(File.DirAssets, "NoImageAvailable.png")
