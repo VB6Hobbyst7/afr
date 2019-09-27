@@ -24,5 +24,5 @@ public Sub newRandomImage
 	If j.Success Then
 		CallSubDelayed2(Starter, "setAlbumArt", j.GetBitmap)
 	End If
-	
+	j.Release
 End Sub

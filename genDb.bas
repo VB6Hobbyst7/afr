@@ -31,7 +31,7 @@ Private Sub initDB
 		vSql.Initialize(db_path, vDbName, False)
 	End If
 	Catch
-		Log(LastException)
+		Log("GENDB @ 28 : "&LastException)
 	End Try
 	
 End Sub

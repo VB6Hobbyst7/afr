@@ -88,7 +88,7 @@ Sub openStationUrl(stationName As String)
 		StartActivity(ph.OpenBrowser(url))
 	Catch
 		ToastMessageShow("Station url seems to be invalid", True)
-		Log(LastException)
+'		Log("CMGEN @ 85 : "&LastException)
 	End Try
 	End Sub
 

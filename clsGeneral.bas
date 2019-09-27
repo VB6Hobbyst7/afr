@@ -84,6 +84,8 @@ Private Sub processOvhLyrics(ovhUrl As String) As ResumableSub
 			Return True
 				
 		End If
+	Else 
+		job.Release	
 	End If
 	
 	Return False
@@ -142,13 +144,15 @@ Sub DownloadImage(Link As String)
 			Starter.chartDataFound	= False
 			Starter.albumArtFound	= False
 		End If
+		j.Release
 	Else
+		j.Release
 		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		Starter.chartDataFound	= False
 		Starter.albumArtFound	= False
 		End If
 	Catch
-		Log(LastException)
+'		Log("CLSGENERAL @ 145 : "&LastException)
 		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		Starter.chartDataFound	= False
 		Starter.albumArtFound	= False
@@ -185,6 +189,7 @@ Public Sub pullDataFromFandom(reverse As Boolean) As ResumableSub
 	If j.Success Then
 		processFandom(j.GetString And j.Response.StatusCode <> "404")
 		'Starter.clsFunc.showLog($"FANDOM STATUS ${j.Response.StatusCode}"$, Colors.Red)
+		j.Release
 	Else
 		j.Release
 		If reverse = False Then
@@ -267,10 +272,12 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 			pullDataFromOndemand(True)
 		End If
 		Starter.clsFunc.showLog($"DEMAND STATUS ${mJob.Response.StatusCode}"$, Colors.Red)
+		mJob.Release
 	Else
 		Starter.clsFunc.showLog($"DEMAND STATUS ${mJob.Response.StatusCode}"$, Colors.Red)
 		page = mJob.GetString
 		processLyricsOnDemand(page)
+		mJob.Release
 	End If
 	mJob.Release
 	
@@ -361,9 +368,11 @@ Public Sub userCountry As ResumableSub
   
 		Dim country As String = mparse.Get("country")
 		Starter.countryCode = mparse.Get("countryCode")
+		j.Release
+	Else 
+		j.Release	
 	End If
 	
-	j.Release
 	Return True
 	
 End Sub

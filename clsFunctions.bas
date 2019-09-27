@@ -28,10 +28,18 @@ Public Sub stringSplit(splitChar As String, stringToSplit As String, startPos As
 	Dim retString="", splitString As String
 	Dim splitList As List
 	Dim i As Int
-
+	
+	
+	
 	If stringToSplit.Length < 3 Then
 		Return stringToSplit
 	End If
+	
+	If stringToSplit.IndexOf(splitChar) = -1 Then
+		Log("MISSING SPLITCHAR")
+		Return stringToSplit
+	End If
+	
 	splitList.Initialize
 	splitList =Regex.Split(splitChar, stringToSplit)
 	
@@ -40,7 +48,12 @@ Public Sub stringSplit(splitChar As String, stringToSplit As String, startPos As
 		If returnCount = True Then
 			Return splitList.Size +1
 		End If
-	
+		
+'		Log($"RETURN INDEX ${returnIndex}"$)
+		'If returnIndex = Null Then
+			'Return 0	
+		'End If
+		
 		If returnIndex > -1 Then
 			Return splitList.Get(returnIndex)
 		End If
@@ -61,7 +74,7 @@ Public Sub stringSplit(splitChar As String, stringToSplit As String, startPos As
 		Next
 	
 	Catch
-		Starter.clsFunc.showLog(LastException, 0)
+		Starter.clsFunc.showLog("CLSFUNCTIONS @ 64 : "&LastException, 0)
 	End Try
 	Return retString
 
@@ -418,7 +431,10 @@ Public Sub parseScrapeData (metadata As String)
 	
 	Dim lyric As String = root.Get("lyrics")
 	Dim source As String = root.Get("source")
-	
+	If lyric = "" Then
+		Starter.vSongLyric = "nolyric"
+		Return
+	End If
 	lyric = lyric.Replace("<p class='verse'>", "")
 	lyric = lyric.Replace("</p>", "")
 	lyric = lyric.Replace("\n<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->", "")
@@ -443,7 +459,7 @@ Public Sub parseIcy(metaData As String) As String
 Try
 		Dim root As Map = parser.NextObject
 Catch
-	'Log(LastException)
+		Log("CLSFUNCTIONS @ 439 : "&LastException)
 		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 	Return "No song information"
 End Try

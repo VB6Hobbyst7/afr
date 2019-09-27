@@ -875,7 +875,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		Try
 			'initPlayStopButton
 		Catch
-			Log(LastException)
+			Log("PLAYER @ 872 : "&LastException)
 		End Try
 		
 		'STOP STREAM
@@ -1039,6 +1039,10 @@ End Sub
 
 
 Sub lblOverflow_Click
+'	Dim index As Int 	= clvPlayer.GetItemFromView(Sender)
+'	showStationInfo(index)
+'	Return
+	
 	Dim index As Int 	= clvPlayer.GetItemFromView(Sender)
 	Dim lbl As ImageView	= Sender
 	Dim stationId As Int
@@ -1144,7 +1148,7 @@ Sub getStationLogo(link As String)
 			Return
 		End If
 	Catch
-		Log(LastException)
+		Log("PLAYER @ 1141 : "&LastException)
 		Return
 	End Try
 	If stationId < 1 Then
@@ -1164,6 +1168,9 @@ Sub getStationLogo(link As String)
 	If link = "" Then
 		Return
 	End If
+	
+	Try
+		
 	
 
 	url = $"https://logo.clearbit.com/${link}/?size=150&format=png"$
@@ -1188,18 +1195,20 @@ Sub getStationLogo(link As String)
 		out.Close
 		writePngNameToTable(stationId, stationFolder&"/"&stationPng &".png")
 		setStationLogo(bm)
-		
+		j.Release
 	Else
 		'try new url only once
 		If imgUrlRetry = 1 Then
 			imgUrlRetry = 0
 			Return
 		End If
-		
+		j.Release			
 		imgUrlRetry = imgUrlRetry + 1
 		cmGen.stripUrl(link)
 	End If
-
+	Catch
+		Log("PLAYER @ 1200 : "&LastException)
+	End Try
 	
 End Sub
 
@@ -1922,6 +1931,7 @@ End Sub
 
 
 Sub iets
+'	Log(Starter.spotMap.Size)
 	If Starter.spotMap.Size < 1 Then
 		Return
 	End If
@@ -1982,6 +1992,17 @@ Sub btn_lyric_close_Click
 	
 End Sub
 
+Sub showStationInfo(index As Int)
+	Dim sfFormat As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
+	
+	DetailsDialog.SetSize(100%X, pnlOverflow.Height+120dip)
+	Wait For (sfFormat) Dialog_Ready(pnl As Panel)
+	pnlOverflow.Top = 0
+	lbl_station_name.Color	= 0xFF004BA0
+	pnl.LoadLayout("dlgStationInfo")
+	lbl_station_name.Text	= getStationByIndex(index)
+	Log(lbl_station_name.Text)
+End Sub
 
 Sub showNowPlayingFormat
 	Dim sfFormat As Object = DetailsDialog.ShowAsync("", "OK", "CANCEL", "", Null, True)

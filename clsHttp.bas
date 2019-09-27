@@ -10,7 +10,7 @@ Version=7.8
 Sub Class_Globals
 	Private cbObj As Object
 	Private cbEN As String
-	Private songReversed As Boolean = False
+	Public songReversed As Boolean = False
 	Dim SpotToken1, SpotGrant1, SpotBase64, SpotClientID1, SpotClientSecret1 As String
 	Dim SourceWeb1, SourceText1 As String
 	
@@ -72,6 +72,7 @@ Sub spBearer(artist As String, song As String)
 	j.PostString(SourceWeb1, "grant_type=" & SpotGrant1)
 	j.GetRequest.SetContentType("application/x-www-form-urlencoded")
 	j.GetRequest.SetHeader("Authorization", "Basic " & SpotBase64)
+'	Log("CLSHTTP @ 69")
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
 		SourceText1 = j.GetString2("ISO-8859-1")
@@ -90,7 +91,7 @@ Sub spBearer(artist As String, song As String)
 		'SpotTrack1 is te vinden in de json onder item, 0 _> id
 		j.Release
 		
-		songReversed = False
+		'songReversed = False
 		Dim j1 As HttpJob
 		j1.Initialize("", Me)
 		j1.Download(SourceWeb1)
@@ -108,6 +109,7 @@ Sub spBearer(artist As String, song As String)
 			
 		Else
 			j1.Release
+			Log($"SONG REVERSED = ${songReversed}"$)
 			If songReversed = False Then
 				songReversed	= True
 				clsFunc.showLog("CLSHTTP REVERSE", Colors.green)
@@ -124,7 +126,7 @@ Sub spBearer(artist As String, song As String)
 			End If
 		End If
 		Else 
-			Log(j.ErrorMessage)
+			Log("ERROR " & j.ErrorMessage)
 			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(Starter.sStationLogoPath, ""))
 			j.Release
 	End If
@@ -193,7 +195,7 @@ Sub getSpotifySongData(jsonData As String)
 				End If
 			Catch
 				Starter.vAlbumReleaseDate	= album.Get("release_date")
-				Log(LastException)
+				Log("ERROR " & LastException)
 			End Try
 			Starter.spotMap.Put("duration", colitems.Get("duration_ms"))
 			Starter.spotMap.Put("album",album.Get("name"))
@@ -229,11 +231,13 @@ Sub getSpotifySongData(jsonData As String)
 			
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
+'				Log("CLSHTTP @ 226")
 				wait for(clsLyrics.checkScrapLyrics(Starter.chartArtist, Starter.chartSong)) Complete (result As Boolean)
 				If result = False Then
 					'Return
 					'Log("NOT FOUND.....")
-					wait for(clsLyrics.checkScrapLyrics(Starter.chartSong, Starter.chartArtist)) Complete (result As Boolean)
+					'wait for(clsLyrics.checkScrapLyrics(Starter.chartSong, Starter.chartArtist)) Complete (result As Boolean)
+					'Log("CLSHTTP @ 232")
 				Else
 					'Log("FOUND.....")
 				End If
@@ -305,27 +309,35 @@ End Sub
 
 
 Sub DownloadImage(Link As String)
-	If clsFunc.checkUrl(Link) = False Then
-		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-	Else
-		Dim j As HttpJob
-		j.Initialize("", Me)
-		j.Download(Link)
-		Wait For (j) JobDone(j As HttpJob)
-		If j.Success Then
-			Starter.albumArtSet = True
-			CallSubDelayed2(Starter, "setAlbumArt", j.GetBitmap)
+	
+	Try
+		If clsFunc.checkUrl(Link) = False Then
+			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		Else
-			'clsLyrics.checkAlbumart
+			Dim j As HttpJob
+			j.Initialize("", Me)
+			j.Download(Link)
+			Wait For (j) JobDone(j As HttpJob)
+			If j.Success Then
+				Starter.albumArtSet = True
+				CallSubDelayed2(Starter, "setAlbumArt", j.GetBitmap)
+			j.Release
+			Else
+			j.Release
+				'clsLyrics.checkAlbumart
+			End If
 		End If
-	j.Release
-	End If
+		
+	Catch
+			j.Release
+		Log("CLSHTTP @ 322 : "&LastException)
+	End Try
 End Sub
 
 
 public Sub getSongLyrics As ResumableSub
 	Dim urlStream, http As String
-	Starter.clsFunc.showLog("getSongLyrics", Colors.Green)
+'	Starter.clsFunc.showLog("getSongLyrics", Colors.Green)
 
 	
 	http = "https://lyric-api.herokuapp.com/api/find/"
@@ -383,6 +395,7 @@ Private Sub processUrl(url As String) As ResumableSub
 			Starter.vSong = lyric
 			CallSubDelayed2(Starter, "setSongLyric", lyric)
 		End If
+		j.Release
 		Return True
 	End If
 	

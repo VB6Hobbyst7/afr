@@ -64,7 +64,7 @@ Private Sub processUrl As ResumableSub
 	Else
 		Starter.chartLyricsDown = True	
 	End If
-	
+	j.Release
 	Return False
 End Sub
 
@@ -121,28 +121,44 @@ Sub processAlbumArt As ResumableSub
 		'Log($"chartlyric song"$)
 		CallSubDelayed2(Starter, "setAlbumArt", bm)
 	End If
+	j.Release
 	Return True
 End Sub
 
 
 
 Sub checkScrapLyrics(artist As String, song As String) As ResumableSub 
-	'Log (artist & " - " & song)
+	If artist = "" Or song = "" Then
+		Return False
+	End If
+	
+	Try
+	
 	Dim url As String
 	url = $"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$
+	
 	
 	Dim j As HttpJob
 	j.Initialize("", Me)
 	j.Download(url)
-	j.GetRequest.Timeout = 6000
+	'j.GetRequest.Timeout = 3000
+	
 	Wait For (j) JobDone(j As HttpJob)
 	
 	If j.Success Then
+		If j.GetString.Length < 10 Then
+			j.Release
+			Return False
+		End If
 		clsFunc.parseScrapeData(j.GetString)
 		j.Release
 		Return True
+	Else 
+		j.Release
+		Return False	
 	End If
-	'checkScrapLyrics(Starter.chartSong, Starter.chartArtist)
-	Return True
-	
+		
+	Catch
+		Return False
+	End Try
 End Sub

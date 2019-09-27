@@ -297,10 +297,17 @@ Public Sub icyMetaData
 		Wait For (job) JobDone(job As HttpJob)
 		If job.Success Then
 			nSong = job.GetString
+			job.Release
 			newSong = clsFunc.parseIcy(nSong)
-			clsFunc.ReplaceRaros(newSong)
+			'clsFunc.ReplaceRaros(newSong)
+			'Log("new song "&newSong)
+			If newSong = "" Then
+				Return
+			End If
+			
 			If newSong <> lastSong Or lastSong = "" Then
-			LogColor(newSong, Colors.Red)
+				
+'				LogColor(newSong, Colors.Red)
 				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(newSong)
 			End If
@@ -350,7 +357,8 @@ Sub processSong(song As String)
 			albumArtSet = False
 				
 			If song <> "No information found" Then
-				Dim mySong As String		= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
+				songdata.songReversed	= False
+				Dim mySong As String	= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
 								
 '				If IsPaused(player) Then Return
 				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
