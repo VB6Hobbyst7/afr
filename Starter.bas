@@ -288,12 +288,18 @@ End Sub
 Public Sub icyMetaData
 	Dim url, nSong, newSong As String
 	Dim job As HttpJob
-	Try
-			
 	
+	If selectedStream = "" Then
+		Log(" -- ")
+		Return
+	End If
+	
+	
+	Try
 		url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
 		job.Initialize("", Me)
 		job.Download(url)
+		job.GetRequest.Timeout = 3000
 		Wait For (job) JobDone(job As HttpJob)
 		If job.Success Then
 			nSong = job.GetString

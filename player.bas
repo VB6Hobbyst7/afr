@@ -2047,3 +2047,7 @@ End Sub
 Sub btn_img_new_station_Click
 	img_close_Click
 End Sub
+
+Sub getNowPlaying As String
+	Return lblArtistNowPlaying.Text
+End Sub

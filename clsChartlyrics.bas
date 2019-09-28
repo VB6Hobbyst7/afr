@@ -128,6 +128,11 @@ End Sub
 
 
 Sub checkScrapLyrics(artist As String, song As String) As ResumableSub 
+	Dim nowPlaying As String = CallSub(player, "getNowPlaying")
+	
+	Log(nowPlaying)
+	
+	
 	If artist = "" Or song = "" Then
 		Return False
 	End If
@@ -135,18 +140,20 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 	Try
 	
 	Dim url As String
-	url = $"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$
+	url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
 	
-	
+	'Log($"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$)
 	Dim j As HttpJob
 	j.Initialize("", Me)
 	j.Download(url)
 	'j.GetRequest.Timeout = 3000
 	
-	Wait For (j) JobDone(j As HttpJob)
 	
+	Wait For (j) JobDone(j As HttpJob)
+		
 	If j.Success Then
 		If j.GetString.Length < 10 Then
+			
 			j.Release
 			Return False
 		End If

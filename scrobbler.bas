@@ -85,6 +85,7 @@ Sub processLyrics(playing As String, reverse As Boolean) As String
 	sb.Append("/")
 	'sb.Append(retSong.Replace(" ", " "))
 	sb.Append(retSong.Replace(" ", " "))
+
 	Return sb.ToString
 End Sub
 

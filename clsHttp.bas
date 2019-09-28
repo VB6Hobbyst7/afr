@@ -49,6 +49,7 @@ Sub spBearer(artist As String, song As String)
 	If Starter.lyricFound = False Then
 		'getSongLyrics
 	End If
+	CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 
 	Dim B64 As Base64
 	Dim n As Long
@@ -100,7 +101,7 @@ Sub spBearer(artist As String, song As String)
 		Wait For (j1) JobDone(j1 As HttpJob)
 		If j1.Success Then
 			Dim j1String As String = j1.GetString
-			'clsFunc.showLog(j1String, Colors.Red)
+			'Logcolor(j1String, Colors.Red)
 			j1.Release
 			getSpotifySongData(j1String)
 			If Starter.chartDataFound = True Then
@@ -244,7 +245,7 @@ Sub getSpotifySongData(jsonData As String)
 				If Starter.vSongLyric = "noLyric" Then
 				Try
 					'	LogColor("getSongLyrics", Colors.Red)
-					wait for(getSongLyrics) Complete (result As Boolean)
+				'''	wait for(getSongLyrics) Complete (result As Boolean)
 				Catch
 					Starter.vSongLyric = "noLyric"
 				End Try
