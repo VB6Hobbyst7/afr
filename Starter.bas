@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Service
 Version=7.8
 @EndOfDesignText@
-#Region  Service Attributes 
+ #Region  Service Attributes 
 	#StartAtBoot: False
 	#ExcludeFromLibrary: True
 #End Region
@@ -184,20 +184,8 @@ Public Sub getSetSongLyric As String
 End Sub
 
 Public Sub setAlbumArt(vAlbum As Bitmap)
-	'LogColor("setalbumart", Colors.Red)
 	If IsPaused(player) Then 
 		Return
-	
-'		If vSongAlbumArt.IsInitialized = False Then
-'			vSongAlbumArt.Initialize(File.DirAssets, "NoImageAvailable.png")
-'		End If
-'		vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
-'		Dim Out As OutputStream
-'		
-'		Out = File.OpenOutput(irp_dbFolder, "imgPlaying.png", False)
-'		vAlbum.WriteToStream(Out, 100, "PNG")
-'		Out.Close
-'		Return
 	End If
 	albumArtSet = True
 	vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
@@ -286,9 +274,9 @@ Public Sub tmrGetSong_tick
 End Sub
 
 Public Sub icyMetaData
+	
 	Dim url, nSong, newSong As String
 	Dim job As HttpJob
-	
 	If selectedStream = "" Then
 		Log(" -- ")
 		Return
@@ -305,15 +293,11 @@ Public Sub icyMetaData
 			nSong = job.GetString
 			job.Release
 			newSong = clsFunc.parseIcy(nSong)
-			'clsFunc.ReplaceRaros(newSong)
-			'Log("new song "&newSong)
 			If newSong = "" Then
 				Return
 			End If
 			
 			If newSong <> lastSong Or lastSong = "" Then
-				
-'				LogColor(newSong, Colors.Red)
 				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				processSong(newSong)
 			End If
@@ -327,29 +311,28 @@ Public Sub icyMetaData
 		Log($"LAST EXCEPTION : ${LastException}"$)
 	End Try
 	job.Release
+	
 			
 End Sub
 
 
 
 Sub processSong(song As String)
+	Log($"PROCESSONG ${song} AT $DateTime{DateTime.Now}"$)
+	
 	If(song.Length > 3) Then
 		song	= clsFunc.ReplaceRaros(song)
 '	song	= clsFunc.NameToProperCase(song)
 	End If
-	'LogColor(song, Colors.Red)
 	If song.Length > 3 Then
 		clearNotif(song)
 	End If
 	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
-	'	Log("LAST SONG " & lastSong)
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 		spotMap.Clear
 		CallSub(player, "disableInfoPanels")
 		setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		lastSong = song
-'		LogColor(song, Colors.Red)
-'		clearNotif(song)
 		setSongPlaying(song)
 		If song = "" Then song = "No information found"
 		If activeActivity = "player" Then
@@ -366,7 +349,6 @@ Sub processSong(song As String)
 				songdata.songReversed	= False
 				Dim mySong As String	= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
 								
-'				If IsPaused(player) Then Return
 				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
 				If IsPaused(player) = False Then
 					CallSubDelayed(player, "enableAlbumInfo")
@@ -378,7 +360,6 @@ Sub processSong(song As String)
 			End If
 		End If
 		If activeActivity = "searchStation" Then
-'			Log("searchStation")
 			CallSub2(activeActivity, "nowPlaying", song)
 		End If
 	Else 
@@ -491,29 +472,6 @@ End Sub
 #End Region
 
 
-
-
-'Sub StartPlayer (RadioStationURL As String)
-'	
-'	Try
-'	'	clsExo.startPlayer(RadioStationURL)
-'		'AacMp3Player.RunMethod("playAsync", Array(RadioStationURL, 128))
-'		Sleep(2000)
-'		setWakeLock(True)
-'	Catch
-'		setWakeLock(False)
-'		Log(LastException)
-'	End Try
-'	
-'End Sub
-
-'Sub StopPlayer
-'	'clsExo.stopPlayer
-'	'setWakeLock(False)
-'	AacMp3Player.RunMethod("stop", Null)
-'	Sleep(2000)
-'End Sub
-
 Public Sub setWakeLock(keepAlive As Boolean)
 	If keepAlive = True Then
 		phoneKeepAlive.KeepAlive(True)
@@ -571,8 +529,6 @@ End Sub
 
 Public Sub startPlayer(url As String)
 	exoPlayer.Initialize("")
-'	Dim sources As List
-'	sources.Initialize
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	
 	exoPlayer.Volume = 1
@@ -585,7 +541,6 @@ Public Sub startPlayer(url As String)
 End Sub
 
 Public Sub stopPlayer
-'	Log("STOP PLAYER")
 	exoPlayer.Pause
 	exoPlayer.Release
 	

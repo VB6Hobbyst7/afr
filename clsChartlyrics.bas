@@ -130,7 +130,7 @@ End Sub
 Sub checkScrapLyrics(artist As String, song As String) As ResumableSub 
 	Dim nowPlaying As String = CallSub(player, "getNowPlaying")
 	
-	Log(nowPlaying)
+'	Log(nowPlaying)
 	
 	
 	If artist = "" Or song = "" Then

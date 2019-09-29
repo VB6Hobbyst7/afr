@@ -36,7 +36,6 @@ Public Sub stringSplit(splitChar As String, stringToSplit As String, startPos As
 	End If
 	
 	If stringToSplit.IndexOf(splitChar) = -1 Then
-		Log("MISSING SPLITCHAR")
 		Return stringToSplit
 	End If
 	
