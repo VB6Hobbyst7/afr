@@ -146,6 +146,8 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 	Dim j As HttpJob
 	j.Initialize("", Me)
 	j.Download(url)
+	'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
+	
 	'j.GetRequest.Timeout = 3000
 	
 	

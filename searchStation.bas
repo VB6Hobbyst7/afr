@@ -910,7 +910,7 @@ Sub genListLanguage(lang As String, width As Int ) As Panel
 	
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0, width, 61dip)
+	p.SetLayout(0,0, width, 0dip)
 	p.LoadLayout("lstLanguage") 
 	
 	p.Tag = lang

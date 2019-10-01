@@ -484,7 +484,7 @@ Sub setStation(lst As List) As Panel
 	svgInfo.Tag				= lst.Get(3)
 	lblForId.Tag			= $"stationid_${lst.Get(7)}"$
 	
-	Log($"stationid_${lst.Get(7)}"$)
+	'Log($"stationid_${lst.Get(7)}"$)
 	
 	lblHeaderPlayButton.Background	= xml.GetDrawable("outline_play_arrow_black_36")
 	If lst.get(6) <> Null And File.Exists("", lst.get(6))Then
@@ -1401,7 +1401,8 @@ End Sub
 
 
 Sub initPlayer
-	CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+	'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+	CallSub(Starter, "showNoImage")
 	CallSubDelayed2(Starter, "setSongLyric", "noLyric")
 	CallSubDelayed2(Starter, "setSongTitle", "")
 	lblNowPlayingStation.Text 	= Application.LabelName & " v"&Application.VersionName

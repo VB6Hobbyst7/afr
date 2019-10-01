@@ -140,20 +140,23 @@ Sub DownloadImage(Link As String)
 			Starter.chartDataFound	= True
 			Starter.albumArtFound	= True
 		Else
-			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+			'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+			CallSub(Starter, "showNoImage")
 			Starter.chartDataFound	= False
 			Starter.albumArtFound	= False
 		End If
 		j.Release
 	Else
 		j.Release
-		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		CallSub(Starter, "showNoImage")
 		Starter.chartDataFound	= False
 		Starter.albumArtFound	= False
 		End If
 	Catch
 '		Log("CLSGENERAL @ 145 : "&LastException)
-		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		CallSub(Starter, "showNoImage")
 		Starter.chartDataFound	= False
 		Starter.albumArtFound	= False
 	End Try

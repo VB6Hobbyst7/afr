@@ -459,13 +459,15 @@ Try
 		Dim root As Map = parser.NextObject
 Catch
 		Log("CLSFUNCTIONS @ 439 : "&LastException)
-		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		CallSub(Starter, "showNoImage")
 	Return "No song information"
 End Try
 	
 	'Dim root As Map = parser.NextObject
 	If root.ContainsKey("error") Then
-		CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		CallSub(Starter, "showNoImage")
 		Return ""
 	End If
 	

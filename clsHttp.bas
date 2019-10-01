@@ -49,7 +49,8 @@ Sub spBearer(artist As String, song As String)
 	If Starter.lyricFound = False Then
 		'getSongLyrics
 	End If
-	CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+	'CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+	CallSub(Starter, "showNoImage")
 
 	Dim B64 As Base64
 	Dim n As Long
@@ -123,7 +124,8 @@ Sub spBearer(artist As String, song As String)
 			If File.Exists(Starter.sStationLogoPath, "") Then
 				CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(Starter.sStationLogoPath, ""))
 			Else
-				CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+				'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+				CallSub(Starter, "showNoImage")
 			End If
 		End If
 		Else 
@@ -138,6 +140,7 @@ End Sub
 
 Sub getSpotifySongData(jsonData As String)
 	'File.WriteString(Starter.irp_dbFolder, $"test-${DateTime.Now}.txt"$, jsonData)
+	'Logcolor(jsonData, Colors.Red)
 	Dim Parser1 As JSONParser
 	Parser1.Initialize(jsonData)
 	Dim root As Map =Parser1.NextObject
@@ -313,7 +316,8 @@ Sub DownloadImage(Link As String)
 	
 	Try
 		If clsFunc.checkUrl(Link) = False Then
-			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+			'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+			CallSub(Starter, "showNoImage")
 		Else
 			Dim j As HttpJob
 			j.Initialize("", Me)

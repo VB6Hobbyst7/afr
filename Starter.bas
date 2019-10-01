@@ -192,6 +192,7 @@ Public Sub setAlbumArt(vAlbum As Bitmap)
 	
 	CallSub2(player, "setAlbumArtFading", vSongAlbumArt)
 	
+	
 End Sub
 
 Public Sub getAlbumArt As Bitmap
@@ -273,15 +274,15 @@ Public Sub tmrGetSong_tick
 	End If
 End Sub
 
+
+
 Public Sub icyMetaData
-	
 	Dim url, nSong, newSong As String
 	Dim job As HttpJob
 	If selectedStream = "" Then
 		Log(" -- ")
 		Return
 	End If
-	
 	
 	Try
 		url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
@@ -298,12 +299,14 @@ Public Sub icyMetaData
 			End If
 			
 			If newSong <> lastSong Or lastSong = "" Then
-				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+				'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+				showNoImage
 				processSong(newSong)
 			End If
 		Else
 			If(lastSong) Then
-				CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+				'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+				showNoImage
 				processSong(lastSong)
 			End If
 		End If
@@ -318,11 +321,13 @@ End Sub
 
 
 Sub processSong(song As String)
-	Log($"PROCESSONG ${song} AT $DateTime{DateTime.Now}"$)
-	
+Log($"SONG ${song} 
+AT $DateTime{DateTime.Now}"$)
+	'setAlbumArt(LoadBitmap(File.DirAssets, "image4512_.png"))
+	'Sleep(1000)
 	If(song.Length > 3) Then
 		song	= clsFunc.ReplaceRaros(song)
-'	song	= clsFunc.NameToProperCase(song)
+		'song	= clsFunc.NameToProperCase(song)
 	End If
 	If song.Length > 3 Then
 		clearNotif(song)
@@ -331,7 +336,7 @@ Sub processSong(song As String)
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 		spotMap.Clear
 		CallSub(player, "disableInfoPanels")
-		setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		lastSong = song
 		setSongPlaying(song)
 		If song = "" Then song = "No information found"
@@ -363,7 +368,8 @@ Sub processSong(song As String)
 			CallSub2(activeActivity, "nowPlaying", song)
 		End If
 	Else 
-		setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+		showNoImage
 	End If
 End Sub
 
@@ -530,6 +536,8 @@ End Sub
 Public Sub startPlayer(url As String)
 	exoPlayer.Initialize("")
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
+	'exoPlayer.Prepare(exoPlayer.CreateSmoothStreamingSource(url))
+	
 	
 	exoPlayer.Volume = 1
 	exoPlayer.Play
@@ -547,3 +555,10 @@ Public Sub stopPlayer
 	setWakeLock(False)
 	tmrGetSongEnable(False)
 End Sub
+
+
+public Sub showNoImage
+	setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+	'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+End Sub
+
