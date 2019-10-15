@@ -70,11 +70,15 @@ Sub spBearer(artist As String, song As String)
 	SpotBase64 = B64.EncodeStoS("91f924c1eace4879ba9c4c0f5061e925" & ":" & "b4fb29e9e2b0490bad9489c28dae6b89","UTF8")
 	Dim j As HttpJob
 	
+	If j.IsInitialized Then
+		j.Release
+	End If
+	
 	j.Initialize("", Me)
 	j.PostString(SourceWeb1, "grant_type=" & SpotGrant1)
 	j.GetRequest.SetContentType("application/x-www-form-urlencoded")
 	j.GetRequest.SetHeader("Authorization", "Basic " & SpotBase64)
-'	Log("CLSHTTP @ 69")
+	j.GetRequest.Timeout = Starter.jobTimeOut
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
 		SourceText1 = j.GetString2("ISO-8859-1")
@@ -95,6 +99,10 @@ Sub spBearer(artist As String, song As String)
 		
 		'songReversed = False
 		Dim j1 As HttpJob
+		If j1.IsInitialized Then
+			j1.Release
+		End If
+		
 		j1.Initialize("", Me)
 		j1.Download(SourceWeb1)
 		j1.GetRequest.Timeout = 5*1000
@@ -102,7 +110,6 @@ Sub spBearer(artist As String, song As String)
 		Wait For (j1) JobDone(j1 As HttpJob)
 		If j1.Success Then
 			Dim j1String As String = j1.GetString
-			'Logcolor(j1String, Colors.Red)
 			j1.Release
 			getSpotifySongData(j1String)
 			If Starter.chartDataFound = True Then
@@ -124,7 +131,6 @@ Sub spBearer(artist As String, song As String)
 			If File.Exists(Starter.sStationLogoPath, "") Then
 				CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(Starter.sStationLogoPath, ""))
 			Else
-				'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				CallSub(Starter, "showNoImage")
 			End If
 		End If
@@ -140,7 +146,6 @@ End Sub
 
 Sub getSpotifySongData(jsonData As String)
 	'File.WriteString(Starter.irp_dbFolder, $"test-${DateTime.Now}.txt"$, jsonData)
-	'Logcolor(jsonData, Colors.Red)
 	Dim Parser1 As JSONParser
 	Parser1.Initialize(jsonData)
 	Dim root As Map =Parser1.NextObject
@@ -168,7 +173,6 @@ Sub getSpotifySongData(jsonData As String)
 		If items.Size < 1 Then
 			If songReversed = False Then
 				songReversed	= True
-'				LogColor("songReversed", Colors.Green)
 				spBearer(Starter.chartSong, Starter.chartArtist)
 			End If
 			noSongData
@@ -189,8 +193,9 @@ Sub getSpotifySongData(jsonData As String)
 			lDate.Initialize
 			mDate = Starter.vAlbumReleaseDate
 			lDate = Regex.Split("-", mDate)
+
 			Try
-				If lDate.Size > 1 Then
+				If lDate.Size >= 2 Then
 					Dim newTime As Long	= DateUtils.SetDate(lDate.Get(0), lDate.Get(1), lDate.Get(2))
 					DateTime.DateFormat ="dd MMMM yyyy"
 					Starter.vAlbumReleaseDate = $"$Date{newTime}"$
@@ -203,7 +208,6 @@ Sub getSpotifySongData(jsonData As String)
 			End Try
 			Starter.spotMap.Put("duration", colitems.Get("duration_ms"))
 			Starter.spotMap.Put("album",album.Get("name"))
-'			Log($"ALBUM ${album.Get("name")}"$)
 			Starter.spotMap.Put("url", spotify)
 			Starter.spotMap.Put("track",colitems.Get("track_number"))
 			Starter.spotMap.Put("date",album.Get("release_date"))
@@ -235,19 +239,12 @@ Sub getSpotifySongData(jsonData As String)
 			
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
-'				Log("CLSHTTP @ 226")
 				wait for(clsLyrics.checkScrapLyrics(Starter.chartArtist, Starter.chartSong)) Complete (result As Boolean)
 				If result = False Then
-					'Return
-					'Log("NOT FOUND.....")
-					'wait for(clsLyrics.checkScrapLyrics(Starter.chartSong, Starter.chartArtist)) Complete (result As Boolean)
-					'Log("CLSHTTP @ 232")
 				Else
-					'Log("FOUND.....")
 				End If
 				If Starter.vSongLyric = "noLyric" Then
 				Try
-					'	LogColor("getSongLyrics", Colors.Red)
 				'''	wait for(getSongLyrics) Complete (result As Boolean)
 				Catch
 					Starter.vSongLyric = "noLyric"
@@ -257,7 +254,6 @@ Sub getSpotifySongData(jsonData As String)
 				If Starter.vSongLyric = "noLyric" Then
 					Try
 						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
-						'	LogColor("clsLyrics.checkAlbumart", Colors.Red)
 						If Starter.chartLyricsDown = False Then
 							'wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
 						End If
@@ -266,7 +262,6 @@ Sub getSpotifySongData(jsonData As String)
 					End Try
 					If Starter.vSongLyric = "noLyric" Then
 						Try
-							'LogColor("clsGeneral_.pullDataFromOndemand(False)", Colors.Red)
 							'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
 							
 							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
@@ -276,7 +271,6 @@ Sub getSpotifySongData(jsonData As String)
 					End If
 					If Starter.vSongLyric = "noLyric" Then
 						Try
-							'LogColor("clsGeneral_.pullDataFromFandom(False)", Colors.Red)
 							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
 						Catch
 							Starter.vSongLyric = "noLyric"
@@ -320,8 +314,13 @@ Sub DownloadImage(Link As String)
 			CallSub(Starter, "showNoImage")
 		Else
 			Dim j As HttpJob
+			If j.IsInitialized Then
+				j.Release
+			End If
+			
 			j.Initialize("", Me)
 			j.Download(Link)
+			j.GetRequest.Timeout = 3000
 			Wait For (j) JobDone(j As HttpJob)
 			If j.Success Then
 				Starter.albumArtSet = True
@@ -348,7 +347,6 @@ public Sub getSongLyrics As ResumableSub
 	http = "https://lyric-api.herokuapp.com/api/find/"
 	
 	urlStream	= scrobbler.processLyrics(CallSub(Starter,"getSongPlaying"), False)
-	'Log(urlStream)
 	'Starter.clsFunc.showLog(urlStream, Colors.Green)
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
 
@@ -370,6 +368,10 @@ End Sub
 
 Private Sub processUrl(url As String) As ResumableSub
 	Dim j As HttpJob
+	
+	If j.IsInitialized Then
+		j.Release
+	End If
 	
 	If url = "" Or clsFunc.checkUrl(url) = False Then
 		Return False

@@ -56,6 +56,9 @@ End Sub
 
 Private Sub processOvhLyrics(ovhUrl As String) As ResumableSub
 	Dim job As HttpJob
+	If job.IsInitialized Then
+		job.Release
+	End If
 	
 	job.Initialize("", Me)
 	job.Download(ovhUrl)
@@ -128,8 +131,13 @@ Sub DownloadImage(Link As String)
 	Dim bm As Bitmap
 	Dim j As HttpJob
 	
+	If j.IsInitialized Then
+		j.Release
+	End If
+	
 	j.Initialize("", Me)
 	j.Download(Link)
+	j.GetRequest.Timeout = 3000
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
 	
@@ -167,6 +175,9 @@ End Sub
 Public Sub pullDataFromFandom(reverse As Boolean) As ResumableSub
 	Dim url, artist, song As String
 	Dim j As HttpJob
+	If j.IsInitialized Then
+		j.Release
+	End If
 	
 	artist = Starter.spotMap.Get("artistname")
 	song = Starter.spotMap.Get("artistsong")
@@ -249,7 +260,9 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 	Dim page As String
 	Dim url As String
 
-	
+	If mJob.IsInitialized Then
+		mJob.Release
+	End If
 	
 
 	url= scrobbler.createLyricsOnDemand(reverse)
@@ -360,6 +373,7 @@ Public Sub userCountry As ResumableSub
 	j.Initialize("", Me)
 	
 	j.Download("http://ip-api.com/json/")
+	j.GetRequest.Timeout = 3000
 	
 	Wait For (j) JobDone (j As HttpJob)
 	

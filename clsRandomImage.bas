@@ -16,6 +16,10 @@ End Sub
 
 public Sub newRandomImage
 	Dim j As HttpJob
+	If j.IsInitialized Then
+		j.Release
+	End If
+	
 	j.Initialize("",  Me)
 	j.Download(url)
 	j.GetRequest.Timeout = 6000

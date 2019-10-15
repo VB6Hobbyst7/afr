@@ -42,6 +42,7 @@ Sub Globals
 '	Private dirArrow As ImageView
 	Private Switch As ACSwitch
 	Private SwitchUpdateLogo As ACSwitch
+	Private SwitchCaps As ACSwitch
 	Private NavDrawer As DSNavigationDrawer
 	Private ivNowPlaying As ImageView
 	Private xml As XmlLayoutBuilder
@@ -145,7 +146,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	tmr.Enabled = False
 	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
 	Starter.activeActivity = "Player"
-	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_END)
+	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
 	
 	Activity.LoadLayout("player")
 	
@@ -175,17 +176,14 @@ Sub Activity_Create(FirstTime As Boolean)
 	lblDataUsage.Text	= ""
 '	createToolbarClock
 	NavDrawer.InitDrawerToggle
+	
 	toolbar.InitMenuListener
 	toolbar.Title	= Starter.vAppname
 	
-	Dim cs As CSBuilder
-	cs.Initialize.Append("Wifi only").Typeface(Typeface.LoadFromAssets("Montserrat-Regular.ttf")).pop
-	
 	Dim actionViewItem As ACMenuItem
 	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 2, 2, "Wifi only", xml.GetDrawable("ic_signal_wifi_4_bar_black_18dp"))
-	
 	Switch.Initialize("Switch")
-	Switch.Typeface=Typeface.LoadFromAssets("Montserrat-Regular.ttf")
+	'Switch.Typeface=Typeface.LoadFromAssets("Montserrat-Regular.ttf")
 	actionViewItem.ActionView = Switch'Switch
 	
 	
@@ -193,6 +191,11 @@ Sub Activity_Create(FirstTime As Boolean)
 	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 3, 2, "Update station logo", xml.GetDrawable("baseline_cached_black_18"))
 	SwitchUpdateLogo.Initialize("SwitchUpdateLogo")
 	actionViewItem.ActionView = SwitchUpdateLogo
+	
+	Dim actionViewItem As ACMenuItem
+	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 4, 2, $"Captitalize now playing"$, xml.GetDrawable("baseline_format_size_black_18"))
+	SwitchCaps.Initialize("SwitchCaps")
+	actionViewItem.ActionView = SwitchCaps
 	
 	Starter.activeActivity	= "player"
 	pnlOverflow.Top	= Activity.Height+240dip
@@ -297,7 +300,8 @@ End Sub
 
 
 Sub setSongPlaying(songPlaying As String)
-	lblArtistNowPlaying.Text = Starter.clsFunc.NameToProperCase(songPlaying)
+	'lblArtistNowPlaying.Text = Starter.clsFunc.NameToProperCase(songPlaying)
+	lblArtistNowPlaying.Text = Starter.clsFunc.TitleCase(songPlaying)
 End Sub
 
 
@@ -1180,8 +1184,13 @@ Sub getStationLogo(link As String)
 
 	url = $"https://logo.clearbit.com/${link}/?size=150&format=png"$
 	Dim j As HttpJob
+	If j.IsInitialized Then
+		j.Release
+	End If
 	j.Initialize("", Me)
 	j.Download(url)
+	j.GetRequest.Timeout = Starter.jobTimeOut
+	
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
 		Dim stationPng As String	= stationName.Replace(" ", "")
@@ -1295,7 +1304,7 @@ End Sub
 
 
 Sub NavDrawer_DrawerOpened (DrawerGravity As Int)
-	lblNavDrawerHeader.Text	= $"AdFree Radio v ${Application.VersionName}"$
+'	lblNavDrawerHeader.Text	= $"AdFree Radio v ${Application.VersionName}"$
 	showHideStoredSongs
 End Sub
 
@@ -1368,6 +1377,14 @@ Sub getSetSettings
 		Starter.vWifiOnly	= False
 	End If
 	
+	If kvs.GetSimple("capnowplaying") = 1 Then
+		SwitchCaps.Checked		= True
+		Starter.capNowPlaying	= True
+	Else
+		SwitchCaps.Checked		= False
+		Starter.capNowPlaying	= False
+	End If
+	
 	If kvs.GetSimple("updatelogo") = 1 Then
 		SwitchUpdateLogo.Checked = True
 		Starter.vUpdateLogo = True
@@ -1392,6 +1409,13 @@ Sub SwitchUpdateLogo_CheckedChange(Checked As Boolean)
 		kvs.PutSimple("updatelogo", Checked)
 		Starter.vUpdateLogo = Checked
 	End If
+End Sub
+
+Sub SwitchCaps_CheckedChange(Checked As Boolean)
+	If kvs.ContainsKey("capnowplaying") = True Then
+		kvs.PutSimple("capnowplaying", Checked)
+		End If
+	Starter.capNowPlaying	= Checked
 End Sub
 
 Sub checkWifiOnly As Boolean

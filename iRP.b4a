@@ -715,7 +715,7 @@ Library6=phone
 Library7=mlwifi
 Library8=javaobject
 Library9=designsupport
-ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'SetApplicationAttribute(android:icon, "@drawable/radio")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~SetApplicationAttribute(android:resizeableActivity, "true")~\n~AddApplicationText(<meta-data android:name="android.max_aspect" android:value="10"/>)~\n~~\n~CreateResource(values-v21, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~	~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~AddPermission(android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)~\n~
+ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'SetApplicationAttribute(android:icon, "@drawable/radio")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~SetApplicationAttribute(android:resizeableActivity, "true")~\n~AddApplicationText(<meta-data android:name="android.max_aspect" android:value="10"/>)~\n~~\n~CreateResource(values-v21, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~	~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~AddPermission(android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)~\n~
 Module1=Starter
 Module10=clsRandomImage
 Module11=searchStation
@@ -789,10 +789,6 @@ Sub Globals
 	Private lblDbConnected As Label
 	Private pnlMain As Panel
 	Private kvs As KeyValueStore
-
-'	Private svIrp As MySecVault
-'	Dim M1 As Map
-'	Dim CollSer As dcCollectionSerializer
 
 	Private btnContinue As Button
 	Private ImageView1 As ImageView
@@ -890,7 +886,6 @@ End Sub
 
 
 Sub startIRP
-'	genDb.truncateTable("rdolist")
 	
 	Dim appStarted, dataUsageShown As Int = 0
 	
@@ -932,7 +927,6 @@ Sub startIRP
 
 		pnlMain.LoadLayout("welcome")
 	End If
-'Log("APP STARTED" & appStarted)
 	If appStarted = 0 Then
 		wait for (showWelcome) Complete (result As Boolean)
 		Sleep(1000)
@@ -941,16 +935,13 @@ Sub startIRP
 	If pnlMain.IsInitialized Then
 		pnlMain.Visible = False
 	End If
-	'getSetVaultData
-	'genDb.vacuumDB
+
 	If genDb.tableExists("stored_songs") = False Then
 		genDb.genStoredSongTable
 	End If
 	If genDb.tableExists("stUpdate") = False Then
 		genDb.genUpdateTable
 	End If
-	'genDb.truncateTable("stUpdate")
-	
 	
 	startPlayer
 End Sub
@@ -1003,7 +994,6 @@ Sub importData(fileName As String, table As String)As ResumableSub
 	ftp.Close
 
 	wait for(importStations(table)) Complete (result As Boolean)
-	'Sleep(2000)
 	pnl_import_data.Visible = False
 	
 	Return True
@@ -1022,8 +1012,6 @@ End Sub
 
 
 Sub startPlayer
-'	getSetVaultData
-	
 	Dim cur As Cursor = genDb.getPresetStations
 	
 	
@@ -1054,39 +1042,6 @@ Sub Activity_PermissionResult (Permission As String, Result As Boolean)
 		startIRP
 	End If
 End Sub
-
-
-'Private Sub getSetVaultData
-'	Dim arrMap() As Byte = svIrp.MyMap
-'	If arrMap <> Null Then
-'		Dim M1 As Map = CollSer.CompressedBytesToMap(arrMap)
-'		
-'		For i = 0 To M1.Size - 1
-'			If M1.GetKeyAt(i) = "spoturl" Then
-'				Starter.SourceWeb1	= M1.GetValueAt(i)
-'			End If
-'			If M1.GetKeyAt(i) = "spotclient" Then
-'				Starter.SpotClientID1 = M1.GetValueAt(i)
-'			End If
-'			If M1.GetKeyAt(i) = "spotsecret" Then
-'				Starter.SpotClientSecret1	=  M1.GetValueAt(i)
-'			End If
-'
-'			If M1.GetKeyAt(i) = "dburel" Then
-'				Starter.dbL	= M1.GetValueAt(i)
-'			End If
-'
-'			If M1.GetKeyAt(i) = "dbpass" Then
-'				Starter.Password	= M1.GetValueAt(i)
-'			End If
-'
-'			If M1.GetKeyAt(i) = "dbuser" Then
-'				Starter.Username	= M1.GetValueAt(i)
-'			End If
-'		Next
-'	End If
-'
-'End Sub
 
 
 Sub btnContinue_Click
@@ -1125,6 +1080,10 @@ Sub initKvs
 
 	If kvs.ContainsKey("stationsTimestamp") = False Then
 		kvs.PutSimple("stationsTimestamp", 0)
+	End If
+	
+	If kvs.ContainsKey("capnowplaying") = False Then
+		kvs.PutSimple("capnowplaying", 0)
 	End If
 	
 	If kvs.ContainsKey("wifionly") = False Then

@@ -46,6 +46,9 @@ End Sub
 Private Sub processUrl As ResumableSub
 	reverseSearch = False
 	Dim j As HttpJob
+	If j.IsInitialized Then
+		j.Release
+	End If
 	
 	If url = "" Or Starter.clsFunc.checkUrl(url) = False Or url = "http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=&song=" Then
 		Return False
@@ -105,6 +108,10 @@ End Sub
 Sub processAlbumArt As ResumableSub
 	Dim j As HttpJob
 	Dim bm As Bitmap
+	If j.IsInitialized Then
+		j.Release
+	End If
+	
 	Starter.clsFunc.showLog($"ALBUMART FOUND IS ${Starter.albumArtSet}"$, 0)
 	If Starter.albumArtSet = True Then
 		Return True
@@ -112,6 +119,7 @@ Sub processAlbumArt As ResumableSub
 	
 	j.Initialize("",  Me)
 	j.Download(coverArtUrl)
+	j.GetRequest.Timeout = 3000
 	
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
@@ -143,12 +151,16 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 	url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
 	
 	'Log($"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$)
-	Dim j As HttpJob
+		Dim j As HttpJob
+		If j.IsInitialized Then
+			j.Release
+		End If
+	
 	j.Initialize("", Me)
 	j.Download(url)
 	'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 	
-	'j.GetRequest.Timeout = 3000
+	j.GetRequest.Timeout = 3000
 	
 	
 	Wait For (j) JobDone(j As HttpJob)

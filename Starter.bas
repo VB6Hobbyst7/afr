@@ -46,7 +46,7 @@ Sub Process_Globals
 	Public mobileData As String = ""
 	Public doy As String ="pdegrootafr", moy As String ="hkWpXtB1!"
 	'BOOLEAN
-	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound As Boolean
+	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound, capNowPlaying As Boolean
 	Public streamStarted, vIsPreset, pnl_album_info_button, pnl_stop_button, pnl_lyric_button, tryRestartStream As Boolean = False
 	Public chatDataLyric, lyricsOnDemand, pnl_store_song_button, lyricFound, albumArtFound, albumArtSet, streamLost, getUpdate As Boolean = False
 	Public chartLyricsDown As Boolean = True
@@ -58,7 +58,7 @@ Sub Process_Globals
 	Public vPlayerSelectedPanel As Int = 999
 	Public notifId As Int = 1
 	'LONG
-	Public lastAccPlayerTime, startAccPlayerTime As Long
+	Public lastAccPlayerTime, startAccPlayerTime, jobTimeOut = 6000 As Long
 	'BITMAP
 	Public smallIcon, vSongAlbumArt As Bitmap
 	'TYPED
@@ -279,8 +279,8 @@ End Sub
 Public Sub icyMetaData
 	Dim url, nSong, newSong As String
 	Dim job As HttpJob
+	
 	If selectedStream = "" Then
-		Log(" -- ")
 		Return
 	End If
 	
@@ -288,26 +288,32 @@ Public Sub icyMetaData
 		url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
 		job.Initialize("", Me)
 		job.Download(url)
-		job.GetRequest.Timeout = 3000
+		job.GetRequest.Timeout = jobTimeOut
 		Wait For (job) JobDone(job As HttpJob)
-		If job.Success Then
-			nSong = job.GetString
-			job.Release
-			newSong = clsFunc.parseIcy(nSong)
-			If newSong = "" Then
-				Return
-			End If
+		Try
+			If job.Success Then
+				nSong = job.GetString
+				job.Release
+				newSong = clsFunc.parseIcy(nSong)
+				If newSong = "" Or lastSong = newSong Then
+					Return
+				End If
 			
-			If newSong <> lastSong Or lastSong = "" Then
-				showNoImage
-				processSong(newSong)
+				If newSong <> lastSong Or lastSong = "" Then
+					showNoImage
+					processSong(newSong)
+				End If
+			Else
+				job.Release
+				If(lastSong) Then
+					showNoImage
+					processSong(lastSong)
+				End If
 			End If
-		Else
-			If(lastSong) Then
-				showNoImage
-				processSong(lastSong)
-			End If
-		End If
+		Catch
+			job.Release
+			Log("")
+		End Try
 	Catch
 		clsFunc.showLog($"LAST EXCEPTION : ${LastException}"$, Colors.Red)
 	End Try
