@@ -1184,9 +1184,7 @@ Sub getStationLogo(link As String)
 
 	url = $"https://logo.clearbit.com/${link}/?size=150&format=png"$
 	Dim j As HttpJob
-	If j.IsInitialized Then
-		j.Release
-	End If
+
 	j.Initialize("", Me)
 	j.Download(url)
 	j.GetRequest.Timeout = Starter.jobTimeOut

@@ -56,13 +56,10 @@ End Sub
 
 Private Sub processOvhLyrics(ovhUrl As String) As ResumableSub
 	Dim job As HttpJob
-	If job.IsInitialized Then
-		job.Release
-	End If
 	
 	job.Initialize("", Me)
 	job.Download(ovhUrl)
-	job.GetRequest.Timeout = 5*1000
+	job.GetRequest.Timeout = Starter.jobTimeOut
 	
 	
 	Wait For (job) JobDone(job As HttpJob)
@@ -131,13 +128,9 @@ Sub DownloadImage(Link As String)
 	Dim bm As Bitmap
 	Dim j As HttpJob
 	
-	If j.IsInitialized Then
-		j.Release
-	End If
-	
 	j.Initialize("", Me)
 	j.Download(Link)
-	j.GetRequest.Timeout = 3000
+	j.GetRequest.Timeout = Starter.jobTimeOut
 	Wait For (j) JobDone(j As HttpJob)
 	If j.Success Then
 	
@@ -175,9 +168,6 @@ End Sub
 Public Sub pullDataFromFandom(reverse As Boolean) As ResumableSub
 	Dim url, artist, song As String
 	Dim j As HttpJob
-	If j.IsInitialized Then
-		j.Release
-	End If
 	
 	artist = Starter.spotMap.Get("artistname")
 	song = Starter.spotMap.Get("artistsong")
@@ -196,7 +186,7 @@ Public Sub pullDataFromFandom(reverse As Boolean) As ResumableSub
 	j.Initialize("", Me)
 	j.Download(url)
 	j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)")
-	j.GetRequest.Timeout = 4000
+	j.GetRequest.Timeout = Starter.jobTimeOut
 	
 	Wait For (j) jobDone(j As HttpJob)
 		
@@ -260,11 +250,6 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 	Dim page As String
 	Dim url As String
 
-	If mJob.IsInitialized Then
-		mJob.Release
-	End If
-	
-
 	url= scrobbler.createLyricsOnDemand(reverse)
 	Starter.clsFunc.showLog(url, Colors.Blue)
 	If url = "noUrl" Then
@@ -275,7 +260,7 @@ public Sub pullDataFromOndemand(reverse As Boolean) As ResumableSub
 	'Log(url)
 	mJob.Initialize("", Me)
 	mJob.Download(url)
-	mJob.GetRequest.Timeout = 5*1000
+	mJob.GetRequest.Timeout = Starter.jobTimeOut
 	mJob.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 	
 	Try
@@ -373,7 +358,7 @@ Public Sub userCountry As ResumableSub
 	j.Initialize("", Me)
 	
 	j.Download("http://ip-api.com/json/")
-	j.GetRequest.Timeout = 3000
+	j.GetRequest.Timeout = Starter.jobTimeOut
 	
 	Wait For (j) JobDone (j As HttpJob)
 	

@@ -70,10 +70,6 @@ Sub spBearer(artist As String, song As String)
 	SpotBase64 = B64.EncodeStoS("91f924c1eace4879ba9c4c0f5061e925" & ":" & "b4fb29e9e2b0490bad9489c28dae6b89","UTF8")
 	Dim j As HttpJob
 	
-	If j.IsInitialized Then
-		j.Release
-	End If
-	
 	j.Initialize("", Me)
 	j.PostString(SourceWeb1, "grant_type=" & SpotGrant1)
 	j.GetRequest.SetContentType("application/x-www-form-urlencoded")
@@ -99,13 +95,10 @@ Sub spBearer(artist As String, song As String)
 		
 		'songReversed = False
 		Dim j1 As HttpJob
-		If j1.IsInitialized Then
-			j1.Release
-		End If
 		
 		j1.Initialize("", Me)
 		j1.Download(SourceWeb1)
-		j1.GetRequest.Timeout = 5*1000
+		j1.GetRequest.Timeout = Starter.jobTimeOut
 	
 		Wait For (j1) JobDone(j1 As HttpJob)
 		If j1.Success Then
@@ -314,13 +307,10 @@ Sub DownloadImage(Link As String)
 			CallSub(Starter, "showNoImage")
 		Else
 			Dim j As HttpJob
-			If j.IsInitialized Then
-				j.Release
-			End If
 			
 			j.Initialize("", Me)
 			j.Download(Link)
-			j.GetRequest.Timeout = 3000
+			j.GetRequest.Timeout = Starter.jobTimeOut
 			Wait For (j) JobDone(j As HttpJob)
 			If j.Success Then
 				Starter.albumArtSet = True
@@ -369,17 +359,13 @@ End Sub
 Private Sub processUrl(url As String) As ResumableSub
 	Dim j As HttpJob
 	
-	If j.IsInitialized Then
-		j.Release
-	End If
-	
 	If url = "" Or clsFunc.checkUrl(url) = False Then
 		Return False
 	End If
 	
 	j.Initialize("",  Me)
 	j.Download(url)
-	j.GetRequest.Timeout = 5*1000
+	j.GetRequest.Timeout = Starter.jobTimeOut
 	Wait For (j) JobDone(j As HttpJob)
 	
 	If j.Success Then
