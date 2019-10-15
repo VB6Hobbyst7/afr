@@ -299,19 +299,17 @@ Public Sub icyMetaData
 			End If
 			
 			If newSong <> lastSong Or lastSong = "" Then
-				'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				showNoImage
 				processSong(newSong)
 			End If
 		Else
 			If(lastSong) Then
-				'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 				showNoImage
 				processSong(lastSong)
 			End If
 		End If
 	Catch
-		Log($"LAST EXCEPTION : ${LastException}"$)
+		clsFunc.showLog($"LAST EXCEPTION : ${LastException}"$, Colors.Red)
 	End Try
 	job.Release
 	
@@ -321,8 +319,6 @@ End Sub
 
 
 Sub processSong(song As String)
-Log($"SONG ${song} 
-AT $DateTime{DateTime.Now}"$)
 	'setAlbumArt(LoadBitmap(File.DirAssets, "image4512_.png"))
 	'Sleep(1000)
 	If(song.Length > 3) Then

@@ -100,8 +100,11 @@ Sub Activity_Create(FirstTime As Boolean)
 	Starter.activeActivity = "searchStation"
 	'Activity.LoadLayout("searchStation")
 	Activity.LoadLayout("tsSearchStation")
+	Dim cs As CSBuilder
+	cs.Initialize.Append("Find Station").Typeface(Typeface.LoadFromAssets("Montserrat-Regular.ttf"))
+	'tsSearchMain.LoadLayout("searchStation", "Find station")
 	
-	tsSearchMain.LoadLayout("searchStation", "Find station")
+	tsSearchMain.LoadLayout("searchStation", cs.ToString)
 	tsSearchMain.LoadLayout("searchStationGenre", "Genre")
 	tsSearchMain.LoadLayout("clvLanguage", "Language")
 	
@@ -854,7 +857,7 @@ Sub genListGenre(genre As String, width As Int ) As Panel
 	
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0, width, 61dip)
+	p.SetLayout(0,0, width, 70dip)
 	p.LoadLayout("genreList") 
 	
 	p.Tag = genre
@@ -910,7 +913,7 @@ Sub genListLanguage(lang As String, width As Int ) As Panel
 	
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0, width, 0dip)
+	p.SetLayout(0,0, width, 60dip)
 	p.LoadLayout("lstLanguage") 
 	
 	p.Tag = lang

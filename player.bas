@@ -178,9 +178,14 @@ Sub Activity_Create(FirstTime As Boolean)
 	toolbar.InitMenuListener
 	toolbar.Title	= Starter.vAppname
 	
+	Dim cs As CSBuilder
+	cs.Initialize.Append("Wifi only").Typeface(Typeface.LoadFromAssets("Montserrat-Regular.ttf")).pop
+	
 	Dim actionViewItem As ACMenuItem
 	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 2, 2, "Wifi only", xml.GetDrawable("ic_signal_wifi_4_bar_black_18dp"))
+	
 	Switch.Initialize("Switch")
+	Switch.Typeface=Typeface.LoadFromAssets("Montserrat-Regular.ttf")
 	actionViewItem.ActionView = Switch'Switch
 	
 	
@@ -292,7 +297,7 @@ End Sub
 
 
 Sub setSongPlaying(songPlaying As String)
-	lblArtistNowPlaying.Text = songPlaying
+	lblArtistNowPlaying.Text = Starter.clsFunc.NameToProperCase(songPlaying)
 End Sub
 
 
@@ -401,7 +406,7 @@ Sub Activity_Resume
 		End If
 		lblNowPlayingDataRate.Text	= ""
 	End If
-	Starter.clsFunc.showLog($"END ACTIVITY RESUME $Time{DateTime.Now}"$, Colors.Black)
+'	Starter.clsFunc.showLog($"END ACTIVITY RESUME $Time{DateTime.Now}"$, Colors.Black)
 End Sub
 
 
@@ -841,10 +846,10 @@ Sub setPanelElevation(index As Int)
 				If v Is Panel Then
 					Dim pnl As Panel = v
 					If i = index Then
-						pnl.SetElevationAnimated(500, 6dip)
+						pnl.SetElevationAnimated(500, 4dip)
 						Sleep(700)
 					Else
-						pnl.Elevation = 2dip
+						pnl.Elevation = 1dip
 					End If
 				End If
 			End If
@@ -2025,12 +2030,11 @@ End Sub
 Sub showLyricDialog
 	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
 	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
-	html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
-	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/>"))
+	'html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
+	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/><br/>"))
 	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
-	DetailsDialog.SetSize(100%X, 500dip)
-	
+	DetailsDialog.SetSize(100%X, Activity.Height - 200dip)
 	Wait For (sf) Dialog_Ready(pnl As Panel)
 	pnl.LoadLayout("dlgSongLyric")
 	lbl_lyric_title.Text = Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
