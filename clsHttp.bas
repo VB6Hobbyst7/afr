@@ -28,6 +28,10 @@ End Sub
 
 'Sub spBearer(song As String)
 Sub spBearer(artist As String, song As String)
+	If artist = "" Then
+		Return
+	End If
+	
 	Dim su As StringUtils
 	song = su.EncodeUrl(song, "UTF8")
 	clsGeneral_.Initialize

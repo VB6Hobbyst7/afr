@@ -79,6 +79,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=player,getStationLogo,1183,2,clsGeneral,processOvhLyrics,55,2,clsGeneral,DownloadImage,126,2,clsGeneral,pullDataFromFandom,182,2,clsGeneral,pullDataFromOndemand,256,2,clsGeneral,userCountry,354,2,clsChartlyrics,processUrl,49,2,clsChartlyrics,processAlbumArt,109,2,clsChartlyrics,checkScrapLyrics,147,2,clsRandomImage,newRandomImage,15,2,searchStation,getGenryCountry,797,0
+NavigationStack=clsGeneral,pullDataFromFandom,182,2,clsGeneral,pullDataFromOndemand,256,2,clsGeneral,userCountry,354,2,clsChartlyrics,processUrl,49,2,clsChartlyrics,processAlbumArt,109,2,clsChartlyrics,checkScrapLyrics,147,2,clsRandomImage,newRandomImage,15,2,searchStation,getGenryCountry,797,0,Starter,icyMetaData,274,0,clsHttp,processUrl,361,0,clsHttp,spBearer,27,6
 SelectedBuild=0
 VisibleModules=1,2,3,7,8,10,11
