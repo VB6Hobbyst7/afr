@@ -35,7 +35,7 @@ Sub Process_Globals
 	'STRING
 	Public dbL, Username, Password, activeActivity, playerUsed, lastfmapi, countryCode, updateFile As String
 	Public SpotClientID1, SpotClientSecret1, SourceWeb1, mManualFolder, vAlbumTrack As String
-	Public vAlbumName, vAlbumReleaseDate, irp_dbFolder, vSong, vStationName As String
+	Public vAlbumName, vAlbumReleaseDate, irp_dbFolder, vSong, vStationName, songPlayingNow As String
 	
 	Public chartArtist, chartSong, streamLostInfo, vSpotError, vSpotUrl, localeDatFormat As String
 	Public selectedStream, currStationId, currStationGerne As String
@@ -301,6 +301,7 @@ Public Sub icyMetaData
 			
 				If newSong <> lastSong Or lastSong = "" Then
 					showNoImage
+					CallSub2(Me, "setSongPlaying", newSong)
 					processSong(newSong)
 				End If
 			Else
@@ -340,10 +341,10 @@ Sub processSong(song As String)
 		CallSub(player, "disableInfoPanels")
 		'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		lastSong = song
-		setSongPlaying(song)
+		'setSongPlaying(song)
 		If song = "" Then song = "No information found"
 		If activeActivity = "player" Then
-			CallSub2(Me, "setSongPlaying", song)
+			'CallSub2(Me, "setSongPlaying", song)
 			CallSub2(Me, "setSongLyric", "noLyric")
 			CallSub(player, "hideLyrics")
 			vAlbumName  		= ""

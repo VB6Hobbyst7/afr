@@ -131,28 +131,29 @@ End Sub
 
 Sub checkScrapLyrics(artist As String, song As String) As ResumableSub 
 	Dim nowPlaying As String = CallSub(player, "getNowPlaying")
-	
+	Dim song As String
 '	Log(nowPlaying)
 	
+'	LogColor($"${Starter.chartSong} - ${Starter.chartArtist}"$, Colors.Green)
 	
-	If artist = "" Or song = "" Then
+	If Starter.chartArtist = "" Or Starter.chartSong = "" Then
+		CallSub(Starter, "showNoImage")
 		Return False
 	End If
 	
-	Try
+	song = $"${Starter.chartSong} - ${Starter.chartArtist}"$
 	
 	Dim url As String
-	url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
+	'url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
+	url = $"http://ice.pdeg.nl/index.php?filename=${song}&format=json"$
 	
 	'Log($"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$)
-		Dim j As HttpJob
+	Dim j As HttpJob
 	
 	j.Initialize("", Me)
 	j.Download(url)
-	'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
-	
 	j.GetRequest.Timeout = Starter.jobTimeOut
-	
+	'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 	
 	Wait For (j) JobDone(j As HttpJob)
 		
@@ -170,7 +171,4 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 		Return False	
 	End If
 		
-	Catch
-		Return False
-	End Try
 End Sub
