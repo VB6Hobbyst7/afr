@@ -969,6 +969,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 '		showStreamWarning(False)
 		Starter.streamLost = False
 		Starter.streamLostInfo = ""
+'		lblArtistNowPlaying.Text = "Getting information"
 		CallSub2(Starter, "run_streamTimer", True)
 		modGlobal.PlayerStarted = True
 		Starter.startAccPlayerTime = DateTime.Now

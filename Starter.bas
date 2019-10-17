@@ -100,7 +100,7 @@ Sub Service_Create
 	
 	'need to disable it as reading from large JdbcResultSet will cause network requests to be sent on the main thread.
 	DisableStrictMode
-	tmrGetSong.Initialize("tmrGetSong", 5*1000)
+	tmrGetSong.Initialize("tmrGetSong", 7*1000)
 	tmrGetSong.Enabled = True
 	connectionTimer.Initialize("connectionTimer", 5*1000)
 	connectionTimer.Enabled	= True
@@ -287,6 +287,7 @@ Public Sub icyMetaData
 	
 	Try
 		url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
+'		Log($"SELECTED STREAM : ${url}"$)
 		job.Initialize("", Me)
 		job.Download(url)
 		job.GetRequest.Timeout = jobTimeOut
@@ -297,13 +298,20 @@ Public Sub icyMetaData
 				nSong = job.GetString
 				job.Release
 				newSong = clsFunc.parseIcy(nSong)
+				
+				'Log($"NEW SONG ${newSong}"$)
+				
 				If newSong = "" Then 'Or lastSong = newSong Then
-					showNoImage
+					'lastSong = ""
+					'showNoImage
 					Return
 				End If
 			
-				If newSong <> lastSong Or lastSong = "" Then
+				If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
 					showNoImage
+'					Log("AFTER SHOWNOIMAGE")
+					setSongLyric("noLyric")
+					spotMap.Clear
 					CallSub2(Me, "setSongPlaying", newSong)
 					processSong(newSong)
 				End If

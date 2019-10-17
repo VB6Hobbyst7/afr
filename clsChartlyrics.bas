@@ -148,7 +148,7 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 	
 	'song = $"${Starter.chartSong} - ${Starter.chartArtist}"$
 	song = $"${Starter.clsFunc.checkAmpersant(Starter.clsFunc.ReplaceRaros(Starter.chartSong))} - ${Starter.chartArtist}"$
-	LogColor($"${song}"$, Colors.Red)
+'	LogColor($"${song} $DateTime{DateTime.Now}"$, Colors.Red)
 	Dim url As String
 	'url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
 	url = $"http://ice.pdeg.nl/index.php?filename=${song}&format=json"$
