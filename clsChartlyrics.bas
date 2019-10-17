@@ -4,6 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=9
 @EndOfDesignText@
+#IgnoreWarnings: 9, 1
 Sub Class_Globals
 	Dim url, coverArtUrl As String
 	Dim parser As SaxParser
@@ -134,15 +135,20 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 	Dim song As String
 '	Log(nowPlaying)
 	
-'	LogColor($"${Starter.chartSong} - ${Starter.chartArtist}"$, Colors.Green)
+	'LogColor($"${Starter.chartSong} - ${Starter.chartArtist}"$, Colors.Green)
+	
+	
+	'Log(">>>>> " & Starter.clsFunc.checkAmpersant("Acda&De Munnik & vrienden"))
+	 
 	
 	If Starter.chartArtist = "" Or Starter.chartSong = "" Then
 		CallSub(Starter, "showNoImage")
 		Return False
 	End If
 	
-	song = $"${Starter.chartSong} - ${Starter.chartArtist}"$
-	
+	'song = $"${Starter.chartSong} - ${Starter.chartArtist}"$
+	song = $"${Starter.clsFunc.checkAmpersant(Starter.clsFunc.ReplaceRaros(Starter.chartSong))} - ${Starter.chartArtist}"$
+	LogColor($"${song}"$, Colors.Red)
 	Dim url As String
 	'url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
 	url = $"http://ice.pdeg.nl/index.php?filename=${song}&format=json"$
@@ -167,8 +173,10 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 		j.Release
 		Return True
 	Else 
+		LogColor($"Error @ checkScrapLyrics"$, Colors.Red)
 		j.Release
 		Return False	
 	End If
+	
 		
 End Sub

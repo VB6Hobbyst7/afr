@@ -397,22 +397,22 @@ Sub getStationRecord(stationName As String, column As String) As String
 	
 End Sub
 
-Sub getStationUrl(stationName As String) As String
-	Dim vQry, stationUrl As String
-	Dim curs As Cursor
-	
-	initDB
-	vQry	= "SELECT station_url FROM preflist WHERE stname=?"
-	curs	= vSql.ExecQuery2(vQry, Array As String(stationName))
-	
-	If curs.RowCount >= 0 Then
-		curs.Position = 0
-		Return curs.GetString("station_url")
-	Else
-		Return "nourl"	
-	End If
-	
-End Sub
+'Sub getStationUrl(stationName As String) As String
+'	Dim vQry, stationUrl As String
+'	Dim curs As Cursor
+'	
+'	initDB
+'	vQry	= "SELECT station_url FROM preflist WHERE stname=?"
+'	curs	= vSql.ExecQuery2(vQry, Array As String(stationName))
+'	
+'	If curs.RowCount >= 0 Then
+'		curs.Position = 0
+'		Return curs.GetString("station_url")
+'	Else
+'		Return "nourl"	
+'	End If
+'	
+'End Sub
 
 Sub setStationUrl(url As String, id As String)
 	Dim vQry As String

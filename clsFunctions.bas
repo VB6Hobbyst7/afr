@@ -441,3 +441,31 @@ End Try
 		Return Starter.lastSong
 	End If
 End Sub
+
+Public Sub checkAmpersant(str As String) As String
+	Dim ampPos As Int = 0
+	Dim txtPreAmp, txtPostAmp, retVal As String
+
+	ampPos = str.IndexOf("&")
+	If ampPos = -1 Then
+		Return str
+	End If
+	
+	If str.SubString2(ampPos-1, ampPos) = " " And str.SubString2(ampPos + 1, ampPos+2) = " " Then
+		retVal = Regex.Replace("&", str, "And")
+	Else
+		txtPreAmp = str.SubString2(0, ampPos)
+		txtPostAmp = str.SubString2(ampPos + 1, str.Length)
+		retVal = $"${txtPreAmp} And ${txtPostAmp}"$
+	End If
+	
+	If retVal.IndexOf("&") > -1 Then
+		retVal = checkAmpersant(retVal)
+	End If
+	'Log("---"&retVal)
+
+	Return retVal
+	
+End Sub
+
+

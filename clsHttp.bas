@@ -103,7 +103,6 @@ Sub spBearer(artist As String, song As String)
 		j1.Initialize("", Me)
 		j1.Download(SourceWeb1)
 		j1.GetRequest.Timeout = Starter.jobTimeOut
-	
 		Wait For (j1) JobDone(j1 As HttpJob)
 		If j1.Success Then
 			Dim j1String As String = j1.GetString

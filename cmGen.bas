@@ -72,25 +72,25 @@ Sub setStationUrlToRecord(url As String, stationId As String)
 End Sub
 
 
-Sub openStationUrl(stationName As String)
-	Dim ph As PhoneIntents
-	Dim url As String = genDb.getStationUrl(stationName)
-	
-	If url = "nourl" Or url = Null Then
-		ToastMessageShow("Invalid Url", True)
-		Return
-	End If
-	url = Starter.clsFunc.checkUrlHttp(url)
-	Try
-		If Not(Starter.clsFunc.checkUrl(url)) Then
-			Return
-		End If
-		StartActivity(ph.OpenBrowser(url))
-	Catch
-		ToastMessageShow("Station url seems to be invalid", True)
-'		Log("CMGEN @ 85 : "&LastException)
-	End Try
-	End Sub
+'Sub openStationUrl(stationName As String)
+'	Dim ph As PhoneIntents
+'	Dim url As String = genDb.getStationUrl(stationName)
+'	
+'	If url = "nourl" Or url = Null Then
+'		ToastMessageShow("Invalid Url", True)
+'		Return
+'	End If
+'	url = Starter.clsFunc.checkUrlHttp(url)
+'	Try
+'		If Not(Starter.clsFunc.checkUrl(url)) Then
+'			Return
+'		End If
+'		StartActivity(ph.OpenBrowser(url))
+'	Catch
+'		ToastMessageShow("Station url seems to be invalid", True)
+''		Log("CMGEN @ 85 : "&LastException)
+'	End Try
+'End Sub
 
 
 Sub getStationRecord(stationName As String, column As String) As String

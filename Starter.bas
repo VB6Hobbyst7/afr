@@ -4,6 +4,7 @@ ModulesStructureVersion=1
 Type=Service
 Version=7.8
 @EndOfDesignText@
+ #IgnoreWarnings: 9, 1
  #Region  Service Attributes 
 	#StartAtBoot: False
 	#ExcludeFromLibrary: True
@@ -58,7 +59,7 @@ Sub Process_Globals
 	Public vPlayerSelectedPanel As Int = 999
 	Public notifId As Int = 1
 	'LONG
-	Public lastAccPlayerTime, startAccPlayerTime, jobTimeOut = 6000 As Long
+	Public lastAccPlayerTime, startAccPlayerTime, jobTimeOut = 60*1000 As Long
 	'BITMAP
 	Public smallIcon, vSongAlbumArt As Bitmap
 	'TYPED
@@ -289,13 +290,15 @@ Public Sub icyMetaData
 		job.Initialize("", Me)
 		job.Download(url)
 		job.GetRequest.Timeout = jobTimeOut
+'		Log("ERROR HERE?")
 		Wait For (job) JobDone(job As HttpJob)
 		Try
 			If job.Success Then
 				nSong = job.GetString
 				job.Release
 				newSong = clsFunc.parseIcy(nSong)
-				If newSong = "" Or lastSong = newSong Then
+				If newSong = "" Then 'Or lastSong = newSong Then
+					showNoImage
 					Return
 				End If
 			
@@ -339,6 +342,7 @@ Sub processSong(song As String)
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 		spotMap.Clear
 		CallSub(player, "disableInfoPanels")
+		showNoImage
 		'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		lastSong = song
 		'setSongPlaying(song)

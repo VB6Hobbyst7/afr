@@ -4,6 +4,7 @@ ModulesStructureVersion=1
 Type=Activity
 Version=7.8
 @EndOfDesignText@
+#IgnoreWarnings: 9, 1
 #Region  Activity Attributes 
 	#FullScreen: false
 	#IncludeTitle: false
@@ -53,7 +54,7 @@ Sub Globals
 	Private img_bluetooth As ImageView
 	Private ivNowPlayingStation As ImageView
 	Private pnlPlayingStation As Panel
-	Private wvLyric As WebView
+'	Private wvLyric As WebView
 	Private btn_img_stop As ImageView
 	Private pnl_stop_button As Panel
 	Private pnl_lyric_button As Panel
@@ -78,12 +79,12 @@ Sub Globals
 	Private lblStationName As Label
 	Private lblDataUsage As Label
 	Private lblHeaderPlayButton As Label
-	Private lblOverflow As Label
+'	Private lblOverflow As Label
 	Private lblStationInformation As Label
 	Private lblBtnStationInformation As Label
 	Private lblBtnDeleteStation As Label
 	Private lblDeleteStation As Label
-	Private lblStationLogo As Label
+'	Private lblStationLogo As Label
 	Private lblOpenStationUrl As Label
 	Private lblNowPlayingDataRate As Label
 	Private lblNowPlayingStation As Label
@@ -573,17 +574,17 @@ Sub setAlbumArtFading(vArt As Bitmap)
 	ivNowPlaying.Bitmap = vArt
 End Sub
 
-Sub streamPlaying(playing As Boolean)
-	
-	If playing = False Then
-'		If Starter.playerUsed	= "aac" Then
-'			CallSub(Starter,"StopPlayer")
-			CallSub(Starter, "stopPlayer")
-			showSnackbar("Unable to play stream..")
-			Return
-'		End If
- 	End If
-End Sub
+'Sub streamPlaying(playing As Boolean)
+'	
+'	If playing = False Then
+''		If Starter.playerUsed	= "aac" Then
+''			CallSub(Starter,"StopPlayer")
+'			CallSub(Starter, "stopPlayer")
+'			showSnackbar("Unable to play stream..")
+'			Return
+''		End If
+' 	End If
+'End Sub
 
 
 Sub showSnackbar(msg As String)
@@ -1683,9 +1684,9 @@ Sub startOrStopStream(index As Int)
 	Wait For(start_stopStream(index)) Complete (result As Boolean)
 End Sub
 
-Sub getStationId(index As Int)
-	
-End Sub
+'Sub getStationId(index As Int)
+'	
+'End Sub
 
 Private Sub disableClickTimer_Tick
 	freeze(False)	
@@ -2020,17 +2021,17 @@ Sub btn_lyric_close_Click
 	
 End Sub
 
-Sub showStationInfo(index As Int)
-	Dim sfFormat As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
-	
-	DetailsDialog.SetSize(100%X, pnlOverflow.Height+120dip)
-	Wait For (sfFormat) Dialog_Ready(pnl As Panel)
-	pnlOverflow.Top = 0
-	lbl_station_name.Color	= 0xFF004BA0
-	pnl.LoadLayout("dlgStationInfo")
-	lbl_station_name.Text	= getStationByIndex(index)
-	Log(lbl_station_name.Text)
-End Sub
+'Sub showStationInfo(index As Int)
+'	Dim sfFormat As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
+'	
+'	DetailsDialog.SetSize(100%X, pnlOverflow.Height+120dip)
+'	Wait For (sfFormat) Dialog_Ready(pnl As Panel)
+'	pnlOverflow.Top = 0
+'	lbl_station_name.Color	= 0xFF004BA0
+'	pnl.LoadLayout("dlgStationInfo")
+'	lbl_station_name.Text	= getStationByIndex(index)
+'	Log(lbl_station_name.Text)
+'End Sub
 
 Sub showNowPlayingFormat
 	Dim sfFormat As Object = DetailsDialog.ShowAsync("", "OK", "CANCEL", "", Null, True)
@@ -2065,9 +2066,9 @@ Sub showLyricDialog
 	
 End Sub
 
-Sub setlblTimeNow(txt As String)
-	lbl_time_now.Text = txt
-End Sub
+'Sub setlblTimeNow(txt As String)
+'	lbl_time_now.Text = txt
+'End Sub
 
 
 
