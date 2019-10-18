@@ -74,7 +74,7 @@ Sub Process_Globals
 	Dim clsGen As clsGeneral
 	
 	Dim csChartLyric As clsChartlyrics
-	Public playingSong as String
+	Public playingSong As String
 	'Private albumTag="91f924c1eace4879ba9c4c0f5061e925" as String, songTag="b4fb29e9e2b0490bad9489c28dae6b89" As String
 End Sub
 
@@ -276,79 +276,66 @@ Public Sub tmrGetSong_tick
 End Sub
 
 Public Sub icyMetaData
-	Dim url, nSong, newSong As String
+	Dim url, nSong As String
 	Dim job As HttpJob
 	
 	If selectedStream = "" Then
 		Return
 	End If
 	
-	Try
-		url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
-		job.Initialize("", Me)
-		job.Download(url)
-		job.GetRequest.Timeout = jobTimeOut
-		Wait For (job) JobDone(job As HttpJob)
-		Try
-			If job.Success Then
-				nSong = job.GetString
-				job.Release
-				newSong = clsFunc.parseIcy(nSong)
-				Log(newSong)
-'				Log(chartSong)
-				'lastSong = newSong
-				'processSong(newSong)
-				
-				If newSong = "" Or newSong = "No song information" Then
-					'lastSong = ""
-					showNoImage
-					Return
-				End If
-				
-				If lastSong = newSong Then
-					Return
-				End If
-'				Log("NEW SONG " & newSong)
-				If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
-					showNoImage
-'					Log("AFTER SHOWNOIMAGE")
-					setSongLyric("noLyric")
-					spotMap.Clear
-					'CallSub2(Me, "setSongPlaying", newSong)
-					CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
-					'processSong($"${chartSong} - ${chartArtist}"$)
-					playingSong = $"${chartSong} - ${chartArtist}"$
-					processSong(newSong)
-				End If
-			Else
-				job.Release
-				If(lastSong) Then
-					showNoImage
-					processSong(lastSong)
-				End If
-			End If
-		Catch
-			job.Release
-			Log("")
-		End Try
-	Catch
-		clsFunc.showLog($"LAST EXCEPTION : ${LastException}"$, Colors.Red)
-	End Try
-	job.Release
 	
-			
+	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
+	job.Initialize("", Me)
+	job.Download(url)
+	job.GetRequest.Timeout = jobTimeOut
+	Wait For (job) JobDone(job As HttpJob)
+		
+		
+	If job.Success Then
+		nSong = job.GetString
+		job.Release
+		preProcessSongData(nSong)
+	Else
+		job.Release
+		If(lastSong) Then
+			showNoImage
+			processSong(lastSong)
+		End If
+	End If
+		
+	job.Release
+End Sub
+
+
+Sub preProcessSongData(nSong As String)
+	Dim newSong As String = clsFunc.parseIcy(nSong)
+'	Log(newSong)
+				
+	If newSong = "" Or newSong = "No song information" Then
+		showNoImage
+		Return
+	End If
+				
+	If lastSong = newSong Then
+		Return
+	End If
+	If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
+		showNoImage
+		setSongLyric("noLyric")
+		spotMap.Clear
+		CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
+		playingSong = $"${chartSong} - ${chartArtist}"$
+		processSong(newSong)
+	End If
 End Sub
 
 Sub processSong(song As String)
 	If(song.Length > 3) Then
 		song	= clsFunc.ReplaceRaros(song)
 		clearNotif(song)
-		'song	= clsFunc.NameToProperCase(song)
 	Else
 		Return
 	End If
-
-	'song = clsFunc.checkAmpersant(song)
 	
 	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
@@ -358,25 +345,15 @@ Sub processSong(song As String)
 		lastSong = song
 		If song = "" Then song = "No information found"
 		If activeActivity = "player" Then
-			'CallSub2(Me, "setSongPlaying", song)
-			CallSub2(Me, "setSongLyric", "noLyric")
-			'CallSub(player, "hideLyrics")
-			vAlbumName  		= ""
-			vAlbumTrack 		= ""
-			vAlbumReleaseDate	= ""
-			vSpotUrl			= ""
-			albumArtSet = False
+			clearVars
 				
 			If song <> "No information found" Then
 				songdata.songReversed	= False
 				Dim mySong As String	= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
 
-'				Log($"Song : ${chartSong} Artist : ${chartArtist}"$)
-'				Log($"Artist : ${chartArtist} Song : ${chartSong}"$)
 				playingSong = $"${chartSong} - ${chartArtist}"$
 				CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
 				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
-'				CallSubDelayed3(songdata,"spBearer", chartSong, chartArtist)
 				
 				If IsPaused(player) = False Then
 					CallSubDelayed(player, "enableAlbumInfo")
@@ -391,9 +368,18 @@ Sub processSong(song As String)
 			CallSub2(activeActivity, "nowPlaying", song)
 		End If
 	Else
-		'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 		showNoImage
 	End If
+End Sub
+
+
+Sub clearVars
+	CallSub2(Me, "setSongLyric", "noLyric")
+	vAlbumName  		= ""
+	vAlbumTrack 		= ""
+	vAlbumReleaseDate	= ""
+	vSpotUrl			= ""
+	albumArtSet 		= False
 End Sub
 
 Sub connectionTimer_Tick

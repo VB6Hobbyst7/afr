@@ -233,7 +233,7 @@ Sub getSpotifySongData(jsonData As String)
 			Starter.spotMap.Put("artistname",colartists.Get("name"))
 			Starter.spotMap.Put("artistsong",colitems.Get("name"))
 			
-			Log($"${colartists.Get("name")} - ${colitems.Get("name")}"$)
+		'	Log($"${colartists.Get("name")} - ${colitems.Get("name")}"$)
 			Starter.chartArtist = colartists.Get("name")
 			Starter.chartSong = colitems.Get("name")
 			Starter.playingSong = $"${colartists.Get("name")} - ${colitems.Get("name")}"$

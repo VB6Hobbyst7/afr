@@ -154,7 +154,7 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 '	Dim url As String
 	'url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
 	url = $"http://ice.pdeg.nl/index.php?filename=${song}&format=json"$
-	Log(url)
+'	Log(url)
 	'Log($"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$)
 	Dim j As HttpJob
 	
