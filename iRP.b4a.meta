@@ -1,5 +1,5 @@
 ﻿ModuleBookmarks0=
-ModuleBookmarks1=355,312
+ModuleBookmarks1=356,312
 ModuleBookmarks10=
 ModuleBookmarks11=
 ModuleBookmarks12=
@@ -82,6 +82,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=player,swIsArtist1_CheckedChange,2097,0,player,retSongPlaying,2097,5,Starter,Service_Create,80,2,clsChartlyrics,Class_Globals,7,3,Starter,processSong,368,6,clsChartlyrics,checkAlbumart,20,0,Visual Designer,player.bal,-100,3,Starter,Process_Globals,70,6,clsChartlyrics,checkScrapLyrics,144,6,clsHttp,getSpotifySongData,241,5
+NavigationStack=player,retSongPlaying,2097,5,Starter,Service_Create,80,2,clsChartlyrics,Class_Globals,7,3,Starter,processSong,368,6,clsChartlyrics,checkAlbumart,20,0,Visual Designer,player.bal,-100,3,Starter,Process_Globals,70,6,clsChartlyrics,checkScrapLyrics,145,6,clsHttp,getSpotifySongData,229,5,Starter,icyMetaData,313,3
 SelectedBuild=0
 VisibleModules=1,2,3,5,6,11,4

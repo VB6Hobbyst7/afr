@@ -294,7 +294,7 @@ Public Sub icyMetaData
 				nSong = job.GetString
 				job.Release
 				newSong = clsFunc.parseIcy(nSong)
-'				Log(chartArtist)
+				Log(newSong)
 '				Log(chartSong)
 				'lastSong = newSong
 				'processSong(newSong)
@@ -317,6 +317,7 @@ Public Sub icyMetaData
 					'CallSub2(Me, "setSongPlaying", newSong)
 					CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
 					'processSong($"${chartSong} - ${chartArtist}"$)
+					playingSong = $"${chartSong} - ${chartArtist}"$
 					processSong(newSong)
 				End If
 			Else
