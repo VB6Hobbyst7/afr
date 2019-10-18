@@ -11,6 +11,7 @@ Sub Class_Globals
 	Dim reverseSearch As Boolean = False
 	Dim reverseCount As Int = 0
 	Dim clsFunc As clsFunctions
+	Public songPlaying As String
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -132,10 +133,10 @@ End Sub
 
 Sub checkScrapLyrics(artist As String, song As String) As ResumableSub 
 	Dim nowPlaying As String = CallSub(player, "getNowPlaying")
-	Dim song As String
+'	Dim song As String
 '	Log(nowPlaying)
 	
-	'LogColor($"${Starter.chartSong} - ${Starter.chartArtist}"$, Colors.Green)
+'	LogColor($"${Starter.chartSong} - ${Starter.chartArtist}"$, Colors.Green)
 	
 	
 	'Log(">>>>> " & Starter.clsFunc.checkAmpersant("Acda&De Munnik & vrienden"))
@@ -146,13 +147,14 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 		Return False
 	End If
 	
+	song = $"${artist} - ${song}"$
 	'song = $"${Starter.chartSong} - ${Starter.chartArtist}"$
-	song = $"${Starter.clsFunc.checkAmpersant(Starter.clsFunc.ReplaceRaros(Starter.chartSong))} - ${Starter.chartArtist}"$
+	song = Starter.clsFunc.checkAmpersant(Starter.playingSong)
 '	LogColor($"${song} $DateTime{DateTime.Now}"$, Colors.Red)
-	Dim url As String
+'	Dim url As String
 	'url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
 	url = $"http://ice.pdeg.nl/index.php?filename=${song}&format=json"$
-	
+	Log(url)
 	'Log($"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$)
 	Dim j As HttpJob
 	

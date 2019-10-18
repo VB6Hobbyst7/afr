@@ -735,6 +735,7 @@ Module23=clsDeviceVolume
 Module24=clsGenTimer
 Module25=clsTimer
 Module26=phdetect
+Module27=clsSongData
 Module3=clsHttp
 Module4=clsGeneral
 Module5=clsChartlyrics
@@ -744,7 +745,7 @@ Module8=searchStation
 Module9=cmGen
 NumberOfFiles=344
 NumberOfLibraries=25
-NumberOfModules=26
+NumberOfModules=27
 Version=9.5
 @EndOfDesignText@
 #Region  Activity Attributes 

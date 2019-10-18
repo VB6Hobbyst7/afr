@@ -138,6 +138,10 @@ Sub Globals
 	Private lbl_playing_text As B4XView
 	Private lbl_playing_stname As B4XView
 	Private lblForId As B4XView
+	Private lblIsArtist As Label
+	Private lblIsArtist1 As Label
+	Private swIsArtist As ACSwitch
+	Private swIsArtist1 As ACSwitch
 End Sub
 
 
@@ -301,8 +305,11 @@ End Sub
 
 
 Sub setSongPlaying(songPlaying As String)
+	Dim strPlaying As String
+	strPlaying = $"${Starter.chartSong} - ${Starter.chartArtist}"$
 	'lblArtistNowPlaying.Text = Starter.clsFunc.NameToProperCase(songPlaying)
 	lblArtistNowPlaying.Text = Starter.clsFunc.TitleCase(songPlaying)
+	'lblArtistNowPlaying.Text = Starter.clsFunc.TitleCase(strPlaying)
 End Sub
 
 
@@ -2040,10 +2047,15 @@ Sub showNowPlayingFormat
 	'lbl_playing_text.Initialize("")
 	Log(lblArtistNowPlaying.Text)
 	
+	Log(Starter.chartArtist)
+	Log(Starter.chartSong)
+	
 	Wait For (sfFormat) Dialog_Ready(pnl As Panel)
 	pnl.LoadLayout("player_playing_format")
 	lbl_playing_text.Text = lblArtistNowPlaying.Text
 	lbl_playing_stname.Text = lblNowPlayingStation.Text
+	lblIsArtist.Text = Starter.chartSong
+	lblIsArtist1.Text	= Starter.chartArtist
 	Wait For (sfFormat) Dialog_Result(Result As Int)
 	If Result = DialogResponse.POSITIVE Then
 		Log(Result)
@@ -2079,4 +2091,16 @@ End Sub
 
 Sub getNowPlaying As String
 	Return lblArtistNowPlaying.Text
+End Sub
+
+Sub swIsArtist_CheckedChange(Checked As Boolean)
+	
+End Sub
+
+Sub swIsArtist1_CheckedChange(Checked As Boolean)
+	
+End Sub
+
+Public Sub retSongPlaying As String
+	Return lblNowPlayingStation.Text
 End Sub

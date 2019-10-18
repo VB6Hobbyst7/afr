@@ -87,11 +87,13 @@ Sub spBearer(artist As String, song As String)
 		SpotToken1=SourceText1.SubString2(n,m)
 		'SourceWeb1 = "https://api.spotify.com/v1/search?query=" & SpotQuery1 & "&type=track&access_token=" & SpotToken1 & "&token_type=Bearer&expires_in=3600&limit=1"
 		'SourceWeb1 = "https://api.spotify.com/v1/search?query=" & SpotQuery1 & "&type=track&access_token=" & SpotToken1 & "&token_type=Bearer&expires_in=3600&limit=1"
-		artist = artist.Replace(" ", "%20")
-		artist = artist.Replace("+", "%20")
-		song = song.Replace(" ", "%20")
-		Dim qry As String = $"track:${artist} artist:${song}&type=track%2Cartist&limit=1&offset=0"$
 		
+'		artist = artist.Replace(" ", "%20")
+'		artist = artist.Replace("+", "%20")
+'		song = song.Replace(" ", "%20")
+		
+		Dim qry As String = $"track:${artist} artist:${song}&type=track%2Cartist&limit=1&offset=0"$
+'		Log("QRY : " & qry)
 		SourceWeb1 = $"https://api.spotify.com/v1/search?q=${qry}&access_token=${SpotToken1}&token_type=Bearer&expires_in=3600&limit=1"$
 		
 		'SpotTrack1 is te vinden in de json onder item, 0 _> id
@@ -230,13 +232,20 @@ Sub getSpotifySongData(jsonData As String)
 			Next
 			Starter.spotMap.Put("artistname",colartists.Get("name"))
 			Starter.spotMap.Put("artistsong",colitems.Get("name"))
+			
+			Log($"${colartists.Get("name")} - ${colitems.Get("name")}"$)
+			Starter.chartArtist = colartists.Get("name")
+			Starter.chartSong = colitems.Get("name")
+			Starter.playingSong = $"${colartists.Get("name")} - ${colitems.Get("name")}"$
 			Dim spSong As String = Starter.spotMap.Get("artistsong")
 			
 			
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
-				wait for(clsLyrics.checkScrapLyrics(Starter.chartArtist, Starter.chartSong)) Complete (result As Boolean)
+				'wait for(clsLyrics.checkScrapLyrics(colartists.Get("name"), colitems.Get("name"))) Complete (result As Boolean)
+				wait for(clsLyrics.checkScrapLyrics(Starter.chartSong, Starter.chartArtist)) Complete (result As Boolean)
 				If result = False Then
+					wait for(clsLyrics.checkScrapLyrics(Starter.chartArtist, Starter.chartSong)) Complete (result As Boolean)
 				Else
 				End If
 				If Starter.vSongLyric = "noLyric" Then
