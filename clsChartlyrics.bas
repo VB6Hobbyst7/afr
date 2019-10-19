@@ -130,32 +130,39 @@ Sub processAlbumArt As ResumableSub
 End Sub
 
 
+Sub processSong(song As String, reverseFind As Boolean) As String
+	Dim lst, newList As List
+	lst.Initialize
+	newList.Initialize
+	lst = Regex.Split("-", song)
+	newList = Starter.clsFunc.GetArtistAndSong(lst)
 
-Sub checkScrapLyrics(artist As String, song As String) As ResumableSub 
-	Dim nowPlaying As String = CallSub(player, "getNowPlaying")
-'	Dim song As String
-'	Log(nowPlaying)
+	If reverseFind = False Then
+		song = $"${newList.Get(0)} - ${newList.Get(1)}"$
+	Else
+		Log("reverse lookup")
+		song = $"${newList.Get(1)} - ${newList.Get(0)}"$
+	End If
 	
-'	LogColor($"${Starter.chartSong} - ${Starter.chartArtist}"$, Colors.Green)
-	
-	
-	'Log(">>>>> " & Starter.clsFunc.checkAmpersant("Acda&De Munnik & vrienden"))
-	 
+	song = Starter.clsFunc.checkAmpersant(song)
+	song = Starter.clsFunc.ReplaceRaros(song)
+	Return song
+End Sub
+
+Sub checkScrapLyrics(reverseFind As Boolean) As ResumableSub
+	Dim url, song As String
 	
 	If Starter.chartArtist = "" Or Starter.chartSong = "" Then
 		CallSub(Starter, "showNoImage")
 		Return False
 	End If
 	
-	song = $"${artist} - ${song}"$
-	'song = $"${Starter.chartSong} - ${Starter.chartArtist}"$
-	song = Starter.clsFunc.checkAmpersant(Starter.playingSong)
-'	LogColor($"${song} $DateTime{DateTime.Now}"$, Colors.Red)
-'	Dim url As String
-	'url = $"http://ice.pdeg.nl/index.php?filename=${nowPlaying}&format=json"$
-	url = $"http://ice.pdeg.nl/index.php?filename=${song}&format=json"$
-'	Log(url)
-	'Log($"http://ice.pdeg.nl/index.php?filename=${artist} - ${song}&format=json"$)
+	song = processSong(Starter.icy_playing, reverseFind)
+
+	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
+	
+	Log(url)
+
 	Dim j As HttpJob
 	
 	j.Initialize("", Me)
@@ -167,17 +174,16 @@ Sub checkScrapLyrics(artist As String, song As String) As ResumableSub
 		
 	If j.Success Then
 		If j.GetString.Length < 10 Then
-			
 			j.Release
 			Return False
 		End If
 		clsFunc.parseScrapeData(j.GetString)
 		j.Release
+		CallSub2(player, "setSongPlaying", song)
 		Return True
-	Else 
-		LogColor($"Error @ checkScrapLyrics"$, Colors.Red)
+	Else
 		j.Release
-		Return False	
+		Return False
 	End If
 	
 		

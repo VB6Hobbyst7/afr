@@ -748,6 +748,7 @@ NumberOfLibraries=25
 NumberOfModules=27
 Version=9.5
 @EndOfDesignText@
+#IgnoreWarnings: 9, 1, 10,16
 #Region  Activity Attributes 
 	#FullScreen: false
 	#IncludeTitle: false

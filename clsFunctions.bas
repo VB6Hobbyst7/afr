@@ -435,6 +435,7 @@ End Try
 			CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
 		End If
 '		Log($" $DateTime{DateTime.Now} NOW PLAYING : ${icy_playing}"$)
+		Starter.icy_playing = icy_playing
 		Return icy_playing
 	Else
 		Return Starter.lastSong
@@ -467,4 +468,19 @@ Public Sub checkAmpersant(str As String) As String
 	
 End Sub
 
-
+'ONLY RETURN ROWS THAT CONTAIN TEXT 
+Public Sub GetArtistAndSong(lst As List) As List
+	Dim cleanList As List
+	
+	
+	cleanList.Initialize
+	
+	For Each str As String In lst
+		If str.Length > 2 Then
+			cleanList.Add(str.Trim)
+		End If
+	Next
+	
+	
+	Return cleanList
+End Sub

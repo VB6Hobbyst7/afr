@@ -11,7 +11,7 @@ End Sub
 #IgnoreWarnings: 9
 
 
-Private Sub GetArtistAndSong(lst As List) As List
+Public Sub GetArtistAndSong(lst As List) As List
 	Dim cleanList As List
 	
 	

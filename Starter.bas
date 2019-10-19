@@ -74,7 +74,7 @@ Sub Process_Globals
 	Dim clsGen As clsGeneral
 	
 	Dim csChartLyric As clsChartlyrics
-	Public playingSong As String
+	Public playingSong, icy_playing As String
 	'Private albumTag="91f924c1eace4879ba9c4c0f5061e925" as String, songTag="b4fb29e9e2b0490bad9489c28dae6b89" As String
 End Sub
 
@@ -334,6 +334,7 @@ Sub processSong(song As String)
 		song	= clsFunc.ReplaceRaros(song)
 		clearNotif(song)
 	Else
+		CallSub2(player, "setSongPlaying", "No information")
 		Return
 	End If
 	

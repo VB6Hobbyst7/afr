@@ -93,6 +93,7 @@ Sub spBearer(artist As String, song As String)
 '		song = song.Replace(" ", "%20")
 		
 		Dim qry As String = $"track:${artist} artist:${song}&type=track%2Cartist&limit=1&offset=0"$
+		
 '		Log("QRY : " & qry)
 		SourceWeb1 = $"https://api.spotify.com/v1/search?q=${qry}&access_token=${SpotToken1}&token_type=Bearer&expires_in=3600&limit=1"$
 		
@@ -237,15 +238,16 @@ Sub getSpotifySongData(jsonData As String)
 			Starter.chartArtist = colartists.Get("name")
 			Starter.chartSong = colitems.Get("name")
 			Starter.playingSong = $"${colartists.Get("name")} - ${colitems.Get("name")}"$
+			
 			Dim spSong As String = Starter.spotMap.Get("artistsong")
 			
 			
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
 				'wait for(clsLyrics.checkScrapLyrics(colartists.Get("name"), colitems.Get("name"))) Complete (result As Boolean)
-				wait for(clsLyrics.checkScrapLyrics(Starter.chartSong, Starter.chartArtist)) Complete (result As Boolean)
+				wait for(clsLyrics.checkScrapLyrics(False)) Complete (result As Boolean)
 				If result = False Then
-					wait for(clsLyrics.checkScrapLyrics(Starter.chartArtist, Starter.chartSong)) Complete (result As Boolean)
+					wait for(clsLyrics.checkScrapLyrics(True)) Complete (result As Boolean)
 				Else
 				End If
 				If Starter.vSongLyric = "noLyric" Then

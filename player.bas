@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Activity
 Version=7.8
 @EndOfDesignText@
-#IgnoreWarnings: 9, 1
+#IgnoreWarnings: 9, 1, 10
 #Region  Activity Attributes 
 	#FullScreen: false
 	#IncludeTitle: false
