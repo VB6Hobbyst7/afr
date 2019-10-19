@@ -312,8 +312,8 @@ Sub preProcessSongData(nSong As String)
 '	Log(newSong)
 				
 	If newSong = "" Or newSong = "No song information" Then
-		showNoImage
-		Return
+	'	showNoImage
+	'	Return
 	End If
 				
 	If lastSong = newSong Then
@@ -323,7 +323,8 @@ Sub preProcessSongData(nSong As String)
 		showNoImage
 		setSongLyric("noLyric")
 		spotMap.Clear
-		CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
+		'CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
+		CallSub2(Me, "setSongPlaying", icy_playing)
 		playingSong = $"${chartSong} - ${chartArtist}"$
 		processSong(newSong)
 	End If
@@ -334,6 +335,8 @@ Sub processSong(song As String)
 		song	= clsFunc.ReplaceRaros(song)
 		clearNotif(song)
 	Else
+		CallSubDelayed2(player, "showHideLyricsButton", False)
+		CallSubDelayed2(player, "enableAlbumButton", False)
 		CallSub2(player, "setSongPlaying", "No information")
 		Return
 	End If

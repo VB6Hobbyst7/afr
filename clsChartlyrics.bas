@@ -131,21 +131,11 @@ End Sub
 
 
 Sub processSong(song As String, reverseFind As Boolean) As String
-	Dim lst, newList As List
-	lst.Initialize
-	newList.Initialize
-	lst = Regex.Split("-", song)
-	newList = Starter.clsFunc.GetArtistAndSong(lst)
 
-	If reverseFind = False Then
-		song = $"${newList.Get(0)} - ${newList.Get(1)}"$
-	Else
-		Log("reverse lookup")
-		song = $"${newList.Get(1)} - ${newList.Get(0)}"$
-	End If
-	
+	song = Starter.clsFunc.GetArtistAndSong(song, reverseFind)
 	song = Starter.clsFunc.checkAmpersant(song)
 	song = Starter.clsFunc.ReplaceRaros(song)
+	song = Starter.clsFunc.removeBetween(song, "(-)")
 	Return song
 End Sub
 
@@ -161,14 +151,14 @@ Sub checkScrapLyrics(reverseFind As Boolean) As ResumableSub
 
 	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
 	
-	Log(url)
+'	Log(url)
+
 
 	Dim j As HttpJob
 	
 	j.Initialize("", Me)
 	j.Download(url)
 	j.GetRequest.Timeout = Starter.jobTimeOut
-	'j.GetRequest.SetHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0")
 	
 	Wait For (j) JobDone(j As HttpJob)
 		
@@ -179,8 +169,12 @@ Sub checkScrapLyrics(reverseFind As Boolean) As ResumableSub
 		End If
 		clsFunc.parseScrapeData(j.GetString)
 		j.Release
-		CallSub2(player, "setSongPlaying", song)
+		'CallSub2(player, "setSongPlaying",  Starter.icy_playing)
+		If Starter.vSongLyric = "nolyric" Then
+			Return False
+		Else
 		Return True
+		End If
 	Else
 		j.Release
 		Return False

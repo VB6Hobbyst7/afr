@@ -378,6 +378,7 @@ Public Sub parseScrapeData (metadata As String)
 	End If
 	lyric = lyric.Replace("<p class='verse'>", "")
 	lyric = lyric.Replace("</p>", "")
+	lyric = lyric.Replace($"<script>try{_402_Show();}catch(e){}</script>\n<div class=\"fb-quote\"></div>\n</div>""$, "")
 	lyric = lyric.Replace("\n<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->", "")
 	Starter.vSong = lyric
 	Starter.vSongLyric = "foundLyric"
@@ -418,9 +419,11 @@ End Try
 	Dim icy_genre As String = root.Get("icy-genre")
 	Dim icy_br As String = root.Get("icy-br")
 	Dim icy_url As String = root.Get("icy-url")
+	If icy_genre = "" Then
+		icy_genre = "N/A"
+	End If
+'	Log(icy_playing)
 	If ReplaceRaros(icy_playing) <> Starter.lastSong Or Starter.lastSong = "" Then
-		'Log("parse ICY data")
-		'End If
 	
 		CallSub2(player, "setGenre", icy_genre)
 		CallSub2(player, "getStationLogo", icy_url)
@@ -434,8 +437,8 @@ End Try
 		Else
 			CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
 		End If
-'		Log($" $DateTime{DateTime.Now} NOW PLAYING : ${icy_playing}"$)
 		Starter.icy_playing = icy_playing
+		'CallSubDelayed2(player, "setSongPlaying", icy_playing)
 		Return icy_playing
 	Else
 		Return Starter.lastSong
@@ -462,18 +465,20 @@ Public Sub checkAmpersant(str As String) As String
 	If retVal.IndexOf("&") > -1 Then
 		retVal = checkAmpersant(retVal)
 	End If
-	'Log("---"&retVal)
 
 	Return retVal
 	
 End Sub
 
 'ONLY RETURN ROWS THAT CONTAIN TEXT 
-Public Sub GetArtistAndSong(lst As List) As List
-	Dim cleanList As List
+Public Sub GetArtistAndSong(song As String, reverse As Boolean) As String
+	Dim lst, cleanList As List
+	Dim retVal As String
 	
-	
+	lst.Initialize
 	cleanList.Initialize
+	
+	lst = Regex.Split("-", song)
 	
 	For Each str As String In lst
 		If str.Length > 2 Then
@@ -481,6 +486,36 @@ Public Sub GetArtistAndSong(lst As List) As List
 		End If
 	Next
 	
+	If reverse = True Then
+		retVal = $"${cleanList.Get(1)} - ${cleanList.Get(0)}"$
+	Else
+		retVal = $"${cleanList.Get(0)} - ${cleanList.Get(1)}"$
+	End If
+	Starter.icy_playing = retVal
+		
+	Return retVal
+End Sub
+
+Sub removeBetween(str As String, charLst As String) As String
+	Dim remLst As List = Regex.Split("-", charLst)
+	Dim firstPos, lastPos As Int
+	Dim remString, newString As String
 	
-	Return cleanList
+	If str.IndexOf(remLst.Get(0)) > -1 Then
+		firstPos = str.IndexOf(remLst.Get(0))
+		lastPos	= str.IndexOf(remLst.Get(1))
+		remString = str.SubString2(firstPos, lastPos+1)
+		Log(remString)
+		newString = str.Replace(remString, "")
+		Log(newString)
+	End If
+	
+	If newString.IndexOf(remLst.Get(0)) > -1 Then
+		newString = removeBetween(newString, charLst)
+	End If
+	Return str
+End Sub
+
+Sub removeCommaFromArtist(str As String) As String
+	
 End Sub

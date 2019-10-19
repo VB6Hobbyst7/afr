@@ -871,9 +871,6 @@ Sub setPanelElevation(index As Int)
 End Sub
 
 Sub start_stopStream(index As Int) As ResumableSub
-'	showStreamWarning(False)
-'	CallSub(Starter, "StopPlayer")	
-	'Starter.clsExoPlayer.stopPlayer
 	CallSub(Starter, "stopPlayer")
 	Starter.lastSong = ""
 	CallSub(Starter,"initPlayerVars")
@@ -908,8 +905,8 @@ Sub start_stopStream(index As Int) As ResumableSub
 	'		pnlSongText.SetVisibleAnimated(500, False)
 			hideOverflow
 			
-			CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
-			handleControlButtons(False, 0dip, 500)
+			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
+'			handleControlButtons(False, 0dip, 500)
 		End If
 	
 		If index = -1 Then
@@ -917,7 +914,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		End If
 		
 		If index = 999 Then
-			CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
+'			CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
 			pnlClicked = 0
 			Return True
 		End If
@@ -934,7 +931,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 			showHideSmallStationLogo(False)
 			CallSub2(Starter, "run_streamTimer", False)
 			modGlobal.PlayerStarted = False
-			setAlbumArtFading(LoadBitmap(File.DirAssets, "logo_afr.png"))
+'			setAlbumArtFading(LoadBitmap(File.DirAssets, "logo_afr.png"))
 			Starter.lastAccPlayerTime = 0
 			Starter.startAccPlayerTime = 0
 			pnlClicked = 0
@@ -1615,10 +1612,10 @@ End Sub
 
 Sub enableAlbumButton(enable As Boolean)
 	If enable = True Then
-		pnl_store_song_button.SetElevationAnimated(700, 8dip)
+		pnl_store_song_button.SetElevationAnimated(500, 8dip)
 		pnl_store_song_button.Enabled = True
 	Else
-		pnl_store_song_button.SetElevationAnimated(700, 0dip)
+		pnl_store_song_button.SetElevationAnimated(500, 0dip)
 		pnl_store_song_button.Enabled = False
 	End If
 	setCtrlButtonsBorder
@@ -2089,9 +2086,9 @@ Sub btn_img_new_station_Click
 	img_close_Click
 End Sub
 
-Sub getNowPlaying As String
-	Return lblArtistNowPlaying.Text
-End Sub
+'Sub getNowPlaying As String
+'	Return lblArtistNowPlaying.Text
+'End Sub
 
 Sub swIsArtist_CheckedChange(Checked As Boolean)
 	
