@@ -505,9 +505,9 @@ Sub removeBetween(str As String, charLst As String) As String
 		firstPos = str.IndexOf(remLst.Get(0))
 		lastPos	= str.IndexOf(remLst.Get(1))
 		remString = str.SubString2(firstPos, lastPos+1)
-		Log(remString)
+'		Log(remString)
 		newString = str.Replace(remString, "")
-		Log(newString)
+'		Log(newString)
 	End If
 	
 	If newString.IndexOf(remLst.Get(0)) > -1 Then

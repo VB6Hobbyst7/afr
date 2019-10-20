@@ -29,7 +29,7 @@ End Sub
 'Sub spBearer(song As String)
 Sub spBearer(artist As String, song As String)
 	If artist = "" Then
-		Return
+	'	Return
 	End If
 	
 	Dim su As StringUtils
@@ -245,45 +245,49 @@ Sub getSpotifySongData(jsonData As String)
 			Starter.vSongLyric = "noLyric"
 			If Starter.vSongLyric = "noLyric" Then
 				'wait for(clsLyrics.checkScrapLyrics(colartists.Get("name"), colitems.Get("name"))) Complete (result As Boolean)
-				wait for(clsLyrics.checkScrapLyrics(False)) Complete (result As Boolean)
+				wait for(clsLyrics.checkScrapLyrics(False, False)) Complete (result As Boolean)
 				If result = False Then
-					wait for(clsLyrics.checkScrapLyrics(True)) Complete (result As Boolean)
+					wait for(clsLyrics.checkScrapLyrics(True, False)) Complete (result As Boolean)
+					If result = False Then
+						wait for(clsLyrics.checkScrapLyrics(False, True)) Complete (result As Boolean)
+					End If
 				Else
+				'	Log(Starter.vSongLyric)
 				End If
-				If Starter.vSongLyric = "noLyric" Then
-				Try
-				'''	wait for(getSongLyrics) Complete (result As Boolean)
-				Catch
-					Starter.vSongLyric = "noLyric"
-				End Try
-				End If
+'				If Starter.vSongLyric = "noLyric" Then
+'				Try
+'				'''	wait for(getSongLyrics) Complete (result As Boolean)
+'				Catch
+'					Starter.vSongLyric = "noLyric"
+'				End Try
+'				End If
 				
-				If Starter.vSongLyric = "noLyric" Then
-					Try
-						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
-						If Starter.chartLyricsDown = False Then
-							'wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
-						End If
-					Catch
-						Starter.vSongLyric = "noLyric"
-					End Try
-					If Starter.vSongLyric = "noLyric" Then
-						Try
-							'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
-							
-							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
-						Catch
-							Starter.vSongLyric = "noLyric"
-						End Try
-					End If
-					If Starter.vSongLyric = "noLyric" Then
-						Try
-							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
-						Catch
-							Starter.vSongLyric = "noLyric"
-						End Try
-					End If
-				End If
+'				If Starter.vSongLyric = "noLyric" Then
+'					Try
+'						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+'						If Starter.chartLyricsDown = False Then
+'							'wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
+'						End If
+'					Catch
+'						Starter.vSongLyric = "noLyric"
+'					End Try
+'					If Starter.vSongLyric = "noLyric" Then
+'						Try
+'							'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+'							
+'							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+'						Catch
+'							Starter.vSongLyric = "noLyric"
+'						End Try
+'					End If
+'					If Starter.vSongLyric = "noLyric" Then
+'						Try
+'							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+'						Catch
+'							Starter.vSongLyric = "noLyric"
+'						End Try
+'					End If
+'				End If
 			End If
 			
 			Dim images As List = album.Get("images")

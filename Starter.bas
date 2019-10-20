@@ -87,6 +87,7 @@ Sub Service_Create
 	clsGen.Initialize
 	csChartLyric.Initialize
 	exoPlayer.Initialize("player")
+'	exoPlayer.Initialize("")
 	Service.AutomaticForegroundMode = Service.AUTOMATIC_FOREGROUND_ALWAYS
 
 	If rp.Check(rp.PERMISSION_READ_PHONE_STATE) Then 
@@ -309,7 +310,7 @@ End Sub
 
 Sub preProcessSongData(nSong As String)
 	Dim newSong As String = clsFunc.parseIcy(nSong)
-'	Log(newSong)
+	
 				
 	If newSong = "" Or newSong = "No song information" Then
 	'	showNoImage
@@ -317,10 +318,12 @@ Sub preProcessSongData(nSong As String)
 	End If
 				
 	If lastSong = newSong Then
-		Return
+	'	Return
 	End If
+	
 	If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
 		showNoImage
+		CallSub(player, "disableInfoPanels")
 		setSongLyric("noLyric")
 		spotMap.Clear
 		'CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
@@ -357,7 +360,8 @@ Sub processSong(song As String)
 
 				playingSong = $"${chartSong} - ${chartArtist}"$
 				CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
-				CallSubDelayed3(songdata,"spBearer", chartArtist, chartSong)
+				CallSub2(Me, "setSongPlaying", $"${song}"$)
+				CallSub3(songdata,"spBearer", chartArtist, chartSong)
 				
 				If IsPaused(player) = False Then
 					CallSubDelayed(player, "enableAlbumInfo")
@@ -540,6 +544,7 @@ Private Sub streamEnded
 End Sub
 
 Public Sub startPlayer(url As String)
+
 	exoPlayer.Initialize("")
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	'exoPlayer.Prepare(exoPlayer.CreateSmoothStreamingSource(url))

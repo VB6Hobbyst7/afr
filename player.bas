@@ -298,7 +298,6 @@ End Sub
 
 
 Sub disableInfoPanels
-	
 	pnl_store_song_button.SetElevationAnimated(1000, 0)
 	pnl_lyric_button.SetElevationAnimated(1000, 0)
 End Sub

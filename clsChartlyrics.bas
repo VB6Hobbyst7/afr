@@ -139,7 +139,7 @@ Sub processSong(song As String, reverseFind As Boolean) As String
 	Return song
 End Sub
 
-Sub checkScrapLyrics(reverseFind As Boolean) As ResumableSub
+Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 	Dim url, song As String
 	
 	If Starter.chartArtist = "" Or Starter.chartSong = "" Then
@@ -147,8 +147,14 @@ Sub checkScrapLyrics(reverseFind As Boolean) As ResumableSub
 		Return False
 	End If
 	
-	song = processSong(Starter.icy_playing, reverseFind)
-
+	'Starter.spotMap.Put("artistname",colartists.Get("name"))
+	'Starter.spotMap.Put("artistsong",colitems.Get("name"))
+	
+	If useSpot = False Then
+		song = processSong(Starter.icy_playing, reverseFind)
+	Else
+		song = processSong(Starter.spotMap.Get("artistname") &" - " & Starter.spotMap.Get("artistsong"), reverseFind)
+	End If
 	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
 	
 '	Log(url)
@@ -173,7 +179,7 @@ Sub checkScrapLyrics(reverseFind As Boolean) As ResumableSub
 		If Starter.vSongLyric = "nolyric" Then
 			Return False
 		Else
-		Return True
+			Return True
 		End If
 	Else
 		j.Release

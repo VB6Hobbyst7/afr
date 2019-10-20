@@ -756,8 +756,8 @@ Version=9.5
 
 #Region  Project Attributes
 	#ApplicationLabel: AdFree Radio
-	#VersionCode: 30052048
-	#VersionName: 0.99
+	#VersionCode: 30052049
+	#VersionName: 1.00
 	 'SupportedOrientations possible values: unspecified, landscape or portrait
 	#SupportedOrientations: portrait
 
