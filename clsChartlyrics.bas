@@ -20,114 +20,114 @@ Public Sub Initialize
 End Sub
 
 
-Public Sub checkAlbumart As ResumableSub
-	If Starter.chartLyricsDown = True Then
-		
-		Return False
-	End If
-'	Log("CHARTLYRICS")
-	If reverseCount = 1 Then
-		reverseCount = 0
-		reverseSearch = False
-		Return False
-	End If
-	
-	scrobbler.processPlaying(Starter.vSong)
-	If reverseSearch = False Then
-		url = $"http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=${Starter.chartSong}&song=${Starter.chartArtist}"$
-	Else
-		reverseCount = reverseCount+1
-		url = $"http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=${Starter.chartArtist}&song=${Starter.chartSong}"$
-	End If
-	wait for (processUrl) Complete (result As Boolean)
-	Return result
-	
-End Sub
+'Public Sub checkAlbumart As ResumableSub
+'	If Starter.chartLyricsDown = True Then
+'		
+'		Return False
+'	End If
+''	Log("CHARTLYRICS")
+'	If reverseCount = 1 Then
+'		reverseCount = 0
+'		reverseSearch = False
+'		Return False
+'	End If
+'	
+'	scrobbler.processPlaying(Starter.vSong)
+'	If reverseSearch = False Then
+'		url = $"http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=${Starter.chartSong}&song=${Starter.chartArtist}"$
+'	Else
+'		reverseCount = reverseCount+1
+'		url = $"http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=${Starter.chartArtist}&song=${Starter.chartSong}"$
+'	End If
+'	wait for (processUrl) Complete (result As Boolean)
+'	Return result
+'	
+'End Sub
 
 
-Private Sub processUrl As ResumableSub
-	reverseSearch = False
-	Dim j As HttpJob
-	
-	If url = "" Or Starter.clsFunc.checkUrl(url) = False Or url = "http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=&song=" Then
-		Return False
-	End If
-	
-	j.Initialize("",  Me)
-	j.Download(url)
-	j.GetRequest.Timeout = Starter.jobTimeOut
-	Wait For (j) JobDone(j As HttpJob)
-	
-	If j.Success Then
-		File.WriteString(Starter.irp_dbFolder,"file.xml", j.GetString)
-		j.Release
-		processXml
-		Return True
-	Else
-		Starter.chartLyricsDown = True	
-	End If
-	j.Release
-	Return False
-End Sub
+'Private Sub processUrl As ResumableSub
+'	reverseSearch = False
+'	Dim j As HttpJob
+'	
+'	If url = "" Or Starter.clsFunc.checkUrl(url) = False Or url = "http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=&song=" Then
+'		Return False
+'	End If
+'	
+'	j.Initialize("",  Me)
+'	j.Download(url)
+'	j.GetRequest.Timeout = Starter.jobTimeOut
+'	Wait For (j) JobDone(j As HttpJob)
+'	
+'	If j.Success Then
+'		File.WriteString(Starter.irp_dbFolder,"file.xml", j.GetString)
+'		j.Release
+'		processXml
+'		Return True
+'	Else
+'		Starter.chartLyricsDown = True	
+'	End If
+'	j.Release
+'	Return False
+'End Sub
 
 
-Private Sub processXml()
-	Dim in As InputStream
-	in = File.OpenInput(Starter.irp_dbFolder,"file.xml")
-	
-	parser.Initialize
-	parser.Parse(in,"parser")
-	
-	
-End Sub
+'Private Sub processXml()
+'	Dim in As InputStream
+'	in = File.OpenInput(Starter.irp_dbFolder,"file.xml")
+'	
+'	parser.Initialize
+'	parser.Parse(in,"parser")
+'	
+'	
+'End Sub
 
-Sub Parser_EndElement (Uri As String, Name As String, Text As StringBuilder)
-	'Log(Name)
-	If Name = "Lyric" Then
-		Starter.vSongLyric = Text.ToString
-		CallSubDelayed2(Starter, "setSongLyric", Text.ToString)
-		'Log(Text.ToString)
-	End If
-	If Name = "LyricCovertArtUrl" Then
-		coverArtUrl = Text.ToString
-	'	Starter.clsFunc.showLog($"ALBUMART ${Text.ToString}"$, 0)
-		If coverArtUrl.IndexOf(".jpg") > -1 Or coverArtUrl.IndexOf(".png") > -1 Then
-			wait for (processAlbumArt) Complete (result As Boolean)
-			
-			reverseSearch = False
-		Else
-			reverseSearch = True
-		End If
-	End If
-	If reverseSearch = True Then
-		checkAlbumart
-	End If
-End Sub
+'Sub Parser_EndElement (Uri As String, Name As String, Text As StringBuilder)
+'	'Log(Name)
+'	If Name = "Lyric" Then
+'		Starter.vSongLyric = Text.ToString
+'		CallSubDelayed2(Starter, "setSongLyric", Text.ToString)
+'		'Log(Text.ToString)
+'	End If
+'	If Name = "LyricCovertArtUrl" Then
+'		coverArtUrl = Text.ToString
+'	'	Starter.clsFunc.showLog($"ALBUMART ${Text.ToString}"$, 0)
+'		If coverArtUrl.IndexOf(".jpg") > -1 Or coverArtUrl.IndexOf(".png") > -1 Then
+'			wait for (processAlbumArt) Complete (result As Boolean)
+'			
+'			reverseSearch = False
+'		Else
+'			reverseSearch = True
+'		End If
+'	End If
+'	If reverseSearch = True Then
+'		checkAlbumart
+'	End If
+'End Sub
 
-Sub processAlbumArt As ResumableSub
-	Dim j As HttpJob
-	Dim bm As Bitmap
-	
-	Starter.clsFunc.showLog($"ALBUMART FOUND IS ${Starter.albumArtSet}"$, 0)
-	If Starter.albumArtSet = True Then
-		Return True
-	End If
-	
-	j.Initialize("",  Me)
-	j.Download(coverArtUrl)
-	j.GetRequest.Timeout = Starter.jobTimeOut
-	
-	Wait For (j) JobDone(j As HttpJob)
-	If j.Success Then
-		bm = j.GetBitmap
-		j.Release
-		Starter.albumArtSet = True
-		'Log($"chartlyric song"$)
-		CallSubDelayed2(Starter, "setAlbumArt", bm)
-	End If
-	j.Release
-	Return True
-End Sub
+'Sub processAlbumArt As ResumableSub
+'	Dim j As HttpJob
+'	Dim bm As Bitmap
+'	
+'	Starter.clsFunc.showLog($"ALBUMART FOUND IS ${Starter.albumArtSet}"$, 0)
+'	If Starter.albumArtSet = True Then
+'		Return True
+'	End If
+'	
+'	j.Initialize("",  Me)
+'	j.Download(coverArtUrl)
+'	j.GetRequest.Timeout = Starter.jobTimeOut
+'	
+'	Wait For (j) JobDone(j As HttpJob)
+'	If j.Success Then
+'		bm = j.GetBitmap
+'		j.Release
+'		Starter.albumArtSet = True
+'		'Log($"chartlyric song"$)
+'		CallSubDelayed2(Starter, "setAlbumArt", bm)
+'	End If
+'	j.Release
+'	Return True
+'End Sub
 
 
 Sub processSong(song As String, reverseFind As Boolean) As String
@@ -150,14 +150,31 @@ Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 	'Starter.spotMap.Put("artistname",colartists.Get("name"))
 	'Starter.spotMap.Put("artistsong",colitems.Get("name"))
 	
+'	LogColor($"ARTIST ${Starter.spotMap.Get("artistname")} SONG ${Starter.spotMap.Get("artistsong")}"$, Colors.Blue)
+	
+	If useSpot = True And reverseFind = True Then
+		Dim mArtist As String = Starter.spotMap.Get("artistname")
+		If mArtist.IndexOf("&") > -1 Then
+			mArtist = mArtist.Replace("&", "")
+			
+		End If
+		
+	End If
+	
 	If useSpot = False Then
 		song = processSong(Starter.icy_playing, reverseFind)
+	Else If useSpot = True And reverseFind = True Then
+		Dim mArtist As String = Starter.spotMap.Get("artistname")
+		If mArtist.IndexOf("&") > -1 Then
+			mArtist = mArtist.Replace("&", "")
+			song = processSong(mArtist &" - " & Starter.spotMap.Get("artistsong"), False)
+		End If
 	Else
 		song = processSong(Starter.spotMap.Get("artistname") &" - " & Starter.spotMap.Get("artistsong"), reverseFind)
 	End If
 	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
 	
-'	Log(url)
+	Log(url)
 
 
 	Dim j As HttpJob

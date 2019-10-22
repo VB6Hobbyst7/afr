@@ -198,7 +198,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	actionViewItem.ActionView = SwitchUpdateLogo
 	
 	Dim actionViewItem As ACMenuItem
-	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 4, 2, $"Captitalize now playing"$, xml.GetDrawable("baseline_format_size_black_18"))
+	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 4, 2, $""Now Playing""$, xml.GetDrawable("baseline_format_size_black_18"))
 	SwitchCaps.Initialize("SwitchCaps")
 	actionViewItem.ActionView = SwitchCaps
 	
@@ -895,6 +895,8 @@ Sub start_stopStream(index As Int) As ResumableSub
 		If modGlobal.PlayerStarted Then
 			clearLabels
 			'Sleep(500)
+			Starter.chartSong = ""  
+			Starter.chartArtist = ""
 			modGlobal.PlayerStarted = False
 			Starter.sStationLogoPath = "null"
 			CallSub2(Starter, "run_streamTimer", False)
@@ -1590,10 +1592,13 @@ Sub clearLabels
 End Sub
 
 
-Sub setStationBitrate(bitrate As String)
+'Sub setStationBitrate(bitrate As String)
+'	lblNowPlayingDataRate.Text	= bitrate
+'End Sub
+
+Sub setStationBitrate(bitrate As CSBuilder)
 	lblNowPlayingDataRate.Text	= bitrate
 End Sub
-
 
 
 

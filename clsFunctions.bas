@@ -178,6 +178,7 @@ Sub ReplaceRaros(p_strText As String) As String
 	'strTemp	= strTemp.Replace("Straks:", "")
 	strTemp	= strTemp.Replace("Now Playing: ", "")
 	strTemp	= strTemp.Replace("S.S.", "")
+	'strTemp	= strTemp.Replace(",", "%2C")
 	
 	If strTemp.SubString2(0,3) = " - " Then
 		strTemp = strTemp.SubString2(3,strTemp.Length)
@@ -435,7 +436,14 @@ End Try
 		If Starter.activeActivity = "searchStation" Then
 			CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & icy_br)
 		Else
-			CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
+			Dim cs As CSBuilder
+			If icy_br < 128 Then
+				'CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
+				CallSub2(player,"setStationBitrate", cs.Initialize.Append("Station bitrate : ").Color(Colors.Black).Append(icy_br).PopAll)
+			Else
+				CallSub2(player,"setStationBitrate", cs.Initialize.Append("Station bitrate : ").Color(Colors.Red).Append(icy_br).PopAll)
+			End If
+			'CallSub2(player,"setStationBitrate", cs.Initialize.Color(Colors.Red).Append("Hello ").Pop.Append("World!").PopAll)
 		End If
 		Starter.icy_playing = icy_playing
 		'CallSubDelayed2(player, "setSongPlaying", icy_playing)

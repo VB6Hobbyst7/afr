@@ -90,9 +90,11 @@ Sub spBearer(artist As String, song As String)
 		
 '		artist = artist.Replace(" ", "%20")
 '		artist = artist.Replace("+", "%20")
-'		song = song.Replace(" ", "%20")
+'		artist = artist.Replace(" ", "+")
+		song = song.Replace(" ", "%20")
 		
-		Dim qry As String = $"track:${artist} artist:${song}&type=track%2Cartist&limit=1&offset=0"$
+		'Dim qry As String = $"track:${artist} artist:${song}&type=track%2Cartist&limit=1&offset=0"$
+		Dim qry As String = $"track:${clsFunc.removeBetween(artist, "(-)")} artist:${song}&type=track%2Cartist&limit=1&offset=1"$
 		
 '		Log("QRY : " & qry)
 		SourceWeb1 = $"https://api.spotify.com/v1/search?q=${qry}&access_token=${SpotToken1}&token_type=Bearer&expires_in=3600&limit=1"$
@@ -170,9 +172,9 @@ Sub getSpotifySongData(jsonData As String)
 		Dim items As List = tracks.Get("items")
 
 		If items.Size < 1 Then
-			If songReversed = False Then
+			If songReversed = False And Starter.chartSong <> "" And Starter.chartArtist <> "" Then
 				songReversed	= True
-				spBearer(Starter.chartSong, Starter.chartArtist)
+				spBearer(Starter.chartSong, Starter.chartArtist) 'LEEG
 			End If
 			noSongData
 			Return
@@ -196,7 +198,7 @@ Sub getSpotifySongData(jsonData As String)
 			Try
 				If lDate.Size >= 2 Then
 					Dim newTime As Long	= DateUtils.SetDate(lDate.Get(0), lDate.Get(1), lDate.Get(2))
-					DateTime.DateFormat ="dd MMMM yyyy"
+					DateTime.DateFormat ="MMMM yyyy"
 					Starter.vAlbumReleaseDate = $"$Date{newTime}"$
 				Else
 					Starter.vAlbumReleaseDate = $"${mDate}"$
@@ -234,7 +236,7 @@ Sub getSpotifySongData(jsonData As String)
 			Starter.spotMap.Put("artistname",colartists.Get("name"))
 			Starter.spotMap.Put("artistsong",colitems.Get("name"))
 			
-		'	Log($"${colartists.Get("name")} - ${colitems.Get("name")}"$)
+			Log($"${colartists.Get("name")} - ${colitems.Get("name")}"$)
 			Starter.chartArtist = colartists.Get("name")
 			Starter.chartSong = colitems.Get("name")
 			Starter.playingSong = $"${colartists.Get("name")} - ${colitems.Get("name")}"$
@@ -250,6 +252,9 @@ Sub getSpotifySongData(jsonData As String)
 					wait for(clsLyrics.checkScrapLyrics(True, False)) Complete (result As Boolean)
 					If result = False Then
 						wait for(clsLyrics.checkScrapLyrics(False, True)) Complete (result As Boolean)
+					End If
+					If result = False Then
+						wait for(clsLyrics.checkScrapLyrics(True, True)) Complete (result As Boolean)
 					End If
 				Else
 				'	Log(Starter.vSongLyric)

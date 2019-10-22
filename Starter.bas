@@ -9,7 +9,6 @@ Version=7.8
 	#StartAtBoot: False
 	#ExcludeFromLibrary: True
 #End Region
-#IgnoreWarnings: 
 
 Sub Process_Globals
 	Public exoPlayer As SimpleExoPlayer
@@ -323,6 +322,8 @@ Sub preProcessSongData(nSong As String)
 	
 	If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
 		showNoImage
+		chartSong = "" 
+		chartArtist = ""
 		CallSub(player, "disableInfoPanels")
 		setSongLyric("noLyric")
 		spotMap.Clear
@@ -361,6 +362,8 @@ Sub processSong(song As String)
 				playingSong = $"${chartSong} - ${chartArtist}"$
 				CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
 				CallSub2(Me, "setSongPlaying", $"${song}"$)
+'				LogColor(chartArtist& " - " &  chartSong, Colors.Red)
+				'ARTIST HOLDS SONG ANBD SONG HOLDS ARTIST BECAUSE OF SPOTIFY QUERY FORMAT
 				CallSub3(songdata,"spBearer", chartArtist, chartSong)
 				
 				If IsPaused(player) = False Then
@@ -560,11 +563,12 @@ Public Sub startPlayer(url As String)
 End Sub
 
 Public Sub stopPlayer
+	tmrGetSongEnable(False)
+	'Sleep(300)
 	exoPlayer.Pause
 	exoPlayer.Release
 	
 	setWakeLock(False)
-	tmrGetSongEnable(False)
 End Sub
 
 public Sub showNoImage
