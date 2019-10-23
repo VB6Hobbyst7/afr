@@ -750,7 +750,7 @@ Version=9.5
 @EndOfDesignText@
 #IgnoreWarnings: 9, 1, 10,16
 #Region  Activity Attributes 
-	#FullScreen: false
+	#FullScreen: true
 	#IncludeTitle: false
 #End Region
 
@@ -819,7 +819,7 @@ End Sub
 Sub Activity_Create(FirstTime As Boolean)
 	
 	Activity.LoadLayout("main")
-	IgnoreBatteryOptimizations
+	'IgnoreBatteryOptimizations
 	clsGen.Initialize
 	getSetrdoDatabase
 	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
@@ -920,6 +920,13 @@ Sub startIRP
 	End If
 	
 	If rdoCount = 0 Then
+		If genDb.tableExists("stored_songs") = False Then
+			genDb.genStoredSongTable
+		End If
+		If genDb.tableExists("stUpdate") = False Then
+			genDb.genUpdateTable
+		End If
+		
 		kvs.PutSimple("stationsTimestamp", dbTimestamp)
 		If pnl_permission.IsInitialized Then
 			pnl_permission.Visible = False
@@ -930,20 +937,21 @@ Sub startIRP
 		pnlMain.LoadLayout("welcome")
 	End If
 	If appStarted = 0 Then
-		wait for (showWelcome) Complete (result As Boolean)
-		Sleep(1000)
+'		wait for (showWelcome) Complete (result As Boolean)
+'		Sleep(1000)
+		showWelcome
 	End If
 	
 	If pnlMain.IsInitialized Then
 		pnlMain.Visible = False
 	End If
 
-	If genDb.tableExists("stored_songs") = False Then
-		genDb.genStoredSongTable
-	End If
-	If genDb.tableExists("stUpdate") = False Then
-		genDb.genUpdateTable
-	End If
+'	If genDb.tableExists("stored_songs") = False Then
+'		genDb.genStoredSongTable
+'	End If
+'	If genDb.tableExists("stUpdate") = False Then
+'		genDb.genUpdateTable
+'	End If
 	
 	startPlayer
 End Sub
@@ -953,6 +961,7 @@ Sub showUserDataUsageWarning
 	
 	If result = DialogResponse.POSITIVE Then
 		kvs.PutSimple("data_usage_warning_shown", 1)
+		IgnoreBatteryOptimizations
 	Else
 		kvs.PutSimple("data_usage_warning_shown", 0)
 		StopService(Starter)

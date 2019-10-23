@@ -174,7 +174,7 @@ Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 	End If
 	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
 	
-	Log(url)
+'	Log(url)
 
 
 	Dim j As HttpJob

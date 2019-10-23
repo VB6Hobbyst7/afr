@@ -297,7 +297,7 @@ Public Sub icyMetaData
 		preProcessSongData(nSong)
 	Else
 		job.Release
-		If(lastSong) Then
+		If lastSong Then
 			showNoImage
 			processSong(lastSong)
 		End If
@@ -309,6 +309,7 @@ End Sub
 
 Sub preProcessSongData(nSong As String)
 	Dim newSong As String = clsFunc.parseIcy(nSong)
+'	Log(newSong)
 	
 				
 	If newSong = "" Or newSong = "No song information" Then
@@ -335,6 +336,7 @@ Sub preProcessSongData(nSong As String)
 End Sub
 
 Sub processSong(song As String)
+'	Log("SONG : " & song)
 	If(song.Length > 3) Then
 		song	= clsFunc.ReplaceRaros(song)
 		clearNotif(song)
@@ -345,7 +347,12 @@ Sub processSong(song As String)
 		Return
 	End If
 	
+	
 	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
+		If activeActivity = "searchStation" Then
+			CallSub2(activeActivity, "nowPlaying", song)
+			Return
+		End If
 		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
 		spotMap.Clear
 		CallSub(player, "disableInfoPanels")
@@ -375,9 +382,9 @@ Sub processSong(song As String)
 				End If
 			End If
 		End If
-		If activeActivity = "searchStation" Then
-			CallSub2(activeActivity, "nowPlaying", song)
-		End If
+'		If activeActivity = "searchStation" Then
+'			CallSub2(activeActivity, "nowPlaying", song)
+'		End If
 	Else
 		showNoImage
 	End If
@@ -547,24 +554,54 @@ Private Sub streamEnded
 End Sub
 
 Public Sub startPlayer(url As String)
-
-	exoPlayer.Initialize("")
+	selectedStream = url
+	exoPlayer.Initialize("player")
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
-	'exoPlayer.Prepare(exoPlayer.CreateSmoothStreamingSource(url))
-	
-	
 	exoPlayer.Volume = 1
 	exoPlayer.Play
-	
+	If activeActivity = "searchStation" Then
+		icyMetaData
+	End If
 	setWakeLock(True)
-	''tm.Initialize ("tm",1000)
-	''tm.Enabled = True
 	tmrGetSongEnable(True)
 End Sub
+
+Sub Player_Ready
+'	LogColor("Ready", Colors.red)
+	Sleep(300)
+'	Log(clsFunc.IsStreamActive(3))
+	If clsFunc.IsStreamActive(3) = False Then
+		If activeActivity = "searchStation" Then
+			CallSub2(activeActivity, "nowPlaying", "Unable to open stream")
+		Else	
+		End If
+		
+	End If
+End Sub
+
+'Sub Player_TrackChanged
+'	Dim jo As JavaObject = exoPlayer
+'	Dim TrackGroups As JavaObject = jo.GetFieldJO("player").RunMethod("getCurrentTrackGroups", Null)
+'	For i = 0 To TrackGroups.GetField("length") - 1
+'		Dim TrackGroup As JavaObject = TrackGroups.RunMethod("get", Array(i))
+'		For j = 0 To TrackGroup.GetField("length") - 1
+'			Dim Format As JavaObject = TrackGroup.RunMethodJO("getFormat", Array(j))
+'			Dim mime As String = Format.GetField("sampleMimeType")
+'			Log(mime)
+'			If mime.StartsWith("audio") Then
+'				Log("audio track")
+'			End If
+'           
+'		Next
+'	Next
+'	Log("Player_TrackChanged")
+'End Sub
+
 
 Public Sub stopPlayer
 	tmrGetSongEnable(False)
 	'Sleep(300)
+	
 	exoPlayer.Pause
 	exoPlayer.Release
 	

@@ -489,10 +489,9 @@ Sub playSelectedStream(selectedStream As String)
 	checkStreamplaying
 	Starter.lastSong = ""
 	Starter.selectedStream = selectedStream
-	'Starter.clsExoPlayer.startPlayer(selectedStream)
+	Starter.activeActivity = "searchStation"
 	CallSub2(Starter, "startPlayer", selectedStream)
-	'CallSub2(Starter, "StartPlayer", selectedStream)
-	Sleep(1000)
+'	Sleep(1000)
 	
 End Sub
 
@@ -703,12 +702,8 @@ Private Sub panel_clicked(tag As String) As Boolean
 	End If
 	
 	If Starter.clsFunc.IsStreamActive(3) = True Then
-		'Starter.clsExoPlayer.stopPlayer
 		CallSub(Starter, "stopPlayer")
-		'CallSub(Starter, "StopPlayer")
-		'Sleep(500)
-		
-'		lblSongPlaying.Text = ""
+
 		lblStreamBitrate.Text = ""
 		clsScrllLabel.runMarquee(panelLabelPlaying, panelLabelPlaying.Tag, "MARQUEE")
 		clsScrllLabel.Initialize

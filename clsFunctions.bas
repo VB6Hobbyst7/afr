@@ -426,8 +426,8 @@ End Try
 '	Log(icy_playing)
 	If ReplaceRaros(icy_playing) <> Starter.lastSong Or Starter.lastSong = "" Then
 	
-		CallSub2(player, "setGenre", icy_genre)
-		CallSub2(player, "getStationLogo", icy_url)
+		'CallSub2(player, "setGenre", icy_genre)
+		'CallSub2(player, "getStationLogo", icy_url)
 		Starter.vStationName	= icy_name
 		If Starter.vStationName = "" Then
 			Starter.vStationName = "AdFree Radio"
@@ -436,17 +436,16 @@ End Try
 		If Starter.activeActivity = "searchStation" Then
 			CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & icy_br)
 		Else
+			CallSub2(player, "setGenre", icy_genre)
+			CallSub2(player, "getStationLogo", icy_url)
 			Dim cs As CSBuilder
 			If icy_br < 128 Then
-				'CallSub2(player,"setStationBitrate", "Station bitrate : "& icy_br)
 				CallSub2(player,"setStationBitrate", cs.Initialize.Append("Station bitrate : ").Color(Colors.Black).Append(icy_br).PopAll)
 			Else
 				CallSub2(player,"setStationBitrate", cs.Initialize.Append("Station bitrate : ").Color(Colors.Red).Append(icy_br).PopAll)
 			End If
-			'CallSub2(player,"setStationBitrate", cs.Initialize.Color(Colors.Red).Append("Hello ").Pop.Append("World!").PopAll)
 		End If
 		Starter.icy_playing = icy_playing
-		'CallSubDelayed2(player, "setSongPlaying", icy_playing)
 		Return icy_playing
 	Else
 		Return Starter.lastSong
