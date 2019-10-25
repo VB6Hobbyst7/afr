@@ -276,6 +276,7 @@ Public Sub tmrGetSong_tick
 End Sub
 
 Public Sub icyMetaData
+	'Player_TrackChanged
 	Dim url, nSong As String
 	Dim job As HttpJob
 	
@@ -310,7 +311,7 @@ End Sub
 Sub preProcessSongData(nSong As String)
 	Dim newSong As String = clsFunc.parseIcy(nSong)
 '	Log(newSong)
-	
+'	Player_TrackChanged
 				
 	If newSong = "" Or newSong = "No song information" Then
 	'	showNoImage
@@ -349,6 +350,7 @@ Sub processSong(song As String)
 	
 	
 	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
+	'	Player_TrackChanged
 		If activeActivity = "searchStation" Then
 			CallSub2(activeActivity, "nowPlaying", song)
 			Return
@@ -579,23 +581,35 @@ Sub Player_Ready
 	End If
 End Sub
 
-'Sub Player_TrackChanged
-'	Dim jo As JavaObject = exoPlayer
-'	Dim TrackGroups As JavaObject = jo.GetFieldJO("player").RunMethod("getCurrentTrackGroups", Null)
+Sub Player_TrackChanged
+	Dim jo As JavaObject = exoPlayer
+	Dim TrackGroups As JavaObject = jo.GetFieldJO("player").RunMethod("getCurrentTrackGroups",Null)
+	'Dim TrackGroups1 As JavaObject = jo.GetFieldJO("player").RunMethod("getMetadataComponent", Array(""))
+'	Dim TrackGroups1 As JavaObject = jo.GetFieldJO("player").RunMethodJO("addMetadataOutput", Null)
+	
+	
+	
+	
+	'Dim z As Object = jo.GetFieldJO("TrackGroups1").RunMethod("metadataOutputs", Null)
+	'Dim z As Object = TrackGroups1.RunMethodJO("metadataOutputs", null)
+	
 '	For i = 0 To TrackGroups.GetField("length") - 1
-'		Dim TrackGroup As JavaObject = TrackGroups.RunMethod("get", Array(i))
+'		
+'		Dim TrackGroup As JavaObject = TrackGroups1.RunMethod("get", Array(i))
 '		For j = 0 To TrackGroup.GetField("length") - 1
+'			'Log(jo.addMetadataOutput)
 '			Dim Format As JavaObject = TrackGroup.RunMethodJO("getFormat", Array(j))
 '			Dim mime As String = Format.GetField("sampleMimeType")
+'			Dim mime As String = Format.GetField("metadata")
 '			Log(mime)
-'			If mime.StartsWith("audio") Then
+'			If mime.StartsWith("meta") Then
 '				Log("audio track")
 '			End If
 '           
 '		Next
 '	Next
-'	Log("Player_TrackChanged")
-'End Sub
+	'Log("Player_TrackChanged")
+End Sub
 
 
 Public Sub stopPlayer

@@ -1,5 +1,5 @@
 ﻿ModuleBookmarks0=
-ModuleBookmarks1=357,326,564
+ModuleBookmarks1=359,327,566
 ModuleBookmarks10=
 ModuleBookmarks11=
 ModuleBookmarks12=
@@ -82,6 +82,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=clsFunctions,ReplaceRaros,115,0,Starter,processSong,361,0,clsHttp,getSpotifySongData,232,0,Starter,Player_Ready,565,6,Starter,startPlayer,555,1,clsChartlyrics,checkScrapLyrics,168,0,Starter,icyMetaData,300,2,Visual Designer,main_import_data.bal,-100,1,clsChartlyrics,Class_Globals,2,0,Starter,preProcessSongData,305,0,Main,showUserDataUsageWarning,213,0
+NavigationStack=Visual Designer,main_import_data.bal,-100,1,clsChartlyrics,Class_Globals,2,0,Main,showUserDataUsageWarning,213,0,Visual Designer,player.bal,-100,1,Starter,Player_Ready,575,6,Starter,preProcessSongData,306,0,Starter,Process_Globals,7,1,Starter,processSong,345,0,Starter,icyMetaData,272,3,Starter,Player_TrackChanged,605,6
 SelectedBuild=0
-VisibleModules=1,2,3,4,5,12
+VisibleModules=1,2,3,4,5,6
