@@ -161,7 +161,8 @@ Sub getSpotifySongData(jsonData As String)
 		Starter.spotMap.Initialize
 	End If
 	
-	If root.ContainsKey("error") And Starter.chartDataFound = False Then
+	If root.ContainsKey("error") Then 'And Starter.chartDataFound = False Then
+		
 		noSongData
 		Return
 	End If
@@ -176,6 +177,7 @@ Sub getSpotifySongData(jsonData As String)
 				songReversed	= True
 				spBearer(Starter.chartSong, Starter.chartArtist) 'LEEG
 			End If
+			
 			noSongData
 			Return
 		End If
@@ -338,6 +340,8 @@ Sub DownloadImage(Link As String)
 			If j.Success Then
 				Starter.albumArtSet = True
 				CallSubDelayed2(Starter, "setAlbumArt", j.GetBitmap)
+				CallSub2(player, "pnlImgColor", False)
+				Starter.rndImgSet = 0
 			j.Release
 			Else
 			j.Release
@@ -421,9 +425,8 @@ End Sub
 
 
 Sub noSongData
-'	wait for (clsLyrics.checkAlbumart) Complete (result As Boolean)
-'	If result = False Then
-'		CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-'	End If
+	Starter.clsRndImage.newRandomImage
+	CallSub2(player, "pnlImgColor", True)
+	Starter.rndImgSet = 1
 End Sub
 

@@ -5,7 +5,7 @@ Type=Class
 Version=8.5
 @EndOfDesignText@
 Sub Class_Globals
-	Dim timer As Timer
+	Public timer As Timer
 	Dim func As String
 End Sub
 
@@ -17,7 +17,7 @@ End Sub
 
 Private Sub initTimer(interval As Long)
 	timer.Initialize("tmr", interval)
-	timer.Enabled	= True
+	timer.Enabled	= False
 End Sub
 
 Private Sub tmr_Tick

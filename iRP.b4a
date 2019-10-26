@@ -700,14 +700,13 @@ Library15=stringfunctions
 Library16=encryption
 Library17=okhttputils2
 Library18=xmllayoutbuilder
-Library19=xmlsax
+Library19=network
 Library2=appcompat
-Library20=network
-Library21=ioxsvg
-Library22=xui views
-Library23=dialogs
-Library24=tabstripviewpager
-Library25=exoplayer
+Library20=ioxsvg
+Library21=xui views
+Library22=dialogs
+Library23=tabstripviewpager
+Library24=exoplayer
 Library3=xui
 Library4=sql
 Library5=stringutils
@@ -744,14 +743,14 @@ Module7=scrobbler
 Module8=clsGeneral
 Module9=searchStation
 NumberOfFiles=344
-NumberOfLibraries=25
+NumberOfLibraries=24
 NumberOfModules=27
 Version=9.5
 @EndOfDesignText@
 #IgnoreWarnings: 9, 1, 10,16
 #Region  Activity Attributes 
-	#FullScreen: true
-	#IncludeTitle: false
+	#FullScreen: True
+	#IncludeTitle: False
 #End Region
 
 #Region  Project Attributes
@@ -790,7 +789,7 @@ Sub Globals
 	Private rp As RuntimePermissions
 	Private lblDbConnected As Label
 	Private pnlMain As Panel
-	Private kvs As KeyValueStore
+	'Private kvs As KeyValueStore
 
 	Private btnContinue As Button
 	Private ImageView1 As ImageView
@@ -822,16 +821,16 @@ Sub Activity_Create(FirstTime As Boolean)
 	'IgnoreBatteryOptimizations
 	clsGen.Initialize
 	getSetrdoDatabase
-	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+	'kvs.Initialize(Starter.irp_dbFolder, "settings", True)
 	initKvs
-	Dim appExitStatus As Int = kvs.GetSimple("app_normal_exit")
+	Dim appExitStatus As Int = Starter.kvs.GetSimple("app_normal_exit")
 
 	If appExitStatus = 1 Then
-		kvs.PutSimple("app_started", 0)
+		Starter.kvs.PutSimple("app_started", 0)
 	Else
-		kvs.PutSimple("app_started", 1)
+		Starter.kvs.PutSimple("app_started", 1)
 	End If
-	kvs.PutSimple("app_normal_exit", 0)
+	Starter.kvs.PutSimple("app_normal_exit", 0)
 	
 	Wait For (clsGen.CheckConnected) Complete(result As Boolean)
 	If result = False Then
@@ -891,11 +890,11 @@ Sub startIRP
 	
 	Dim appStarted, dataUsageShown As Int = 0
 	
-	If kvs.ContainsKey("app_started") = True Then
-		appStarted = kvs.GetSimple("app_started")
+	If Starter.kvs.ContainsKey("app_started") = True Then
+		appStarted = Starter.kvs.GetSimple("app_started")
 	End If
-	If kvs.ContainsKey("data_usage_warning_shown") = True Then
-		dataUsageShown = kvs.GetSimple("data_usage_warning_shown")
+	If Starter.kvs.ContainsKey("data_usage_warning_shown") = True Then
+		dataUsageShown = Starter.kvs.GetSimple("data_usage_warning_shown")
 	End If
 	
 	If dataUsageShown = 0 Then
@@ -907,7 +906,7 @@ Sub startIRP
 	wait for (checkUpdate) Complete(r As Boolean)
 	
 	
-	If dbTimestamp > kvs.getSimple("stationsTimestamp") And rdoCount > 0 Then
+	If dbTimestamp > Starter.kvs.getSimple("stationsTimestamp") And rdoCount > 0 Then
 		Msgbox2Async($"Radio station update availeble, update now?"$, Starter.vAppname, "Yes", "", "No", Null, False)
 	
 		Wait For Msgbox_Result (response As Int)
@@ -927,7 +926,7 @@ Sub startIRP
 			genDb.genUpdateTable
 		End If
 		
-		kvs.PutSimple("stationsTimestamp", dbTimestamp)
+		Starter.kvs.PutSimple("stationsTimestamp", dbTimestamp)
 		If pnl_permission.IsInitialized Then
 			pnl_permission.Visible = False
 		End If
@@ -960,10 +959,10 @@ Sub showUserDataUsageWarning
 	Dim result As Int = Msgbox2($"This application connects to the internet, to avoid usage charges, use Wi-Fi only"$, Starter.vAppname, "OK, I understand", "", "Get me out of here", Null)
 	
 	If result = DialogResponse.POSITIVE Then
-		kvs.PutSimple("data_usage_warning_shown", 1)
+		Starter.kvs.PutSimple("data_usage_warning_shown", 1)
 		IgnoreBatteryOptimizations
 	Else
-		kvs.PutSimple("data_usage_warning_shown", 0)
+		starter.kvs.PutSimple("data_usage_warning_shown", 0)
 		StopService(Starter)
 	
 		CallSub(Starter, "Service_Destroy")
@@ -1079,68 +1078,68 @@ End Sub
 
 
 Sub initKvs
-	If File.Exists(Starter.irp_dbFolder, "settings") = False Then
-		kvs.Initialize(Starter.irp_dbFolder, "settings", True)
-	Else
-		kvs.Initialize(Starter.irp_dbFolder, "settings", False)
+'	If File.Exists(Starter.irp_dbFolder, "settings") = False Then
+'		Starter.kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+'	Else
+'		Starter.kvs.Initialize(Starter.irp_dbFolder, "settings", False)
+'	End If
+
+	If Starter.kvs.ContainsKey("data_usage_warning_shown") = False Then
+		Starter.kvs.PutSimple("data_usage_warning_shown", 0)
 	End If
 
-	If kvs.ContainsKey("data_usage_warning_shown") = False Then
-		kvs.PutSimple("data_usage_warning_shown", 0)
-	End If
-
-	If kvs.ContainsKey("stationsTimestamp") = False Then
-		kvs.PutSimple("stationsTimestamp", 0)
+	If Starter.kvs.ContainsKey("stationsTimestamp") = False Then
+		Starter.kvs.PutSimple("stationsTimestamp", 0)
 	End If
 	
-	If kvs.ContainsKey("capnowplaying") = False Then
-		kvs.PutSimple("capnowplaying", 0)
+	If Starter.kvs.ContainsKey("capnowplaying") = False Then
+		Starter.kvs.PutSimple("capnowplaying", 0)
 	End If
 	
-	If kvs.ContainsKey("wifionly") = False Then
-		kvs.PutSimple("wifionly", False)
+	If Starter.kvs.ContainsKey("wifionly") = False Then
+		Starter.kvs.PutSimple("wifionly", False)
 		Starter.vWifiOnly	= False
 	End If
 
-	If kvs.ContainsKey("updatelogo") = False Then
-		kvs.PutSimple("updatelogo", False)
+	If Starter.kvs.ContainsKey("updatelogo") = False Then
+		Starter.kvs.PutSimple("updatelogo", False)
 		Starter.vUpdateLogo	= False
 	End If
 
-	If kvs.ContainsKey("data_usage") = False Then
-		kvs.PutSimple("data_usage", 0)
+	If Starter.kvs.ContainsKey("data_usage") = False Then
+		Starter.kvs.PutSimple("data_usage", 0)
 	End If
 	
-	If kvs.ContainsKey("app_normal_exit") = False Then
-		kvs.PutSimple("app_normal_exit", 0)
+	If Starter.kvs.ContainsKey("app_normal_exit") = False Then
+		Starter.kvs.PutSimple("app_normal_exit", 0)
 	End If
 
-	If kvs.ContainsKey("pnl_stop_button") = False Then
-		kvs.PutSimple("pnl_stop_button", False)
+	If Starter.kvs.ContainsKey("pnl_stop_button") = False Then
+		Starter.kvs.PutSimple("pnl_stop_button", False)
 	End If
 
-	If kvs.ContainsKey("pnl_lyric_button") = False Then
-		kvs.PutSimple("pnl_lyric_button", False)
+	If Starter.kvs.ContainsKey("pnl_lyric_button") = False Then
+		Starter.kvs.PutSimple("pnl_lyric_button", False)
 	End If
 
-	If kvs.ContainsKey("pnl_store_song_button") = False Then
-		kvs.PutSimple("pnl_store_song_button", False)
+	If Starter.kvs.ContainsKey("pnl_store_song_button") = False Then
+		Starter.kvs.PutSimple("pnl_store_song_button", False)
 	End If
 
-	If kvs.ContainsKey("pnl_album_info_button") = False Then
-		kvs.PutSimple("pnl_album_info_button", False)
+	If Starter.kvs.ContainsKey("pnl_album_info_button") = False Then
+		Starter.kvs.PutSimple("pnl_album_info_button", False)
 	End If
 
-	If kvs.ContainsKey("app_started") = False Then
+	If Starter.kvs.ContainsKey("app_started") = False Then
 	'	kvs.PutSimple("app_started", 0)
 	End If
 
-	If kvs.ContainsKey("lblNowPlayingDataRate") = False Then
-		kvs.PutSimple("lblNowPlayingDataRate", "")
+	If Starter.kvs.ContainsKey("lblNowPlayingDataRate") = False Then
+		Starter.kvs.PutSimple("lblNowPlayingDataRate", "")
 	End If
 
-	If kvs.ContainsKey("lbl_time_now") = False Then
-		kvs.PutSimple("lbl_time_now", "")
+	If Starter.kvs.ContainsKey("lbl_time_now") = False Then
+		Starter.kvs.PutSimple("lbl_time_now", "")
 	End If
 
 '	If kvs.ContainsKey("player_station_logo") = False Then
@@ -1151,12 +1150,12 @@ Sub initKvs
 '		kvs.PutBitmap("store_song_albumart", Null)
 '	End If
 	
-	If kvs.ContainsKey("sleep_timer") = False Then
-		kvs.PutSimple("sleep_timer", 0)
+	If Starter.kvs.ContainsKey("sleep_timer") = False Then
+		Starter.kvs.PutSimple("sleep_timer", 0)
 	End If
 	
-	If kvs.ContainsKey("sleep_timer_duration") = False Then
-		kvs.PutSimple("sleep_timer_duration", 3600000) ' one hour
+	If Starter.kvs.ContainsKey("sleep_timer_duration") = False Then
+		starter.kvs.PutSimple("sleep_timer_duration", 3600000) ' one hour
 	End If
 	
 End Sub

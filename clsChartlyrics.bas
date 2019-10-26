@@ -7,7 +7,7 @@ Version=9
 #IgnoreWarnings: 9, 1
 Sub Class_Globals
 	Dim url, coverArtUrl As String
-	Dim parser As SaxParser
+	'Dim parser As SaxParser
 	Dim reverseSearch As Boolean = False
 	Dim reverseCount As Int = 0
 	Dim clsFunc As clsFunctions

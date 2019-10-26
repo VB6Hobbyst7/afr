@@ -11,8 +11,6 @@ Sub Class_Globals
 End Sub
 
 Public Sub Initialize
-	
-	
 End Sub
 
 '***function description here...
@@ -526,3 +524,27 @@ End Sub
 Sub removeCommaFromArtist(str As String) As String
 	
 End Sub
+
+Public Sub exitPlayer
+	genDb.closeConnection
+	Starter.kvs.PutSimple("app_started", 0)
+	Starter.kvs.PutSimple("app_normal_exit", 1)
+	
+	If File.Exists(Starter.irp_dbFolder, "imgPlaying.png") Then
+		File.Delete(Starter.irp_dbFolder, "imgPlaying.png")
+	End If
+		
+	StopService(Starter)
+	
+	CallSub(Starter, "Service_Destroy")
+	CallSub2(Starter, "run_streamTimer", False)
+	CallSub2(Starter, "tmrGetSongEnable", False)
+	CallSub(Starter, "endForeGround")
+	Starter.tmrGetSong.Enabled = False
+	Starter.streamTimer.Enabled = False
+	Starter.tmrInetConnection.Enabled = False
+	Starter.connectionTimer.Enabled = False
+	Starter.tmrInactive.Enabled = False
+End Sub
+
+	

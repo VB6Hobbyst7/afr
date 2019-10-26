@@ -15,6 +15,7 @@ Public Sub Initialize
 End Sub
 
 public Sub newRandomImage
+	if Starter.rndImgSet = 1 then Return
 	Dim j As HttpJob
 	
 	j.Initialize("",  Me)

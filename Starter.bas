@@ -11,6 +11,7 @@ Version=7.8
 #End Region
 
 Sub Process_Globals
+	Public clsRndImage As clsRandomImage
 	Public exoPlayer As SimpleExoPlayer
 	'Public clsExoPlayer As clsExo
 	Public sleepTimerDuration As Long
@@ -31,6 +32,7 @@ Sub Process_Globals
 	Public phoneKeepAlive As PhoneWakeState
 	Private clsImage As clsRandomImage
 	Public spotMap As Map
+	Public kvs As KeyValueStore
 	
 	'STRING
 	Public dbL, Username, Password, activeActivity, playerUsed, lastfmapi, countryCode, updateFile As String
@@ -53,7 +55,7 @@ Sub Process_Globals
 	'FLOAT
 	Public vDataUsage, ivAlbumArtHeight, ivAlbumArtwidth As Float
 	'INT
-	Public currentMusicVolume, playingStationId As Int
+	Public currentMusicVolume, playingStationId, rndImgSet = 0 As Int
 	Public streamRestartCount, stationAdded, tryRestartCount As Int = 0
 	Public vPlayerSelectedPanel As Int = 999
 	Public notifId As Int = 1
@@ -69,7 +71,7 @@ Sub Process_Globals
 	Dim PE As PhoneEvents
 	Dim PhoneId As PhoneId
 	Public hasWakeLock As Boolean = False
-	Public tmrInetConnection, tmrGetSong As Timer
+	Public tmrInetConnection, tmrGetSong, tmrInactive As Timer
 	Dim clsGen As clsGeneral
 	
 	Dim csChartLyric As clsChartlyrics
@@ -79,6 +81,7 @@ End Sub
 
 
 Sub Service_Create
+	clsRndImage.Initialize
 	clsFunc.Initialize
 	'clsChart.Initialize
 	clsImage.Initialize
@@ -96,6 +99,7 @@ Sub Service_Create
 	'mManualFolder	= rp.GetSafeDirDefaultExternal("shared")
 	'irp_dbFolder	= rp.GetSafeDirDefaultExternal("")
 	irp_dbFolder	= rp.GetSafeDirDefaultExternal("irp_files") 'File.DirInternal
+	kvs.Initialize(irp_dbFolder, "settings", True)
 	smallIcon		= LoadBitmapResize(File.DirAssets, "radio_notif.png", 24dip, 24dip, True)
 	logs.Initialize
 #if RELEASE
@@ -104,10 +108,12 @@ Sub Service_Create
 	
 	'need to disable it as reading from large JdbcResultSet will cause network requests to be sent on the main thread.
 	DisableStrictMode
-	tmrGetSong.Initialize("tmrGetSong", 7*1000)
-	tmrGetSong.Enabled = True
+	tmrInactive.Initialize("tmrInactive", 30*60000)
+	tmrInactive.Enabled = False
+	tmrGetSong.Initialize("tmrGetSong", 3*1000)
+	'tmrGetSong.Enabled = True
 	connectionTimer.Initialize("connectionTimer", 5*1000)
-	connectionTimer.Enabled	= True
+	'connectionTimer.Enabled	= True
 	tmrInetConnection.Initialize("inetConnected", 1000)
 	tmrInetConnection.Enabled = False
 	localeDatFormat = GetDeviceDateFormatSettings
@@ -124,6 +130,14 @@ Sub GetDeviceDateFormatSettings As String
 	r.Target = r.RunStaticMethod("android.text.format.DateFormat", "getDateFormat", Array As Object(r.GetContext), _
       Array As String("android.content.Context"))
 	Return r.RunMethod("toPattern")
+End Sub
+
+Sub tmrInactive_Tick
+	Log("tmrInactive_Tick")
+	Dim streamActive As Boolean = clsFunc.IsStreamActive(3)
+	If IsPaused(player) And streamActive = False Then
+		clsFunc.exitPlayer
+	End If
 End Sub
 
 Sub inetConnected_Tick
@@ -194,7 +208,7 @@ Public Sub setAlbumArt(vAlbum As Bitmap)
 	vSongAlbumArt	= vAlbum.Resize(ivAlbumArtwidth, ivAlbumArtHeight, True)
 	
 	CallSub2(player, "setAlbumArtFading", vSongAlbumArt)
-	
+	'CallSub2(player, "pnlImgColor", False)
 	
 End Sub
 
@@ -276,6 +290,7 @@ Public Sub tmrGetSong_tick
 End Sub
 
 Public Sub icyMetaData
+	
 	'Player_TrackChanged
 	Dim url, nSong As String
 	Dim job As HttpJob
@@ -345,6 +360,9 @@ Sub processSong(song As String)
 		CallSubDelayed2(player, "showHideLyricsButton", False)
 		CallSubDelayed2(player, "enableAlbumButton", False)
 		CallSub2(player, "setSongPlaying", "No information")
+		clsRndImage.newRandomImage
+		CallSub2(player, "pnlImgColor", True)
+		rndImgSet = 1
 		Return
 	End If
 	
@@ -623,7 +641,10 @@ Public Sub stopPlayer
 End Sub
 
 public Sub showNoImage
-	setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+	clsRndImage.newRandomImage
+	CallSub2(player, "pnlImgColor", False)
+	rndImgSet = 1
+	'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 	'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 End Sub
 

@@ -14,12 +14,14 @@ Version=7.8
 
 Sub Process_Globals
 	Public bckBtnClickCount As Int = 1
-	Private kvs As KeyValueStore
+'	Private kvs As KeyValueStore
 	Private processingPanel, currMusicVolume As Int
 	Private pg_playing, pg_station, stationLogoPath As String
 	Public pg_artistAlbum As Bitmap
 	Private clsGen As clsGeneral
 	Private tmr As Timer
+	Dim hideTmr As clsGenTimer
+	
 End Sub
 
 
@@ -142,21 +144,26 @@ Sub Globals
 	Private lblIsArtist1 As Label
 	Private swIsArtist As ACSwitch
 	Private swIsArtist1 As ACSwitch
+	
+	
+	
+	Private pnlRnd As B4XView
 End Sub
 
 
 Sub Activity_Create(FirstTime As Boolean)
-	
+	'pnlRnd.Initialize("")
 	tmr.Initialize("disableClickTimer", 1000)
 	tmr.Enabled = False
-	kvs.Initialize(Starter.irp_dbFolder, "settings", True)
+	hideTmr.Initialize(5000, "hideOverFlow")
+	'kvs.Initialize(Starter.irp_dbFolder, "settings", True)
 	Starter.activeActivity = "Player"
 	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
 	
 	Activity.LoadLayout("player")
 	
-	
-	
+	pnlRnd.SetRotationAnimated(0, 90)
+	pnlRnd.Top=pnlNowPlaying.Top+30dip
 	pnl_volume_slider.BringToFront
 	pnlPlayingStation.SetVisibleAnimated(0, False)
 	'rsip.Initialize
@@ -224,7 +231,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	
 	If FirstTime Then
-		kvs.PutSimple("app_started", 1)
+		Starter.kvs.PutSimple("app_started", 1)
+		
 	End If
 	
 	Sleep(2)
@@ -303,12 +311,14 @@ Sub disableInfoPanels
 End Sub
 
 
+Sub pnlImgColor(isRndImage As Boolean)
+	pnlRnd.BringToFront
+	pnlRnd.SetVisibleAnimated(500, isRndImage)
+
+End Sub
+
 Sub setSongPlaying(songPlaying As String)
-	Dim strPlaying As String
-	strPlaying = $"${Starter.chartSong} - ${Starter.chartArtist}"$
-	'lblArtistNowPlaying.Text = Starter.clsFunc.NameToProperCase(songPlaying)
 	lblArtistNowPlaying.Text = Starter.clsFunc.TitleCase(songPlaying)
-	'lblArtistNowPlaying.Text = Starter.clsFunc.TitleCase(strPlaying)
 End Sub
 
 
@@ -370,6 +380,7 @@ End Sub
 Sub Activity_Resume
 	Dim in As Intent
 	Starter.activeActivity = "Player"
+	Starter.tmrInactive.Enabled = False
 	acVolume.Value = clsVol.currVolume
 	acVolume_ValueChanged (clsVol.currVolume, False)
 	If Starter.streamLost = True Then
@@ -423,15 +434,16 @@ End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 	If UserClosed Then
-		kvs.PutSimple("app_started", 0)
+		Starter.kvs.PutSimple("app_started", 0)
 		resetKvsPnlButtons
 		exitPlayer
 	Else
 		Starter.streamTimer.Enabled = False
-		kvs.PutSimple("app_started", 1)
+		Starter.kvs.PutSimple("app_started", 1)
 		pnl_volume_slider.Visible = False
 		'pnlSongText.SetVisibleAnimated(0, False)
 		getSetButtonState(True)
+		Starter.tmrInactive.Enabled = True
 		
 		If pg_artistAlbum.IsInitialized Then
 			pg_artistAlbum = CallSub(Starter, "getAlbumArt")
@@ -441,14 +453,14 @@ End Sub
 
 
 Sub resetKvsPnlButtons
-	kvs.PutSimple("app_started", 0)
-	kvs.PutSimple("pnl_stop_button",  0)
-	kvs.PutSimple("pnl_lyric_button",  0)
-	kvs.PutSimple("pnl_store_song_button", 0)
-	kvs.PutSimple("pnl_album_info_button", 0)
-	kvs.PutSimple("lbl_time_now", "")
-	kvs.PutSimple("lblNowPlayingDataRate", "")
-	kvs.Remove("player_station_logo")
+	Starter.kvs.PutSimple("app_started", 0)
+	Starter.kvs.PutSimple("pnl_stop_button",  0)
+	Starter.kvs.PutSimple("pnl_lyric_button",  0)
+	Starter.kvs.PutSimple("pnl_store_song_button", 0)
+	Starter.kvs.PutSimple("pnl_album_info_button", 0)
+	Starter.kvs.PutSimple("lbl_time_now", "")
+	Starter.kvs.PutSimple("lblNowPlayingDataRate", "")
+	Starter.kvs.Remove("player_station_logo")
 End Sub
 
 
@@ -669,18 +681,18 @@ Sub Activity_KeyPress (KeyCode As Int) As Boolean 'Return True to consume the ev
 '		End If
 	End If
 
-	If KeyCode = KeyCodes.KEYCODE_BACK Then
-
-		If bckBtnClickCount = 2 Then
-		bckBtnClickCount = 1
-
-			exitPlayer
-			Return False
-		End If
-		
-		bckBtnClickCount = bckBtnClickCount +1
-		showSnackbar("Tap back key again to exit application")
-	End If
+'	If KeyCode = KeyCodes.KEYCODE_BACK Then
+'
+'		If bckBtnClickCount = 2 Then
+'		bckBtnClickCount = 1
+'
+'			exitPlayer
+'			Return False
+'		End If
+'		
+'		bckBtnClickCount = bckBtnClickCount +1
+'		showSnackbar("Tap back key again to exit application")
+'	End If
 	
 	If KeyCode = KeyCodes.KEYCODE_VOLUME_UP Or KeyCode = KeyCodes.KEYCODE_VOLUME_DOWN Then
 		pnl_volume_Click
@@ -900,6 +912,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 			modGlobal.PlayerStarted = False
 			Starter.sStationLogoPath = "null"
 			CallSub2(Starter, "run_streamTimer", False)
+			CallSub2(Me, "pnlImgColor", False)
 			
 			CallSub2(Starter, "clearNotif", "Not streaming")
 			CallSubDelayed2(Starter, "setSongLyric", "noLyric")
@@ -1080,9 +1093,10 @@ End Sub
 
 
 Sub showOverflow
-	Dim hideTmr As clsGenTimer
+'	Dim hideTmr As clsGenTimer
 
-	hideTmr.Initialize(5000, "hideOverFlow")
+	'hideTmr.Initialize(5000, "hideOverFlow")
+	hideTmr.timer.Enabled = True
 	
 	pnlOverflow.SetVisibleAnimated(0, True)
 	pnlOverflow.SetLayoutAnimated(500, pnlOverflow.Left, (Activity.Height- pnlOverflow.Height)-pnlControl.Height, pnlOverflow.Width, pnlOverflow.Height)
@@ -1090,14 +1104,19 @@ End Sub
 
 
 Sub hideOverflow
-	pnlOverflow.SetLayoutAnimated(1000, pnlOverflow.Left, Activity.Height-120dip, pnlOverflow.Width, pnlOverflow.Height)
+	pnlOverflow.SetLayoutAnimated(1000, pnlOverflow.Left, Activity.Height-110dip, pnlOverflow.Width, pnlOverflow.Height)
 	'pnlOverflow.SetLayoutAnimated(1000, pnlOverflow.Left, pnlControl.Top+130dip, pnlOverflow.Width, pnlOverflow.Height)
+	
 	Sleep(1000)
 	Sleep(300)
 	pnlOverflow.SetLayoutAnimated(1000, pnlOverflow.Left, Activity.Height+40dip, pnlOverflow.Width, pnlOverflow.Height)
 	Sleep(1000)
 	pnlOverflow.SetVisibleAnimated(0, False)
-	
+	Try
+	hideTmr.timer.Enabled = False
+	Catch
+		Log("")
+	End Try
 End Sub
 
 
@@ -1322,7 +1341,7 @@ Sub NavDrawer_NavigationItemSelected (MenuItem As ACMenuItem, DrawerGravity As I
 		Dim result As Int
 		result = Msgbox2("Reset usage data", Starter.vAppname, "Yes", "", "No", Null)
 		If result = DialogResponse.POSITIVE Then
-			kvs.PutSimple("data_usage", 0)
+			Starter.kvs.PutSimple("data_usage", 0)
 		End If
 	else If MenuItem.id = 11 Then
 		NavDrawer.CloseDrawer2(DrawerGravity)
@@ -1374,7 +1393,7 @@ End Sub
 
 Sub getSetSettings
 	'get wifi only setting
-	If kvs.GetSimple("wifionly") = 1 Then
+	If Starter.kvs.GetSimple("wifionly") = 1 Then
 		Switch.Checked		= True
 		Starter.vWifiOnly	= True
 	Else
@@ -1382,7 +1401,7 @@ Sub getSetSettings
 		Starter.vWifiOnly	= False
 	End If
 	
-	If kvs.GetSimple("capnowplaying") = 1 Then
+	If Starter.kvs.GetSimple("capnowplaying") = 1 Then
 		SwitchCaps.Checked		= True
 		Starter.capNowPlaying	= True
 	Else
@@ -1390,7 +1409,7 @@ Sub getSetSettings
 		Starter.capNowPlaying	= False
 	End If
 	
-	If kvs.GetSimple("updatelogo") = 1 Then
+	If Starter.kvs.GetSimple("updatelogo") = 1 Then
 		SwitchUpdateLogo.Checked = True
 		Starter.vUpdateLogo = True
 	Else
@@ -1402,23 +1421,23 @@ End Sub
 
 
 Sub Switch_CheckedChange(Checked As Boolean)
-	If kvs.ContainsKey("wifionly") = True Then
-		kvs.PutSimple("wifionly", Checked)
+	If Starter.kvs.ContainsKey("wifionly") = True Then
+		Starter.kvs.PutSimple("wifionly", Checked)
 		Starter.vWifiOnly	= Checked
 	End If
 End Sub
 
 
 Sub SwitchUpdateLogo_CheckedChange(Checked As Boolean)
-	If kvs.ContainsKey("updatelogo") = True Then
-		kvs.PutSimple("updatelogo", Checked)
+	If Starter.kvs.ContainsKey("updatelogo") = True Then
+		Starter.kvs.PutSimple("updatelogo", Checked)
 		Starter.vUpdateLogo = Checked
 	End If
 End Sub
 
 Sub SwitchCaps_CheckedChange(Checked As Boolean)
-	If kvs.ContainsKey("capnowplaying") = True Then
-		kvs.PutSimple("capnowplaying", Checked)
+	If Starter.kvs.ContainsKey("capnowplaying") = True Then
+		Starter.kvs.PutSimple("capnowplaying", Checked)
 		End If
 	Starter.capNowPlaying	= Checked
 End Sub
@@ -1450,28 +1469,28 @@ End Sub
 Sub getSetButtonState(set As Boolean)
 	If set = True Then
 			
-		kvs.PutSimple("pnl_stop_button",  0)
-		kvs.PutSimple("pnl_lyric_button",  0)
-		kvs.PutSimple("pnl_store_song_button", 0)
-		kvs.PutSimple("pnl_album_info_button", 0)
+		Starter.kvs.PutSimple("pnl_stop_button",  0)
+		Starter.kvs.PutSimple("pnl_lyric_button",  0)
+		Starter.kvs.PutSimple("pnl_store_song_button", 0)
+		Starter.kvs.PutSimple("pnl_album_info_button", 0)
 		'kvs.PutBitmap("player_station_logo", ivNowPlayingStation.Bitmap)
-		kvs.PutSimple("lbl_time_now", lbl_time_now.Text)
-		kvs.PutSimple("lblNowPlayingDataRate", lblNowPlayingDataRate.Text)
+		Starter.kvs.PutSimple("lbl_time_now", lbl_time_now.Text)
+		Starter.kvs.PutSimple("lblNowPlayingDataRate", lblNowPlayingDataRate.Text)
 		
 		If  pnl_stop_button.Enabled Then
-			kvs.PutSimple("pnl_stop_button",  1)
+			Starter.kvs.PutSimple("pnl_stop_button",  1)
 		End If
 		If pnl_lyric_button.Enabled Then
-			kvs.PutSimple("pnl_lyric_button",  1)
+			Starter.kvs.PutSimple("pnl_lyric_button",  1)
 		End If
 		If pnl_store_song_button.Enabled Then
-			kvs.PutSimple("pnl_store_song_button",  1)
+			Starter.kvs.PutSimple("pnl_store_song_button",  1)
 		End If
 		If pnl_album_info_button.Enabled Then
-			kvs.PutSimple("pnl_album_info_button",  1)
+			Starter.kvs.PutSimple("pnl_album_info_button",  1)
 		End If
 	Else
-		Dim bm As Bitmap = kvs.GetBitmap("player_station_logo")
+		Dim bm As Bitmap = Starter.kvs.GetBitmap("player_station_logo")
 		
 		If bm.IsInitialized = False Then
 			pnlPlayingStation.Visible =  False
@@ -1479,8 +1498,8 @@ Sub getSetButtonState(set As Boolean)
 			pnlPlayingStation.Visible =  True
 		End If
 		
-		lblNowPlayingDataRate.Text = kvs.GetSimple("lblNowPlayingDataRate")
-		lbl_time_now.Text = kvs.GetSimple("lbl_time_now")
+		lblNowPlayingDataRate.Text = Starter.kvs.GetSimple("lblNowPlayingDataRate")
+		lbl_time_now.Text = Starter.kvs.GetSimple("lbl_time_now")
 		If bm.IsInitialized = True Then
 			ivNowPlayingStation.Bitmap = bm
 		End If
@@ -1488,26 +1507,28 @@ Sub getSetButtonState(set As Boolean)
 		If bm.IsInitialized = True Then
 			showHideSmallStationLogo(True)
 		End If
-		If kvs.GetSimple("pnl_stop_button") = 1 Then
+		If Starter.kvs.GetSimple("pnl_stop_button") = 1 Then
 			pnl_stop_button.Enabled = True
 			pnl_stop_button.Elevation = 5dip
 		End If
-		If kvs.GetSimple("pnl_lyric_button") = 1 Then
+		If Starter.kvs.GetSimple("pnl_lyric_button") = 1 Then
 			pnl_lyric_button.Enabled = True
 			pnl_lyric_button.Elevation = 5dip
 		End If
-		If kvs.GetSimple("pnl_store_song_button") = 1 Then
+		If Starter.kvs.GetSimple("pnl_store_song_button") = 1 Then
 			pnl_store_song_button.Enabled = True
 			pnl_store_song_button.Elevation = 5dip
 		End If
-		If kvs.GetSimple("pnl_album_info_button") = 1 Then
+		If Starter.kvs.GetSimple("pnl_album_info_button") = 1 Then
 			pnl_album_info_button.Enabled = True
 			pnl_album_info_button.Elevation = 5dip
 		End If
 	End If
 End Sub
 
-Sub exitPlayer
+
+Public Sub exitPlayer
+
 	
 	'***END WAKELOCK
 	CallSub2(Starter, "setWakeLock", False)
@@ -1522,8 +1543,8 @@ Sub exitPlayer
 	
 	genDb.closeConnection
 	resetKvsPnlButtons
-	kvs.PutSimple("app_started", 0)
-	kvs.PutSimple("app_normal_exit", 1)
+	Starter.kvs.PutSimple("app_started", 0)
+	Starter.kvs.PutSimple("app_normal_exit", 1)
 	
 	'Sleep(200)
 	pg_playing	= ""
@@ -1552,6 +1573,7 @@ Sub exitPlayer
 	Starter.streamTimer.Enabled = False
 	Starter.tmrInetConnection.Enabled = False
 	Starter.connectionTimer.Enabled = False
+	Starter.tmrInactive.Enabled = False
 	Activity.Finish
 	
 End Sub
@@ -1691,6 +1713,7 @@ End Sub
 Sub startOrStopStream(index As Int)
 	freeze(True)
 	Wait For(start_stopStream(index)) Complete (result As Boolean)
+	
 End Sub
 
 'Sub getStationId(index As Int)
@@ -2104,4 +2127,9 @@ End Sub
 
 Public Sub retSongPlaying As String
 	Return lblNowPlayingStation.Text
+End Sub
+
+Sub lblArtistNowPlaying_Click
+'	pnlRnd.Top=pnlNowPlaying.Top+30dip
+	
 End Sub
