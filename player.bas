@@ -108,6 +108,7 @@ Sub Globals
 	Private img_close As ImageView
 	Private pnl_volume As Panel
 	Dim clsScroll As clsScrollLabel
+	Dim clsScroll1 As clsScrollLabel
 	
 #end region
 
@@ -147,7 +148,8 @@ Sub Globals
 	
 	
 	
-	Private pnlRnd As B4XView
+	
+	Private lblRandomImage As B4XView
 End Sub
 
 
@@ -161,9 +163,9 @@ Sub Activity_Create(FirstTime As Boolean)
 	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
 	
 	Activity.LoadLayout("player")
-	
-	pnlRnd.SetRotationAnimated(0, 90)
-	pnlRnd.Top=pnlNowPlaying.Top+30dip
+	'lblRandomImage.Initialize("")
+	lblRandomImage.SetRotationAnimated(0, 90)
+	lblRandomImage.Top=pnlNowPlaying.Top+30dip
 	pnl_volume_slider.BringToFront
 	pnlPlayingStation.SetVisibleAnimated(0, False)
 	'rsip.Initialize
@@ -204,10 +206,10 @@ Sub Activity_Create(FirstTime As Boolean)
 	SwitchUpdateLogo.Initialize("SwitchUpdateLogo")
 	actionViewItem.ActionView = SwitchUpdateLogo
 	
-	Dim actionViewItem As ACMenuItem
-	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 4, 2, $""Now Playing""$, xml.GetDrawable("baseline_format_size_black_18"))
-	SwitchCaps.Initialize("SwitchCaps")
-	actionViewItem.ActionView = SwitchCaps
+'	Dim actionViewItem As ACMenuItem
+'	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 4, 2, $""Now Playing""$, xml.GetDrawable("baseline_format_size_black_18"))
+'	SwitchCaps.Initialize("SwitchCaps")
+'	actionViewItem.ActionView = SwitchCaps
 	
 	Starter.activeActivity	= "player"
 	pnlOverflow.Top	= Activity.Height+240dip
@@ -289,6 +291,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	clsScroll.Initialize
 	clsScroll.runMarquee(lblArtistNowPlaying, "Click station to start streaming", "MARQUEE")
+	clsScroll1.Initialize
+	clsScroll1.runMarquee(lblRandomImage, "No song information found, random image is shown", "MARQUEE")
 	dialog.Initialize(Activity)
 	
 	
@@ -312,8 +316,8 @@ End Sub
 
 
 Sub pnlImgColor(isRndImage As Boolean)
-	pnlRnd.BringToFront
-	pnlRnd.SetVisibleAnimated(500, isRndImage)
+	lblRandomImage.BringToFront
+	lblRandomImage.SetVisibleAnimated(500, isRndImage)
 
 End Sub
 
@@ -605,11 +609,11 @@ End Sub
 'End Sub
 
 
-Sub showSnackbar(msg As String)
-	Dim snack As DSSnackbar
-	snack.Initialize("Snack", Activity, msg, snack.DURATION_SHORT)
-	snack.Show
-End Sub
+'Sub showSnackbar(msg As String)
+'	Dim snack As DSSnackbar
+'	snack.Initialize("Snack", Activity, msg, snack.DURATION_SHORT)
+'	snack.Show
+'End Sub
 
 
 Sub nowPlaying(playing As String)
@@ -868,11 +872,12 @@ Sub setPanelElevation(index As Int)
 			If v.Tag = "headerColor" Then
 				If v Is Panel Then
 					Dim pnl As Panel = v
+					pnl.Elevation = 1dip
 					If i = index Then
 						pnl.SetElevationAnimated(500, 4dip)
 						Sleep(700)
 					Else
-						pnl.Elevation = 1dip
+					'	pnl.Elevation = 1dip
 					End If
 				End If
 			End If
@@ -882,46 +887,58 @@ Sub setPanelElevation(index As Int)
 End Sub
 
 Sub start_stopStream(index As Int) As ResumableSub
-	CallSub(Starter, "stopPlayer")
-	Starter.lastSong = ""
-	CallSub(Starter,"initPlayerVars")
-	showHideLyricsButton(False)
-	enableAlbumButton(False)
-	setPanelElevation(-1)
-	handleControlButtons(False, 0dip, 500)
-	Starter.clsFunc.shadowLayer(lblArtistNowPlaying,0,0,0, Colors.White)
-	If index > clvPlayer.Size-1  Then
-		Return False
-	End If
+	Dim dataCleared, isSamePanel As Boolean = False
 	
+	
+	If Starter.clsFunc.IsMusicPlaying Then
+		dataCleared = True
+'		Log("MUSIC PLAYING " & index)
+'		CallSub2(Starter, "tmrGetSongEnable", False)
+'		CallSub(Starter, "stopPlayer")
+'		Starter.lastSong = ""
+'		CallSub(Starter,"initPlayerVars")
+'		showHideLyricsButton(False)
+'		enableAlbumButton(False)
+'		setPanelElevation(-1)
+		isSamePanel = Starter.clsSngData.clearSongData(index)
+		handleControlButtons(False, 0dip, 500)
+		Starter.clsFunc.shadowLayer(lblArtistNowPlaying,0,0,0, Colors.White)
+		If index > clvPlayer.Size-1  Then
+			Return False
+		Else	
+		'	Return False
+		End If
+		If isSamePanel Then 
+			stream = ""
+			pnlClicked = 0
+			Return True
+		End If
+	End If
 	
 
 	Try
-		Try
-			'initPlayStopButton
-		Catch
-			Log("PLAYER @ 872 : "&LastException)
-		End Try
-		
 		'STOP STREAM
-		If modGlobal.PlayerStarted Then
-			clearLabels
-			'Sleep(500)
-			Starter.chartSong = ""  
-			Starter.chartArtist = ""
-			modGlobal.PlayerStarted = False
-			Starter.sStationLogoPath = "null"
-			CallSub2(Starter, "run_streamTimer", False)
-			CallSub2(Me, "pnlImgColor", False)
-			
-			CallSub2(Starter, "clearNotif", "Not streaming")
-			CallSubDelayed2(Starter, "setSongLyric", "noLyric")
-	'		pnlSongText.SetVisibleAnimated(500, False)
-			hideOverflow
-			
-			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
-'			handleControlButtons(False, 0dip, 500)
+		If dataCleared = False Then
+			Starter.clsSngData.clearSongData(index)
 		End If
+'		If modGlobal.PlayerStarted Then
+'			clearLabels
+'			'Sleep(500)
+'			Starter.chartSong = ""
+'			Starter.chartArtist = ""
+'			modGlobal.PlayerStarted = False
+'			Starter.sStationLogoPath = "null"
+'			CallSub2(Starter, "run_streamTimer", False)
+'			CallSub2(Me, "pnlImgColor", False)
+'			
+'			CallSub2(Starter, "clearNotif", "Not streaming")
+'			CallSubDelayed2(Starter, "setSongLyric", "noLyric")
+'			'		pnlSongText.SetVisibleAnimated(500, False)
+'			hideOverflow
+'			
+'			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
+''			handleControlButtons(False, 0dip, 500)
+'		End If
 	
 		If index = -1 Then
 			index = Starter.vPlayerSelectedPanel
@@ -937,20 +954,22 @@ Sub start_stopStream(index As Int) As ResumableSub
 			Return True
 		End If
 	
-		If Starter.vPlayerSelectedPanel = index Then
+		
+		
+'		If Starter.vPlayerSelectedPanel = index Then
 			'reset info screen
-			start_stopStreamResetLabels
-			Starter.vPlayerSelectedPanel = 999
-			stream = ""
-			showHideSmallStationLogo(False)
-			CallSub2(Starter, "run_streamTimer", False)
-			modGlobal.PlayerStarted = False
+			'start_stopStreamResetLabels
+			'Starter.vPlayerSelectedPanel = 999
+'			stream = ""
+			'showHideSmallStationLogo(False)
+			'CallSub2(Starter, "run_streamTimer", False)
+			'modGlobal.PlayerStarted = False
 '			setAlbumArtFading(LoadBitmap(File.DirAssets, "logo_afr.png"))
-			Starter.lastAccPlayerTime = 0
-			Starter.startAccPlayerTime = 0
-			pnlClicked = 0
-			Return True
-		End If
+			'Starter.lastAccPlayerTime = 0
+			'Starter.startAccPlayerTime = 0
+'			pnlClicked = 0
+'			Return True
+'		End If
 	
 		modGlobal.PlayerStarted = True
 		lblNowPlayingStation.Text	= ""
@@ -972,7 +991,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		'CallSub2(Starter, "StartPlayer", stream)
 		'Starter.clsExoPlayer.startPlayer(stream)
 		CallSub2(Starter, "startPlayer", stream)
-		CallSubDelayed(Starter, "icyMetaData")
+		'CallSubDelayed(Starter, "icyMetaData")
 		setPanelElevation(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
 			smallStationLogo.Initialize(stationLogoPath,"")
@@ -988,7 +1007,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		Starter.streamLost = False
 		Starter.streamLostInfo = ""
 '		lblArtistNowPlaying.Text = "Getting information"
-		CallSub2(Starter, "run_streamTimer", True)
+'		CallSub2(Starter, "run_streamTimer", True)
 		modGlobal.PlayerStarted = True
 		Starter.startAccPlayerTime = DateTime.Now
 		pnlClicked = 0
@@ -1401,13 +1420,13 @@ Sub getSetSettings
 		Starter.vWifiOnly	= False
 	End If
 	
-	If Starter.kvs.GetSimple("capnowplaying") = 1 Then
-		SwitchCaps.Checked		= True
-		Starter.capNowPlaying	= True
-	Else
-		SwitchCaps.Checked		= False
-		Starter.capNowPlaying	= False
-	End If
+'	If Starter.kvs.GetSimple("capnowplaying") = 1 Then
+'		SwitchCaps.Checked		= True
+'		Starter.capNowPlaying	= True
+'	Else
+'		SwitchCaps.Checked		= False
+'		Starter.capNowPlaying	= False
+'	End If
 	
 	If Starter.kvs.GetSimple("updatelogo") = 1 Then
 		SwitchUpdateLogo.Checked = True
@@ -1454,8 +1473,8 @@ End Sub
 
 
 Sub initPlayer
-	'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-	CallSub(Starter, "showNoImage")
+	CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
+	'CallSub(Starter, "showNoImage")
 	CallSubDelayed2(Starter, "setSongLyric", "noLyric")
 	CallSubDelayed2(Starter, "setSongTitle", "")
 	lblNowPlayingStation.Text 	= Application.LabelName & " v"&Application.VersionName
@@ -1702,7 +1721,7 @@ End Sub
 
 
 Sub setGenre(genre As String)
-	
+	Return
 	lbl_time_now.Text = $"Genre : ${genre}"$
 	Starter.currStationGerne = genre
 	'CHECK IF GERNE MATCHES GERNE IN TABLE, IF NOT UPDATE GENRE IN TABLE
@@ -2092,6 +2111,7 @@ Sub showLyricDialog
 	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
 	'html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
 	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/><br/>"))
+'	Log(vLyric)
 	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
 	DetailsDialog.SetSize(100%X, Activity.Height - 200dip)
@@ -2126,7 +2146,7 @@ Sub swIsArtist1_CheckedChange(Checked As Boolean)
 End Sub
 
 Public Sub retSongPlaying As String
-	Return lblNowPlayingStation.Text
+	Return lblArtistNowPlaying.Text
 End Sub
 
 Sub lblArtistNowPlaying_Click

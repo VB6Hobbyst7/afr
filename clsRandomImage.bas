@@ -15,7 +15,7 @@ Public Sub Initialize
 End Sub
 
 public Sub newRandomImage
-	if Starter.rndImgSet = 1 then Return
+	If Starter.rndImgSet = 1 Then Return
 	Dim j As HttpJob
 	
 	j.Initialize("",  Me)
@@ -25,6 +25,10 @@ public Sub newRandomImage
 	
 	If j.Success Then
 		CallSubDelayed2(Starter, "setAlbumArt", j.GetBitmap)
+		CallSub2(player, "pnlImgColor", True)
+		Starter.rndImgSet = 1
 	End If
 	j.Release
 End Sub
+
+

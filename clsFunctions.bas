@@ -388,44 +388,60 @@ Public Sub parseScrapeData (metadata As String)
 End Sub
 
 
+'Public Sub parseIcy(metadata As String) As String
 Public Sub parseIcy(metaData As String) As String
+	Dim playerPaused As Boolean = CallSub(Starter, "playerPaused")
+
+	If playerPaused Then
+		Dim s As String
+	End If
+
 	If metaData.SubString2(0,1) <> "{" Then
+		If playerPaused Then Return False
+		Starter.newTitle = True
 		Return "No song information"
 	End If
+	
+	Dim icy_by, icy_name, icy_playing, icy_genre, icy_br, icy_url, icy_genre As String = ""
+	Dim songPlaying As String = CallSub(player, "retSongPlaying")
 	Dim parser As JSONParser
 	parser.Initialize(metaData)
-	
-	
 
-Try
+	Try
 		Dim root As Map = parser.NextObject
-Catch
-		'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-		CallSub(Starter, "showNoImage")
+	Catch
+		If playerPaused Then Return False
+		Starter.newTitle = True
 		Return "No song information"
-End Try
+	End Try
 	
 	'Dim root As Map = parser.NextObject
 	If root.ContainsKey("error") Then
-		'CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-		CallSub(Starter, "showNoImage")
+		If playerPaused Then Return False
+		Starter.newTitle = True
 		Return "No song information"
 	End If
 	
-	Dim icy_by As String = root.Get("icy-by")
-	Dim icy_name As String = root.Get("icy-name")
-	Dim icy_playing As String = root.Get("icy-playing")
-	Dim icy_genre As String = root.Get("icy-genre")
-	Dim icy_br As String = root.Get("icy-br")
-	Dim icy_url As String = root.Get("icy-url")
+	icy_by = root.Get("icy-by")
+	icy_name = root.Get("icy-name")
+	icy_playing = root.Get("icy-playing")
+	icy_genre = root.Get("icy-genre")
+	icy_br  = root.Get("icy-br")
+	icy_url = root.Get("icy-url")
+	
 	If icy_genre = "" Then
 		icy_genre = "N/A"
 	End If
-'	Log(icy_playing)
-	If ReplaceRaros(icy_playing) <> Starter.lastSong Or Starter.lastSong = "" Then
 	
-		'CallSub2(player, "setGenre", icy_genre)
-		'CallSub2(player, "getStationLogo", icy_url)
+'	Log("PLAYER PAUSED " & IsPaused(player))
+	CallSub2(Starter, "clearNotif", icy_playing)
+	CallSub2(Starter, "clearNotif", icy_playing)
+	If playerPaused = True Then Return False
+	
+	Starter.newTitle = False
+	If icy_playing <> songPlaying Then
+		CallSub2(player, "setSongPlaying", icy_playing)
+		Starter.newTitle = True
 		Starter.vStationName	= icy_name
 		If Starter.vStationName = "" Then
 			Starter.vStationName = "AdFree Radio"
@@ -445,9 +461,9 @@ End Try
 		End If
 		Starter.icy_playing = icy_playing
 		Return icy_playing
-	Else
-		Return Starter.lastSong
+	'Else
 	End If
+	Return icy_playing
 End Sub
 
 Public Sub checkAmpersant(str As String) As String
@@ -521,9 +537,6 @@ Sub removeBetween(str As String, charLst As String) As String
 	Return str
 End Sub
 
-Sub removeCommaFromArtist(str As String) As String
-	
-End Sub
 
 Public Sub exitPlayer
 	genDb.closeConnection

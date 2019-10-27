@@ -48,7 +48,7 @@ Sub Process_Globals
 	Public mobileData As String = ""
 	Public doy As String ="pdegrootafr", moy As String ="hkWpXtB1!"
 	'BOOLEAN
-	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound, capNowPlaying As Boolean
+	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound, capNowPlaying, newTitle As Boolean
 	Public streamStarted, vIsPreset, pnl_album_info_button, pnl_stop_button, pnl_lyric_button, tryRestartStream As Boolean = False
 	Public chatDataLyric, lyricsOnDemand, pnl_store_song_button, lyricFound, albumArtFound, albumArtSet, streamLost, getUpdate As Boolean = False
 	Public chartLyricsDown As Boolean = True
@@ -74,6 +74,7 @@ Sub Process_Globals
 	Public tmrInetConnection, tmrGetSong, tmrInactive As Timer
 	Dim clsGen As clsGeneral
 	
+	Dim clsSngData As clsSongData
 	Dim csChartLyric As clsChartlyrics
 	Public playingSong, icy_playing As String
 	'Private albumTag="91f924c1eace4879ba9c4c0f5061e925" as String, songTag="b4fb29e9e2b0490bad9489c28dae6b89" As String
@@ -88,6 +89,7 @@ Sub Service_Create
 	spotMap.Initialize
 	clsGen.Initialize
 	csChartLyric.Initialize
+	clsSngData.Initialize
 	exoPlayer.Initialize("player")
 '	exoPlayer.Initialize("")
 	Service.AutomaticForegroundMode = Service.AUTOMATIC_FOREGROUND_ALWAYS
@@ -108,9 +110,9 @@ Sub Service_Create
 	
 	'need to disable it as reading from large JdbcResultSet will cause network requests to be sent on the main thread.
 	DisableStrictMode
-	tmrInactive.Initialize("tmrInactive", 30*60000)
+	tmrInactive.Initialize("tmrInactive", 10*60000)
 	tmrInactive.Enabled = False
-	tmrGetSong.Initialize("tmrGetSong", 3*1000)
+	tmrGetSong.Initialize("tmrGetSong", 8*1000)
 	'tmrGetSong.Enabled = True
 	connectionTimer.Initialize("connectionTimer", 5*1000)
 	'connectionTimer.Enabled	= True
@@ -133,7 +135,7 @@ Sub GetDeviceDateFormatSettings As String
 End Sub
 
 Sub tmrInactive_Tick
-	Log("tmrInactive_Tick")
+'	Log("tmrInactive_Tick")
 	Dim streamActive As Boolean = clsFunc.IsStreamActive(3)
 	If IsPaused(player) And streamActive = False Then
 		clsFunc.exitPlayer
@@ -285,130 +287,130 @@ Public Sub tmrGetSong_tick
 	End If
 	'LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
 	If clsFunc.IsMusicPlaying = True Then
-		icyMetaData
+		clsSngData.icyMetaData
 	End If
 End Sub
 
-Public Sub icyMetaData
-	
-	'Player_TrackChanged
-	Dim url, nSong As String
-	Dim job As HttpJob
-	
-	If selectedStream = "" Then
-		Return
-	End If
-	
-	
-	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
-	job.Initialize("", Me)
-	job.Download(url)
-	job.GetRequest.Timeout = jobTimeOut
-	Wait For (job) JobDone(job As HttpJob)
-		
-		
-	If job.Success Then
-		nSong = job.GetString
-		job.Release
-		preProcessSongData(nSong)
-	Else
-		job.Release
-		If lastSong Then
-			showNoImage
-			processSong(lastSong)
-		End If
-	End If
-		
-	job.Release
-End Sub
+'Public Sub icyMetaData
+'	
+'	'Player_TrackChanged
+'	Dim url, nSong As String
+'	Dim job As HttpJob
+'	
+'	If selectedStream = "" Then
+'		Return
+'	End If
+'	
+'	
+'	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
+'	job.Initialize("", Me)
+'	job.Download(url)
+'	job.GetRequest.Timeout = jobTimeOut
+'	Wait For (job) JobDone(job As HttpJob)
+'		
+'		
+'	If job.Success Then
+'		nSong = job.GetString
+'		job.Release
+'		preProcessSongData(nSong)
+'	Else
+'		job.Release
+'		If lastSong Then
+'			showNoImage
+'			processSong(lastSong)
+'		End If
+'	End If
+'		
+'	job.Release
+'End Sub
 
 
-Sub preProcessSongData(nSong As String)
-	Dim newSong As String = clsFunc.parseIcy(nSong)
-'	Log(newSong)
-'	Player_TrackChanged
-				
-	If newSong = "" Or newSong = "No song information" Then
-	'	showNoImage
-	'	Return
-	End If
-				
-	If lastSong = newSong Then
-	'	Return
-	End If
-	
-	If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
-		showNoImage
-		chartSong = "" 
-		chartArtist = ""
-		CallSub(player, "disableInfoPanels")
-		setSongLyric("noLyric")
-		spotMap.Clear
-		'CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
-		CallSub2(Me, "setSongPlaying", icy_playing)
-		playingSong = $"${chartSong} - ${chartArtist}"$
-		processSong(newSong)
-	End If
-End Sub
+'Sub preProcessSongData(nSong As String)
+'	Dim newSong As String = clsFunc.parseIcy(nSong)
+''	Log(newSong)
+''	Player_TrackChanged
+'				
+'	If newSong = "" Or newSong = "No song information" Then
+'	'	showNoImage
+'	'	Return
+'	End If
+'				
+'	If lastSong = newSong Then
+'	'	Return
+'	End If
+'	
+'	If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
+'		showNoImage
+'		chartSong = "" 
+'		chartArtist = ""
+'		CallSub(player, "disableInfoPanels")
+'		setSongLyric("noLyric")
+'		spotMap.Clear
+'		'CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
+'		CallSub2(Me, "setSongPlaying", icy_playing)
+'		playingSong = $"${chartSong} - ${chartArtist}"$
+'		processSong(newSong)
+'	End If
+'End Sub
 
-Sub processSong(song As String)
-'	Log("SONG : " & song)
-	If(song.Length > 3) Then
-		song	= clsFunc.ReplaceRaros(song)
-		clearNotif(song)
-	Else
-		CallSubDelayed2(player, "showHideLyricsButton", False)
-		CallSubDelayed2(player, "enableAlbumButton", False)
-		CallSub2(player, "setSongPlaying", "No information")
-		clsRndImage.newRandomImage
-		CallSub2(player, "pnlImgColor", True)
-		rndImgSet = 1
-		Return
-	End If
-	
-	
-	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
-	'	Player_TrackChanged
-		If activeActivity = "searchStation" Then
-			CallSub2(activeActivity, "nowPlaying", song)
-			Return
-		End If
-		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
-		spotMap.Clear
-		CallSub(player, "disableInfoPanels")
-		showNoImage
-		lastSong = song
-		If song = "" Then song = "No information found"
-		If activeActivity = "player" Then
-			clearVars
-				
-			If song <> "No information found" Then
-				songdata.songReversed	= False
-				Dim mySong As String	= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
-
-				playingSong = $"${chartSong} - ${chartArtist}"$
-				CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
-				CallSub2(Me, "setSongPlaying", $"${song}"$)
-'				LogColor(chartArtist& " - " &  chartSong, Colors.Red)
-				'ARTIST HOLDS SONG ANBD SONG HOLDS ARTIST BECAUSE OF SPOTIFY QUERY FORMAT
-				CallSub3(songdata,"spBearer", chartArtist, chartSong)
-				
-				If IsPaused(player) = False Then
-					CallSubDelayed(player, "enableAlbumInfo")
-					If albumArtSet Then
-						CallSub2(player, "enableAlbumButton", False)
-					Else
-					End If
-				End If
-			End If
-		End If
+'Sub processSong(song As String)
+''	Log("SONG : " & song)
+'	If(song.Length > 3) Then
+'		song	= clsFunc.ReplaceRaros(song)
+'		clearNotif(song)
+'	Else
+'		CallSubDelayed2(player, "showHideLyricsButton", False)
+'		CallSubDelayed2(player, "enableAlbumButton", False)
+'		CallSub2(player, "setSongPlaying", "No information")
+'		clsRndImage.newRandomImage
+'		CallSub2(player, "pnlImgColor", True)
+'		rndImgSet = 1
+'		Return
+'	End If
+'	
+'	
+'	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
+'	'	Player_TrackChanged
 '		If activeActivity = "searchStation" Then
 '			CallSub2(activeActivity, "nowPlaying", song)
+'			Return
 '		End If
-	Else
-		showNoImage
-	End If
-End Sub
+'		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
+'		spotMap.Clear
+'		CallSub(player, "disableInfoPanels")
+'		showNoImage
+'		lastSong = song
+'		If song = "" Then song = "No information found"
+'		If activeActivity = "player" Then
+'			clearVars
+'				
+'			If song <> "No information found" Then
+'				songdata.songReversed	= False
+'				Dim mySong As String	= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
+'
+'				playingSong = $"${chartSong} - ${chartArtist}"$
+'				CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
+'				CallSub2(Me, "setSongPlaying", $"${song}"$)
+''				LogColor(chartArtist& " - " &  chartSong, Colors.Red)
+'				'ARTIST HOLDS SONG ANBD SONG HOLDS ARTIST BECAUSE OF SPOTIFY QUERY FORMAT
+'				CallSub3(songdata,"spBearer", chartArtist, chartSong)
+'				
+'				If IsPaused(player) = False Then
+'					CallSubDelayed(player, "enableAlbumInfo")
+'					If albumArtSet Then
+'						CallSub2(player, "enableAlbumButton", False)
+'					Else
+'					End If
+'				End If
+'			End If
+'		End If
+''		If activeActivity = "searchStation" Then
+''			CallSub2(activeActivity, "nowPlaying", song)
+''		End If
+'	Else
+'		showNoImage
+'	End If
+'End Sub
 
 
 Sub clearVars
@@ -574,16 +576,16 @@ Private Sub streamEnded
 End Sub
 
 Public Sub startPlayer(url As String)
+	tmrGetSongEnable(True)
 	selectedStream = url
 	exoPlayer.Initialize("player")
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	exoPlayer.Volume = 1
 	exoPlayer.Play
-	If activeActivity = "searchStation" Then
-		icyMetaData
-	End If
+'	If activeActivity = "searchStation" Then
+		clsSngData.icyMetaData
+'	End If
 	setWakeLock(True)
-	tmrGetSongEnable(True)
 End Sub
 
 Sub Player_Ready
@@ -632,8 +634,6 @@ End Sub
 
 Public Sub stopPlayer
 	tmrGetSongEnable(False)
-	'Sleep(300)
-	
 	exoPlayer.Pause
 	exoPlayer.Release
 	
@@ -642,8 +642,8 @@ End Sub
 
 public Sub showNoImage
 	clsRndImage.newRandomImage
-	CallSub2(player, "pnlImgColor", False)
-	rndImgSet = 1
+	'CallSub2(player, "pnlImgColor", False)
+	'rndImgSet = 1
 	'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 	'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 End Sub
@@ -651,4 +651,8 @@ End Sub
 Public Sub hideSongData
 	CallSub2(Me, "setSongLyric", "noLyric")
 	CallSub(player, "hideLyrics")
+End Sub
+
+Public Sub playerPaused As Boolean
+	return IsPaused(player)
 End Sub

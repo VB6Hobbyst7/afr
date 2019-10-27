@@ -54,7 +54,7 @@ Sub spBearer(artist As String, song As String)
 		'getSongLyrics
 	End If
 	'CallSub2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-	CallSub(Starter, "showNoImage")
+'''	CallSub(Starter, "showNoImage")
 
 	Dim B64 As Base64
 	Dim n As Long
@@ -145,12 +145,12 @@ Sub spBearer(artist As String, song As String)
 	
 End Sub
 
-Sub getSpotifySongData(jsonData As String)
+Sub getSpotifySongData(jsonData As String)As ResumableSub
 	'File.WriteString(Starter.irp_dbFolder, $"test-${DateTime.Now}.txt"$, jsonData)
 	Dim Parser1 As JSONParser
 	Parser1.Initialize(jsonData)
 	Dim root As Map =Parser1.NextObject
-	
+'	Log(jsonData)
 	Dim mDate As String
 	Starter.albumArtSet = False
 	Starter.albumArtFound = False
@@ -164,7 +164,7 @@ Sub getSpotifySongData(jsonData As String)
 	If root.ContainsKey("error") Then 'And Starter.chartDataFound = False Then
 		
 		noSongData
-		Return
+		Return True
 	End If
 		
 	
@@ -179,7 +179,7 @@ Sub getSpotifySongData(jsonData As String)
 			End If
 			
 			noSongData
-			Return
+			Return True
 		End If
 		For Each colitems As Map In items
 			Dim duration_ms As Long		= colitems.Get("duration_ms")'
@@ -196,9 +196,9 @@ Sub getSpotifySongData(jsonData As String)
 			lDate.Initialize
 			mDate = Starter.vAlbumReleaseDate
 			lDate = Regex.Split("-", mDate)
-
+			
 			Try
-				If lDate.Size >= 2 Then
+				If lDate.Size = 3 Then
 					Dim newTime As Long	= DateUtils.SetDate(lDate.Get(0), lDate.Get(1), lDate.Get(2))
 					DateTime.DateFormat ="MMMM yyyy"
 					Starter.vAlbumReleaseDate = $"$Date{newTime}"$
@@ -223,7 +223,7 @@ Sub getSpotifySongData(jsonData As String)
 			End If
 			
 			If Starter.albumArtFound = True Then
-				Return
+				Return True
 			End If
 			
 			For Each colartists As Map In artists
@@ -305,7 +305,7 @@ Sub getSpotifySongData(jsonData As String)
 				If height = 640 Or width = 640 And clsFunc.checkUrl(url) Then
 					DownloadImage(url)
 					Exit
-					Return
+					Return True
 				Else
 					noSongData
 					
@@ -318,7 +318,7 @@ Sub getSpotifySongData(jsonData As String)
 	Else
 		
 	End If
-
+	Return True
 	
 End Sub
 
@@ -426,7 +426,7 @@ End Sub
 
 Sub noSongData
 	Starter.clsRndImage.newRandomImage
-	CallSub2(player, "pnlImgColor", True)
-	Starter.rndImgSet = 1
+	'CallSub2(player, "pnlImgColor", True)
+	'Starter.rndImgSet = 1
 End Sub
 

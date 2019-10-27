@@ -335,7 +335,9 @@ End Sub
 public Sub addStationToPreset(setStname As String, setDescription As String, setGenre As String, setCountry As String, setLanguage As String, setUrl As String, stationId As String)' As String
 	Dim vQry, vQryAdd As String
 	Dim vCurs As Cursor
-		
+	If setGenre = Null Then
+		setGenre = "N/A"	
+	End If
 	initDB
 	
 	vQryAdd	= "INSERT INTO preflist (stname, description, genre, country, language, stream1, rdo_id) VALUES (?,?,?,?,?,?,?)"

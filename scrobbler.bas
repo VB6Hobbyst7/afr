@@ -196,39 +196,39 @@ Sub RemoveAccents(s As String) As String
 End Sub
 
 
-Sub createLyricsOnDemand(reverse As Boolean) As String
-	Dim artist, song As String
-	
-	artist	= Starter.chartArtist.ToLowerCase
-	song	= Starter.chartSong.ToLowerCase
-	artist = Starter.spotMap.Get("artistname")
-	song = Starter.spotMap.Get("artistsong")
-	
-'	artist = artist.ToLowerCase
-'	song = song.ToLowerCase
-	If artist = Null Or artist = "" Then Return "noUrl"
-	
-	artist	= Starter.clsFunc.replacetekens(artist)
-	song	= Starter.clsFunc.replacetekens(song)
-	
-	song	= song.Replace(" ", "")
-	artist	= artist.Replace("'", "")
-	song	= song.Replace("'", "")
-	artist	= artist.Replace("&", "")
-	song	= song.Replace("&", "")
-	artist	= artist.Replace("(", "")
-	song	= song.Replace(")", "")
-	artist	= artist.Replace(".", "")
-	artist	= artist.Replace("-", "")
-'	artist	= artist.Replace("the", "")
-	song	= song.Replace(".", "")
-	song	= song.Replace("?", "")
-	song	= song.Replace("!", "")
-	If reverse = False Then
-		Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1)}/${artist}/${song}lyrics.html"$
-	Else	
-		Return $"https://www.lyricsondemand.com/${song.SubString2(0,1)}/${song}/${artist}lyrics.html"$
-	End If
-	
-'	Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1).ToLowerCase}/${artist}lyrics/${song}lyrics.html"$
-End Sub
+'Sub createLyricsOnDemand(reverse As Boolean) As String
+'	Dim artist, song As String
+'	
+'	artist	= Starter.chartArtist.ToLowerCase
+'	song	= Starter.chartSong.ToLowerCase
+'	artist = Starter.spotMap.Get("artistname")
+'	song = Starter.spotMap.Get("artistsong")
+'	
+''	artist = artist.ToLowerCase
+''	song = song.ToLowerCase
+'	If artist = Null Or artist = "" Then Return "noUrl"
+'	
+'	artist	= Starter.clsFunc.replacetekens(artist)
+'	song	= Starter.clsFunc.replacetekens(song)
+'	
+'	song	= song.Replace(" ", "")
+'	artist	= artist.Replace("'", "")
+'	song	= song.Replace("'", "")
+'	artist	= artist.Replace("&", "")
+'	song	= song.Replace("&", "")
+'	artist	= artist.Replace("(", "")
+'	song	= song.Replace(")", "")
+'	artist	= artist.Replace(".", "")
+'	artist	= artist.Replace("-", "")
+''	artist	= artist.Replace("the", "")
+'	song	= song.Replace(".", "")
+'	song	= song.Replace("?", "")
+'	song	= song.Replace("!", "")
+'	If reverse = False Then
+'		Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1)}/${artist}/${song}lyrics.html"$
+'	Else	
+'		Return $"https://www.lyricsondemand.com/${song.SubString2(0,1)}/${song}/${artist}lyrics.html"$
+'	End If
+'	
+''	Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1).ToLowerCase}/${artist}lyrics/${song}lyrics.html"$
+'End Sub

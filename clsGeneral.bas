@@ -7,7 +7,7 @@ Version=8.5
 #IgnoreWarnings: 9, 1, 11
 Sub Class_Globals
 	'Private xmlparser As SaxParser
-	Private url As String
+	'Private url As String
 
 	Public chartDataFound As Boolean = False
 End Sub
