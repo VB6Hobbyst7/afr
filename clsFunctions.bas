@@ -7,7 +7,7 @@ Version=8.5
 #IgnoreWarnings: 9, 1
 Sub Class_Globals
 	Private mlWifi As MLwifi
-	
+	Public songPlaying As String
 End Sub
 
 Public Sub Initialize
@@ -31,6 +31,9 @@ Public Sub stringSplit(splitChar As String, stringToSplit As String, startPos As
 	
 	splitList.Initialize
 	splitList =Regex.Split(splitChar, stringToSplit)
+	If splitList.Size = 0 Then
+		Return stringToSplit
+	End If
 	
 	Try
 	
@@ -318,6 +321,7 @@ Sub TitleCase (s As String) As String
 	End If
 	s = s.ToLowerCase
 	Dim m As Matcher = Regex.Matcher("\b(\w)", s)
+	'Dim m As Matcher = Regex.Matcher("\b(\w|['-])+\b", s)
 	Do While m.Find
 		Dim i As Int = m.GetStart(1)
 		s = s.SubString2(0, i) & s.SubString2(i, i + 1).ToUpperCase & s.SubString(i + 1)
@@ -388,13 +392,9 @@ Public Sub parseScrapeData (metadata As String)
 End Sub
 
 
-'Public Sub parseIcy(metadata As String) As String
 Public Sub parseIcy(metaData As String) As String
 	Dim playerPaused As Boolean = CallSub(Starter, "playerPaused")
 
-	If playerPaused Then
-		Dim s As String
-	End If
 
 	If metaData.SubString2(0,1) <> "{" Then
 		If playerPaused Then Return False
@@ -403,7 +403,8 @@ Public Sub parseIcy(metaData As String) As String
 	End If
 	
 	Dim icy_by, icy_name, icy_playing, icy_genre, icy_br, icy_url, icy_genre As String = ""
-	Dim songPlaying As String = CallSub(player, "retSongPlaying")
+	
+	
 	Dim parser As JSONParser
 	parser.Initialize(metaData)
 
@@ -422,6 +423,8 @@ Public Sub parseIcy(metaData As String) As String
 		Return "No song information"
 	End If
 	
+	songPlaying = CallSub(player, "retSongPlaying")
+	
 	icy_by = root.Get("icy-by")
 	icy_name = root.Get("icy-name")
 	icy_playing = root.Get("icy-playing")
@@ -433,15 +436,16 @@ Public Sub parseIcy(metaData As String) As String
 		icy_genre = "N/A"
 	End If
 	
-'	Log("PLAYER PAUSED " & IsPaused(player))
-	CallSub2(Starter, "clearNotif", icy_playing)
 	CallSub2(Starter, "clearNotif", icy_playing)
 	If playerPaused = True Then Return False
 	
 	Starter.newTitle = False
-	If icy_playing <> songPlaying Then
+	
+	
+	If icy_playing.ToLowerCase <> songPlaying.ToLowerCase Then
 		CallSub2(player, "setSongPlaying", icy_playing)
 		Starter.newTitle = True
+		Starter.triedLyrics = False
 		Starter.vStationName	= icy_name
 		If Starter.vStationName = "" Then
 			Starter.vStationName = "AdFree Radio"
@@ -451,7 +455,10 @@ Public Sub parseIcy(metaData As String) As String
 			CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & icy_br)
 		Else
 			CallSub2(player, "setGenre", icy_genre)
-			CallSub2(player, "getStationLogo", icy_url)
+			If Starter.triedGetStation = False Then
+				Starter.triedGetStation = True
+				CallSub2(player, "getStationLogo", icy_url)
+			End If
 			Dim cs As CSBuilder
 			If icy_br < 128 Then
 				CallSub2(player,"setStationBitrate", cs.Initialize.Append("Station bitrate : ").Color(Colors.Black).Append(icy_br).PopAll)
@@ -461,10 +468,59 @@ Public Sub parseIcy(metaData As String) As String
 		End If
 		Starter.icy_playing = icy_playing
 		Return icy_playing
-	'Else
+		'Else
 	End If
 	Return icy_playing
 End Sub
+
+
+Public Sub parseIcySearchStation(metaData As String)
+
+	If metaData.SubString2(0,1) <> "{" Then
+		CallSub2(searchStation, "nowPlaying", "No song information")
+	End If
+	
+	Dim icy_by, icy_name, icy_playing, icy_genre, icy_br, icy_url, icy_genre As String = ""
+	
+	Dim parser As JSONParser
+	parser.Initialize(metaData)
+
+	Try
+		Dim root As Map = parser.NextObject
+	Catch
+		CallSub2(searchStation, "nowPlaying", "No song information")
+	End Try
+	
+	'Dim root As Map = parser.NextObject
+	If root.ContainsKey("error") Then
+		CallSub2(searchStation, "nowPlaying", "No song information")
+		Return
+	End If
+	
+	icy_by = root.Get("icy-by")
+	icy_name = root.Get("icy-name")
+	icy_playing = root.Get("icy-playing")
+	icy_genre = root.Get("icy-genre")
+	icy_br  = root.Get("icy-br")
+	icy_url = root.Get("icy-url")
+	
+	If icy_genre = "" Then
+		icy_genre = "N/A"
+	End If
+	
+	If icy_playing = "" Then
+		icy_playing = "No song information"
+	End If
+	
+	CallSub2(Starter, "clearNotif", icy_playing)
+	If CallSub(searchStation, "retCurrLabel") = icy_playing Then
+		Return
+	End If
+	CallSub2(searchStation, "setStreamBitRate", "Bitrate : " & icy_br)
+	CallSub2(searchStation, "nowPlaying", icy_playing)
+End Sub
+
+
 
 Public Sub checkAmpersant(str As String) As String
 	Dim ampPos As Int = 0
@@ -560,4 +616,4 @@ Public Sub exitPlayer
 	Starter.tmrInactive.Enabled = False
 End Sub
 
-	
+

@@ -206,10 +206,10 @@ Sub Activity_Create(FirstTime As Boolean)
 	SwitchUpdateLogo.Initialize("SwitchUpdateLogo")
 	actionViewItem.ActionView = SwitchUpdateLogo
 	
-'	Dim actionViewItem As ACMenuItem
-'	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 4, 2, $""Now Playing""$, xml.GetDrawable("baseline_format_size_black_18"))
-'	SwitchCaps.Initialize("SwitchCaps")
-'	actionViewItem.ActionView = SwitchCaps
+	Dim actionViewItem As ACMenuItem
+	actionViewItem = NavDrawer.NavigationView.Menu.AddWithGroup2(1, 4, 2, $""Now Playing""$, xml.GetDrawable("baseline_format_size_black_18"))
+	SwitchCaps.Initialize("SwitchCaps")
+	actionViewItem.ActionView = SwitchCaps
 	
 	Starter.activeActivity	= "player"
 	pnlOverflow.Top	= Activity.Height+240dip
@@ -407,10 +407,12 @@ Sub Activity_Resume
 		Starter.lastSong = "resume"
 		CallSub2(Starter, "tmrGetSongEnable", True)
 		Starter.streamTimer.Enabled = True
-		CallSub(Starter, "icyMetaData")
+		'CallSub(Starter, "icyMetaData")
 		restorePlayingInfo
-		Dim songdata As clsHttp
-		songdata.Initialize(Starter, "peter")
+		Starter.clsFunc.songPlaying = "resume"
+		Starter.clsSngData.icyMetaData
+		'Dim songdata As clsHttp
+		'songdata.Initialize(Starter, "peter")
 		'CallSubDelayed3(songdata,"spBearer", Starter.chartArtist, Starter.chartSong)'scrobbler.processPlaying(Starter.lastSong))
 	Else
 		If Starter.stationAdded = 1 Then
@@ -991,6 +993,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		'CallSub2(Starter, "StartPlayer", stream)
 		'Starter.clsExoPlayer.startPlayer(stream)
 		CallSub2(Starter, "startPlayer", stream)
+		Starter.clsSngData.icyMetaData
 		'CallSubDelayed(Starter, "icyMetaData")
 		setPanelElevation(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
@@ -1188,8 +1191,11 @@ Sub panelStationLogo(bm As Bitmap)
 End Sub
 
 Sub getStationLogo(link As String)
+	Log("GETSTATIONLOGO")
+	If link = "" Or link = Null Or link.IndexOf("ull") > -1 Then Return
 	Dim url As String
-
+	
+	
 	Try
 		Dim stationName As String	 = getStation
 		If stationName = "" Then
@@ -1227,7 +1233,7 @@ Sub getStationLogo(link As String)
 		
 	
 
-	url = $"https://logo.clearbit.com/${link}/?size=150&format=png"$
+	url = $"https://logo.clearbit.com/${link.Trim}/?size=150&format=png"$
 	Dim j As HttpJob
 
 	j.Initialize("", Me)
@@ -1420,13 +1426,13 @@ Sub getSetSettings
 		Starter.vWifiOnly	= False
 	End If
 	
-'	If Starter.kvs.GetSimple("capnowplaying") = 1 Then
-'		SwitchCaps.Checked		= True
-'		Starter.capNowPlaying	= True
-'	Else
-'		SwitchCaps.Checked		= False
-'		Starter.capNowPlaying	= False
-'	End If
+	If Starter.kvs.GetSimple("capnowplaying") = 1 Then
+		SwitchCaps.Checked		= True
+		Starter.capNowPlaying	= True
+	Else
+		SwitchCaps.Checked		= False
+		Starter.capNowPlaying	= False
+	End If
 	
 	If Starter.kvs.GetSimple("updatelogo") = 1 Then
 		SwitchUpdateLogo.Checked = True
@@ -1542,6 +1548,12 @@ Sub getSetButtonState(set As Boolean)
 			pnl_album_info_button.Enabled = True
 			pnl_album_info_button.Elevation = 5dip
 		End If
+		
+		If Starter.kvs.GetSimple("capnowplaying") = 1 Then
+			Starter.capNowPlaying = True
+			Starter.capNowPlaying = True
+		End If
+		
 	End If
 End Sub
 
@@ -2117,7 +2129,7 @@ Sub showLyricDialog
 	DetailsDialog.SetSize(100%X, Activity.Height - 200dip)
 	Wait For (sf) Dialog_Ready(pnl As Panel)
 	pnl.LoadLayout("dlgSongLyric")
-	lbl_lyric_title.Text = Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
+	lbl_lyric_title.Text = retSongPlaying'Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
 
 	wv__lyric_lyric.LoadHtml(html)
 	

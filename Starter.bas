@@ -16,6 +16,8 @@ Sub Process_Globals
 	'Public clsExoPlayer As clsExo
 	Public sleepTimerDuration As Long
 	'Public AacMp3Player As JavaObject
+	Public joExo As JavaObject
+	Public eventExo As Object
 	Private logs As StringBuilder
 	Private logcat As LogCat
 	Private const emailAddress As String = "pieter09@gmail.com"
@@ -48,10 +50,10 @@ Sub Process_Globals
 	Public mobileData As String = ""
 	Public doy As String ="pdegrootafr", moy As String ="hkWpXtB1!"
 	'BOOLEAN
-	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound, capNowPlaying, newTitle As Boolean
+	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound, capNowPlaying, newTitle, triedGetStation As Boolean
 	Public streamStarted, vIsPreset, pnl_album_info_button, pnl_stop_button, pnl_lyric_button, tryRestartStream As Boolean = False
 	Public chatDataLyric, lyricsOnDemand, pnl_store_song_button, lyricFound, albumArtFound, albumArtSet, streamLost, getUpdate As Boolean = False
-	Public chartLyricsDown As Boolean = True
+	Public chartLyricsDown, triedLyrics As Boolean = True
 	'FLOAT
 	Public vDataUsage, ivAlbumArtHeight, ivAlbumArtwidth As Float
 	'INT
@@ -82,6 +84,7 @@ End Sub
 
 
 Sub Service_Create
+	triedGetStation = False
 	clsRndImage.Initialize
 	clsFunc.Initialize
 	'clsChart.Initialize
@@ -91,6 +94,10 @@ Sub Service_Create
 	csChartLyric.Initialize
 	clsSngData.Initialize
 	exoPlayer.Initialize("player")
+	joExo = exoPlayer
+	'eventExo = joExo.CreateEventFromUI("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)
+	'joExo.GetFieldJO("player").RunMethod("addMetadataOutput", Null)
+'	joExo.InitializeArray("addMetadataOutput", Null)
 '	exoPlayer.Initialize("")
 	Service.AutomaticForegroundMode = Service.AUTOMATIC_FOREGROUND_ALWAYS
 
@@ -282,6 +289,9 @@ Sub tmrGetSongEnable(isEnabled As Boolean)
 End Sub
 
 Public Sub tmrGetSong_tick
+	'eventExo = joExo.CreateEvent("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)'"MetadataOutput")
+	'joExo.GetFieldJO("player").RunMethod("addListener", Array(eventExo))
+	
 	If clsFunc.IsStreamActive(3) = False Then 
 		Return
 	End If
@@ -291,6 +301,15 @@ Public Sub tmrGetSong_tick
 	End If
 End Sub
 
+
+Sub addmetadataoutput_event(MethodName As String,Args() As Object)
+	Dim TrackGroups As JavaObject = joExo.GetFieldJO("player").RunMethod("getCurrentTrackGroups",Null)
+	Dim metaData As JavaObject = joExo.GetFieldJO("player").RunMethod("getMetadataComponent",Null)
+	Dim metaData1 As JavaObject = joExo.GetFieldJO("player").RunMethod("getTextComponent",Null)
+    Dim x As String	
+End Sub
+
+#Region
 'Public Sub icyMetaData
 '	
 '	'Player_TrackChanged
@@ -411,7 +430,7 @@ End Sub
 '		showNoImage
 '	End If
 'End Sub
-
+#End Region
 
 Sub clearVars
 	CallSub2(Me, "setSongLyric", "noLyric")
@@ -575,33 +594,43 @@ Private Sub streamEnded
 	clearNotif($"Connection to stream lost at $DateTime{DateTime.Now}"$)
 End Sub
 
+#Region exoplayer1
 Public Sub startPlayer(url As String)
-	tmrGetSongEnable(True)
+	triedGetStation = False
 	selectedStream = url
 	exoPlayer.Initialize("player")
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	exoPlayer.Volume = 1
 	exoPlayer.Play
-'	If activeActivity = "searchStation" Then
-		clsSngData.icyMetaData
-'	End If
-	setWakeLock(True)
+End Sub
+
+Sub player_Error(msg As String)
+	If activeActivity = "searchStation" Then
+		CallSub2(searchStation, "nowPlaying", "Unable to start selected stream")
+	End If
+	stopPlayer
 End Sub
 
 Sub Player_Ready
-'	LogColor("Ready", Colors.red)
-	Sleep(300)
-'	Log(clsFunc.IsStreamActive(3))
-	If clsFunc.IsStreamActive(3) = False Then
-		If activeActivity = "searchStation" Then
-			CallSub2(activeActivity, "nowPlaying", "Unable to open stream")
-		Else	
-		End If
-		
-	End If
+	setWakeLock(True)
+	clsSngData.icyMetaData
+	tmrGetSongEnable(True)
 End Sub
 
-Sub Player_TrackChanged
+
+Public Sub stopPlayer
+	tmrGetSongEnable(False)
+	triedGetStation = False
+	exoPlayer.Pause
+	exoPlayer.Release
+	
+	setWakeLock(False)
+End Sub
+
+#End Region
+
+'Sub Player_TrackChanged
+Sub Player_statechanged
 	Dim jo As JavaObject = exoPlayer
 	Dim TrackGroups As JavaObject = jo.GetFieldJO("player").RunMethod("getCurrentTrackGroups",Null)
 	'Dim TrackGroups1 As JavaObject = jo.GetFieldJO("player").RunMethod("getMetadataComponent", Array(""))
@@ -632,20 +661,9 @@ Sub Player_TrackChanged
 End Sub
 
 
-Public Sub stopPlayer
-	tmrGetSongEnable(False)
-	exoPlayer.Pause
-	exoPlayer.Release
-	
-	setWakeLock(False)
-End Sub
 
 public Sub showNoImage
 	clsRndImage.newRandomImage
-	'CallSub2(player, "pnlImgColor", False)
-	'rndImgSet = 1
-	'setAlbumArt(LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
-	'CallSub2(Me, "setAlbumArt", LoadBitmap(File.DirAssets, "NoImageAvailable.png"))
 End Sub
 
 Public Sub hideSongData
@@ -654,5 +672,5 @@ Public Sub hideSongData
 End Sub
 
 Public Sub playerPaused As Boolean
-	return IsPaused(player)
+	Return IsPaused(player)
 End Sub

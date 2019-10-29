@@ -181,6 +181,7 @@ Sub getSpotifySongData(jsonData As String)As ResumableSub
 			noSongData
 			Return True
 		End If
+		
 		For Each colitems As Map In items
 			Dim duration_ms As Long		= colitems.Get("duration_ms")'
 			Dim album As Map			= colitems.Get("album")'
@@ -247,56 +248,65 @@ Sub getSpotifySongData(jsonData As String)As ResumableSub
 			
 			
 			Starter.vSongLyric = "noLyric"
-			If Starter.vSongLyric = "noLyric" Then
-				'wait for(clsLyrics.checkScrapLyrics(colartists.Get("name"), colitems.Get("name"))) Complete (result As Boolean)
-				wait for(clsLyrics.checkScrapLyrics(False, False)) Complete (result As Boolean)
-				If result = False Then
-					wait for(clsLyrics.checkScrapLyrics(True, False)) Complete (result As Boolean)
-					If result = False Then
-						wait for(clsLyrics.checkScrapLyrics(False, True)) Complete (result As Boolean)
-					End If
-					If result = False Then
-						wait for(clsLyrics.checkScrapLyrics(True, True)) Complete (result As Boolean)
-					End If
-				Else
-				'	Log(Starter.vSongLyric)
-				End If
-'				If Starter.vSongLyric = "noLyric" Then
-'				Try
-'				'''	wait for(getSongLyrics) Complete (result As Boolean)
-'				Catch
-'					Starter.vSongLyric = "noLyric"
-'				End Try
-'				End If
-				
-'				If Starter.vSongLyric = "noLyric" Then
-'					Try
-'						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
-'						If Starter.chartLyricsDown = False Then
-'							'wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
-'						End If
-'					Catch
-'						Starter.vSongLyric = "noLyric"
-'					End Try
-'					If Starter.vSongLyric = "noLyric" Then
-'						Try
-'							'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
-'							
-'							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
-'						Catch
-'							Starter.vSongLyric = "noLyric"
-'						End Try
+			clsLyrics.tryLyrics
+#Region remark			
+'			If Starter.vSongLyric = "noLyric" Then
+'				'wait for(clsLyrics.checkScrapLyrics(colartists.Get("name"), colitems.Get("name"))) Complete (result As Boolean)
+'				wait for(clsLyrics.checkScrapLyrics(False, False)) Complete (result As Boolean)
+'				If result = False Then
+'					wait for(clsLyrics.checkScrapLyrics(True, False)) Complete (result As Boolean)
+'					If result = False Then
+'						wait for(clsLyrics.checkScrapLyrics(False, True)) Complete (result As Boolean)
 '					End If
-'					If Starter.vSongLyric = "noLyric" Then
-'						Try
-'							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
-'						Catch
-'							Starter.vSongLyric = "noLyric"
-'						End Try
+'					If result = False Then
+'						wait for(clsLyrics.checkScrapLyrics(True, True)) Complete (result As Boolean)
 '					End If
+'					If result = False Then
+'						wait for(getSongLyrics) Complete (result As Boolean)
+'						Log("HEROKU")
+'						
+'					End If
+'				Else
 '				End If
-			End If
-			
+'			
+'			
+'				
+'				''				If Starter.vSongLyric = "noLyric" Then
+'				''				Try
+'				''				'''	wait for(getSongLyrics) Complete (result As Boolean)
+'				''				Catch
+'				''					Starter.vSongLyric = "noLyric"
+'				''				End Try
+'				''				End If
+''				
+'				''				If Starter.vSongLyric = "noLyric" Then
+'				''					Try
+'				''						'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+'				''						If Starter.chartLyricsDown = False Then
+'				''							'wait for(clsLyrics.checkAlbumart) Complete (result As Boolean)
+'				''						End If
+'				''					Catch
+'				''						Starter.vSongLyric = "noLyric"
+'				''					End Try
+'				''					If Starter.vSongLyric = "noLyric" Then
+'				''						Try
+'				''							'wait for(clsGeneral_.pullDataFromOndemand(False)) Complete (result As Boolean)
+'				''
+'				''							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+'				''						Catch
+'				''							Starter.vSongLyric = "noLyric"
+'				''						End Try
+'				''					End If
+'				''					If Starter.vSongLyric = "noLyric" Then
+'				''						Try
+'				''							'wait for(clsGeneral_.pullDataFromFandom(False)) Complete (result As Boolean)
+'				''						Catch
+'				''							Starter.vSongLyric = "noLyric"
+'				''						End Try
+'				''					End If
+'				''				End If
+'			End If
+#end Region			
 			Dim images As List = album.Get("images")
 			For Each colimages As Map In images
 				Dim width As Int = colimages.Get("width")
@@ -363,14 +373,15 @@ public Sub getSongLyrics As ResumableSub
 	
 	http = "https://lyric-api.herokuapp.com/api/find/"
 	
-	urlStream	= scrobbler.processLyrics(CallSub(Starter,"getSongPlaying"), False)
+	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), False)
+	'Log(urlStream)
 	'Starter.clsFunc.showLog(urlStream, Colors.Green)
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
 
 	If result Then Return result
 	
 	'****TRY REVERSE
-	urlStream	= scrobbler.processLyrics(CallSub(Starter,"getSongPlaying"), True)
+	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), True)
 	'Starter.clsFunc.showLog(urlStream, Colors.Green)
 	
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
@@ -426,7 +437,5 @@ End Sub
 
 Sub noSongData
 	Starter.clsRndImage.newRandomImage
-	'CallSub2(player, "pnlImgColor", True)
-	'Starter.rndImgSet = 1
+	clsLyrics.tryLyrics
 End Sub
-

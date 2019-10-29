@@ -20,6 +20,7 @@ Public Sub Initialize
 End Sub
 
 
+#Region remark
 'Public Sub checkAlbumart As ResumableSub
 '	If Starter.chartLyricsDown = True Then
 '		
@@ -128,6 +129,7 @@ End Sub
 '	j.Release
 '	Return True
 'End Sub
+#End Region
 
 
 Sub processSong(song As String, reverseFind As Boolean) As String
@@ -138,6 +140,7 @@ Sub processSong(song As String, reverseFind As Boolean) As String
 	song = Starter.clsFunc.removeBetween(song, "(-)")
 	Return song
 End Sub
+
 
 Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 	Dim url, song As String
@@ -205,3 +208,98 @@ Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 	
 		
 End Sub
+
+
+public Sub getSongLyrics As ResumableSub
+	Dim urlStream, http As String
+'	Starter.clsFunc.showLog("getSongLyrics", Colors.Green)
+
+	
+	http = "https://lyric-api.herokuapp.com/api/find/"
+	
+	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), False)
+	'Starter.clsFunc.showLog(urlStream, Colors.Green)
+	Wait For (processUrl(urlStream)) Complete (result As Boolean)
+
+	If result Then Return result
+	
+	'****TRY REVERSE
+	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), True)
+	'Starter.clsFunc.showLog(urlStream, Colors.Green)
+	
+	Wait For (processUrl(urlStream)) Complete (result As Boolean)
+	
+	If result = False Then
+		Starter.vSong = "noLyric"
+		CallSubDelayed2(Starter, "setSongLyric", "noLyric")
+	End If
+	Return result
+End Sub
+
+
+Private Sub processUrl(purl As String) As ResumableSub
+	Dim j As HttpJob
+	
+	If purl = "" Or clsFunc.checkUrl(purl) = False Then
+		Return False
+	End If
+	
+	j.Initialize("",  Me)
+	j.Download(purl)
+	j.GetRequest.Timeout = Starter.jobTimeOut
+	Wait For (j) JobDone(j As HttpJob)
+	
+	If j.Success Then
+		Dim json As String = j.GetString()'("UTF-16")
+		j.Release
+		
+		Dim Parser As JSONParser
+		Parser.Initialize(json)
+		Dim root As Map = Parser.NextObject
+		Dim err As String = root.Get("err")
+		Dim lyric As String = root.Get("lyric")
+		If lyric.Length < 10 Then
+			Return False
+		End If
+		If err = "not found" Then
+			Starter.vSong = "noLyric"
+			CallSubDelayed2(Starter, "setSongLyric", "noLyric")
+		Else
+			File.WriteString(Starter.irp_dbFolder, "ini.txt", lyric)
+			Starter.vSong = lyric
+			CallSubDelayed2(Starter, "setSongLyric", lyric)
+		End If
+		j.Release
+		Return True
+	End If
+	
+	j.Release
+	Return False
+End Sub
+
+
+Sub tryLyrics
+	If Starter.triedLyrics = True Then Return
+	
+	Starter.triedLyrics = True
+	
+'	Log($"TRY LYRICS - $DateTime{DateTime.Now}"$)
+	
+	If Starter.vSongLyric = "noLyric" Then
+		wait for(checkScrapLyrics(False, False)) Complete (result As Boolean)
+		If result = False Then
+			wait for(checkScrapLyrics(True, False)) Complete (result As Boolean)
+			If result = False Then
+				wait for(checkScrapLyrics(False, True)) Complete (result As Boolean)
+			End If
+			If result = False Then
+				wait for(checkScrapLyrics(True, True)) Complete (result As Boolean)
+			End If
+			If result = False Then
+'				Log("HEROKU")
+				wait for(getSongLyrics) Complete (result As Boolean)
+			End If
+		End If
+	End If
+End Sub
+

@@ -491,6 +491,7 @@ Sub playSelectedStream(selectedStream As String)
 	Starter.selectedStream = selectedStream
 	Starter.activeActivity = "searchStation"
 	CallSub2(Starter, "startPlayer", selectedStream)
+'	Starter.clsSngData.icyMetaData
 '	Sleep(1000)
 	
 End Sub
@@ -713,6 +714,11 @@ Private Sub panel_clicked(tag As String) As Boolean
 	End If
 	
 	Return retVal
+End Sub
+
+
+Public Sub retCurrLabel As String
+	Return panelLabelPlaying.Text
 End Sub
 
 Sub pnl_stream1_Click
