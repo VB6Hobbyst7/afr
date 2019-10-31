@@ -16,6 +16,11 @@ End Sub
 
 public Sub newRandomImage
 	If Starter.rndImgSet = 1 Then Return
+	
+	If Starter.clsFunc.IsMusicPlaying = False Then
+		Return
+	End If	
+		
 	Dim j As HttpJob
 	
 	j.Initialize("",  Me)

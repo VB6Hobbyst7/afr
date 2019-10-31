@@ -22,7 +22,7 @@ Public Sub icyMetaData
 	Dim url, nSong As String
 	Dim job As HttpJob
 	
-	If Starter.selectedStream = "" Then
+	If Starter.selectedStream = "" Or Starter.clsFunc.IsMusicPlaying = False Then
 		Return
 	End If
 	

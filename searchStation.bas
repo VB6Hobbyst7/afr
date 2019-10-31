@@ -5,16 +5,16 @@ Type=Activity
 Version=7.8
 @EndOfDesignText@
 #Region  Activity Attributes 
-	#FullScreen: False
+	#FullScreen: True
 	#IncludeTitle: False
-	#IgnoreWarnings: 9, 10, 12
+	#IgnoreWarnings: 9, 10
 #End Region
 
 #Extends: android.support.v7.app.AppCompatActivity
 
 Sub Process_Globals
 	Public stationUrl As String
-	Dim bm As Bitmap
+	''Dim bm As Bitmap
 End Sub
 
 Sub Globals
@@ -23,18 +23,18 @@ Sub Globals
 #Region Views 
 	Private clvStationList As irp_CustomListView
 	Private lblStreamCount As Label
-	Private ProgressBar1 As ProgressBar
+	''Private ProgressBar1 As ProgressBar
 	Private pnlStation As Panel
 	Private pnlStationData As Panel
 	Private lblStreamBitrate As Label
 	Private edt_find As EditText
-	Private btn_clear_search As Label
-	Private lbl_stationname As Label
+	''Private btn_clear_search As Label
+	''Private lbl_stationname As Label
 	Private pnl_stationname As Panel
-	Private lblAppHeader As Label
+	''Private lblAppHeader As Label
 	Private ivCountry As ImageView
-	Private lblSelectedCountry As Label
-	Private ivSelectCountry As ImageView
+	''Private lblSelectedCountry As Label
+	''Private ivSelectCountry As ImageView
 #End Region	
 
 #Region Vars
@@ -46,11 +46,11 @@ Sub Globals
 	Private vStreamLst As List
 	Private panelIndex As Int = -1
 	Private panelStationId As String
-	Private selected_playButton As Button
-	Private showRestartInfo As Int = 0
-	Private imgUrlRetry As Int = 0
-	Private stationName As String
-	Private lblSongPlaying As Label
+	''Private selected_playButton As Button
+	''Private showRestartInfo As Int = 0
+	''Private imgUrlRetry As Int = 0
+	''Private stationName As String
+	''Private lblSongPlaying As Label
 	
 	
 #End Region	
@@ -76,8 +76,8 @@ Sub Globals
 	Private tsSearchMain As TabStrip
 	Private lblSearch As Label
 	Private lblGenreName As Label
-	Private pnlGenreName As Panel
-	Private pnlClvGenre As Panel
+	''Private pnlGenreName As Panel
+	''Private pnlClvGenre As Panel
 	Private clvCountryGenre As irp_CustomListView
 	Private pnlGenre As Panel
 	Private pnlListGenreName As Panel
@@ -198,7 +198,7 @@ Sub genStationList(stname As String, genre As String, info As String, width As I
 	Dim streamCount As Int = 1
 	
 	p.Initialize("")
-	p.SetLayout(0,0, width, 65dip)
+	p.SetLayout(0,0, width, 60dip)
 	p.LoadLayout("lstStat1") 
 	
 	pnl_stationname.Tag	= $"stationname-${stname}"$
@@ -245,30 +245,27 @@ Private Sub scrollTimer_Tick
 End Sub
 
 Sub checkAarPlaying
-	'Starter.clsExoPlayer.stopPlayer
 	CallSub(Starter, "stopPlayer")
-	'CallSub(Starter, "StopPlayer")
 
 	Starter.playerUsed	= ""
-'	lblSongPlaying.Text	= ""
 	lblStreamBitrate.Text = ""
 End Sub
 
-Sub streamPlaying(playing As Boolean)
-	If playing = False Then
-'		Log(Starter.vStationUrl)
-		'Starter.clsExoPlayer.stopPlayer
-		CallSub(Starter, "stopPlayer")
-		'CallSub(Starter, "StopPlayer")
-		ToastMessageShow("Unable to play stream..", False)
-		lblStreamBitrate.Text = ""
-		panelLabelPlaying.Text = "Click to start"'panelLabelplayingText
-		'RESET PLAY BUTTON
-		restorePanelPlayButton
-		
-		lblStreamBitrate.Text = ""
-	End If
-End Sub
+'Sub streamPlaying(playing As Boolean)
+'	If playing = False Then
+''		Log(Starter.vStationUrl)
+'		'Starter.clsExoPlayer.stopPlayer
+'		CallSub(Starter, "stopPlayer")
+'		'CallSub(Starter, "StopPlayer")
+'		ToastMessageShow("Unable to play stream..", False)
+'		lblStreamBitrate.Text = ""
+'		panelLabelPlaying.Text = "Click to start"'panelLabelplayingText
+'		'RESET PLAY BUTTON
+'		restorePanelPlayButton
+'		
+'		lblStreamBitrate.Text = ""
+'	End If
+'End Sub
 
 Sub showSnackbar(msg As String)
 	Dim snack As DSSnackbar
@@ -282,11 +279,11 @@ End Sub
 
 
 
-Sub getsearchStation(params As List) As Cursor
-	Dim curs As Cursor = genDb.getSearchStation(params.Get(0), params.Get(1), params.Get(2), params.Get(3))
-	
-	Return curs
-End Sub
+'Sub getsearchStation(params As List) As Cursor
+'	Dim curs As Cursor = genDb.getSearchStation(params.Get(0), params.Get(1), params.Get(2), params.Get(3))
+'	
+'	Return curs
+'End Sub
 
 
 Sub getStationStream(params As List) As Cursor
@@ -345,7 +342,9 @@ End Sub
 Sub clvStationList_ItemClick (Index As Int, Value As Object)
 	checkAarPlaying
 	setClickedPanelColor(Index)
-	
+	lbl_stream1.TextColor = Colors.Black
+	lbl_stream2.TextColor = Colors.Black
+	lbl_stream3.TextColor = Colors.Black
 	panelIndex = Index
 	
 	getStationInfo(Index)
@@ -385,9 +384,9 @@ Private Sub resetPanels
 	pnl_stream1.Tag = ""
 	pnl_stream2.Tag = ""
 	pnl_stream3.Tag = ""
-	lbl_stream1.Text = "Click to start"
-	lbl_stream2.Text = "Click to start"
-	lbl_stream3.Text = "Click to start"
+	lbl_stream1.Text = ""'"Click to start"
+	lbl_stream2.Text = ""'"Click to start"
+	lbl_stream3.Text = ""'"Click to start"
 	
 	pnl_stream1.SetElevationAnimated(0, 1dip)
 	pnl_stream2.SetElevationAnimated(0, 1dip)
@@ -453,29 +452,37 @@ Sub getStationInfo(index As Int)
 	For i = 0 To lstStream.Size -1
 		If i = 0 Then
 			pnl_stream1.Tag = lstStream.Get(i)
-			pnl_stream1.SetElevationAnimated(100, 3dip)
+			pnl_stream1.SetElevationAnimated(0, 3dip)
 			pnl_stream1.Enabled = True
 			iv_add_favorite1.Visible = True
+			lbl_stream1.Text = "Click to start"
+			
 		else If i = 1 Then
 			pnl_stream2.Tag = lstStream.Get(i)
-			pnl_stream2.SetElevationAnimated(210, 3dip)
+			pnl_stream2.SetElevationAnimated(0, 3dip)
 			pnl_stream2.Enabled = True
 			iv_add_favorite2.Visible = True
+			lbl_stream2.Text = "Click to start"
 		Else
 			pnl_stream3.Tag = lstStream.Get(i)
-			pnl_stream3.SetElevationAnimated(300, 3dip)
+			pnl_stream3.SetElevationAnimated(0, 3dip)
 			pnl_stream3.Enabled = True
 			iv_add_favorite3.Visible = True
+			lbl_stream3.Text = "Click to start"
 		End If
 	Next
-	Sleep(300)
+	'Sleep(500)
 End Sub
 
 'SET CLICKED PANEL COLOR
 Sub setClickedPanelColor(index As Int)
+	pnl_stream1.Color = Colors.White
+	pnl_stream2.Color = Colors.White
+	pnl_stream3.Color = Colors.White
 	For pnlIndex = 0 To clvStationList.Size-1
 		Dim pnl As Panel = clvStationList.GetPanel(pnlIndex)
 		pnl.Elevation = 0dip
+		pnl.Color = Colors.White
 		If(index = pnlIndex) Then
 			pnl.Elevation = 8dip
 		End If
@@ -569,8 +576,12 @@ Sub edt_find_EnterPressed
 	
 	
 	checkAarPlaying
-'	ProgressBar1.Visible = True
 	Sleep(10)
+	If vText.Length < 2 Then
+		Return
+	End If
+	
+
 '	If vText.Length > 0 Then
 	vText	= "%"&vText&"%"
 	params.Add(vText)
@@ -640,17 +651,17 @@ Sub ivSelectCountry_Click
 	showCountryList
 End Sub
 
-Private Sub setSvg(view As ImageView, svg As String)
-	Dim tCanvas As Canvas
-	tCanvas.Initialize(view)
-
-	Dim svgGen As ioxSVG
-	
-	svgGen.Initialize(svg)
-	svgGen.DocumentWidth = view.Width
-	svgGen.DocumentHeight = view.Height
-	svgGen.RenderToCanvas(tCanvas)
-End Sub
+'Private Sub setSvg(view As ImageView, svg As String)
+'	Dim tCanvas As Canvas
+'	tCanvas.Initialize(view)
+'
+'	Dim svgGen As ioxSVG
+'	
+'	svgGen.Initialize(svg)
+'	svgGen.DocumentWidth = view.Width
+'	svgGen.DocumentHeight = view.Height
+'	svgGen.RenderToCanvas(tCanvas)
+'End Sub
 
 Sub btn_clear_search_Click
 	Dim im As IME
@@ -671,18 +682,18 @@ Private Sub createStreamPanel(pnl As Panel, startStop As ImageView, addFavorite 
 	addFavorite.Background = xml.GetDrawable("outline_playlist_add_black_24")
 End Sub
 
-Private Sub createStreamTag(streamCount As Int, stream As String)
-	If streamCount = 1 Then
-		pnl_stream1.Tag = stream
-		pnl_stream1.SetElevationAnimated(0, 8dip)
-	else If streamCount = 2 Then
-		pnl_stream2.Tag = stream
-		pnl_stream2.SetElevationAnimated(0, 8dip)
-	else If streamCount = 3 Then
-		pnl_stream3.Tag = stream
-		pnl_stream3.SetElevationAnimated(0, 8dip)
-	End If
-End Sub
+'Private Sub createStreamTag(streamCount As Int, stream As String)
+'	If streamCount = 1 Then
+'		pnl_stream1.Tag = stream
+'		pnl_stream1.SetElevationAnimated(0, 8dip)
+'	else If streamCount = 2 Then
+'		pnl_stream2.Tag = stream
+'		pnl_stream2.SetElevationAnimated(0, 8dip)
+'	else If streamCount = 3 Then
+'		pnl_stream3.Tag = stream
+'		pnl_stream3.SetElevationAnimated(0, 8dip)
+'	End If
+'End Sub
 
 Private Sub restorePanelPlayButton
 	createStreamPanel(pnl_stream1, iv_start_stop1, iv_add_favorite1)
@@ -695,20 +706,22 @@ Private Sub createPanelStopButton(startStop As ImageView)
 End Sub
 
 Private Sub panel_clicked(tag As String) As Boolean
-	Dim retVal As Boolean = False
-	
+	Dim retVal, streamActive As Boolean = False
+	'panelLabelPlaying.TextColor = Colors.Black
+	streamActive = Starter.clsFunc.IsStreamActive(3)
 		
-	If Starter.clsFunc.IsStreamActive(3) = True And tag = panelLabelPlaying.Tag Then
+	If streamActive = True And tag = panelLabelPlaying.Tag Then
 		retVal = True
 	End If
 	
-	If Starter.clsFunc.IsStreamActive(3) = True Then
+	If streamActive = True Then
 		CallSub(Starter, "stopPlayer")
 
 		lblStreamBitrate.Text = ""
 		clsScrllLabel.runMarquee(panelLabelPlaying, panelLabelPlaying.Tag, "MARQUEE")
 		clsScrllLabel.Initialize
 		panelLabelPlaying.Text = panelLabelPlaying.Tag
+		panelLabelPlaying.TextColor = Colors.Black
 		
 		restorePanelPlayButton
 	End If
@@ -724,8 +737,12 @@ End Sub
 Sub pnl_stream1_Click
 	Dim panelIsPanel As Boolean = panel_clicked(lbl_stream1.Tag)
 	
-	Sleep(500)
-	If(panelIsPanel) Then Return
+	'Sleep(500)
+	If(panelIsPanel) Then 
+		restorePanelColor
+		Return
+	End If
+	
 	
 	lbl_stream1.Text = "Loading stream.."
 	If pnl_stream1.tag = "" Then Return
@@ -734,10 +751,19 @@ Sub pnl_stream1_Click
 	panelLabelPlaying = lbl_stream1
 	panelLabelPlaying.Tag = lbl_stream1.Tag
 	panelLabelplayingText = lbl_stream1.Text
+	pnl_stream1.Color =0xFF7fa5cf
+	lbl_stream1.TextColor = Colors.White
 	createPanelStopButton(iv_start_stop1)
 	
 	
 	playSelectedStream(pnl_stream1.Tag)
+End Sub
+
+
+Sub restorePanelColor
+	pnl_stream1.Color =0xFFFFFFFF
+	pnl_stream2.Color =0xFFFFFFFF
+	pnl_stream3.Color =0xFFFFFFFF
 End Sub
 
 Sub iv_start_stop1_Click
@@ -751,14 +777,21 @@ End Sub
 Sub pnl_stream2_Click
 	Dim panelIsPanel As Boolean = panel_clicked(lbl_stream2.Tag)
 	
-	Sleep(500)
-	If(panelIsPanel) Then Return
+	'Sleep(500)
+	If(panelIsPanel) Then
+		restorePanelColor
+		Return
+	End If
+	
+	lbl_stream2.TextColor = Colors.white
 	lbl_stream2.Text = "Loading stream.."
 	If pnl_stream2.tag = "" Then Return
 	panelPlaying = "pnl_stream2"
 	lbl_stream2.Tag = "Click to start"
 	panelLabelPlaying = lbl_stream2
 	panelLabelplayingText = lbl_stream2.Text
+	pnl_stream2.Color =0xFF7fa5cf
+	lbl_stream2.TextColor = Colors.White
 	createPanelStopButton(iv_start_stop2)
 	playSelectedStream(pnl_stream2.Tag)
 	
@@ -776,14 +809,20 @@ End Sub
 Sub pnl_stream3_Click
 	Dim panelIsPanel As Boolean = panel_clicked(lbl_stream3.Tag)
 	
-	Sleep(500)
-	If(panelIsPanel) Then Return
+	'Sleep(500)
+	If(panelIsPanel) Then
+		restorePanelColor
+		Return
+	End If
+	lbl_stream3.TextColor = Colors.white
 	lbl_stream3.Text = "Loading stream.."
 	If pnl_stream3.tag = "" Then Return
 	panelPlaying = "pnl_stream3"
 	lbl_stream3.Tag = "Click to start"
 	panelLabelPlaying = lbl_stream3
 	panelLabelplayingText = lbl_stream3.Text
+	pnl_stream3.Color =0xFF7fa5cf
+	lbl_stream3.TextColor = Colors.White
 	createPanelStopButton(iv_start_stop3)
 	playSelectedStream(pnl_stream3.Tag)
 End Sub
@@ -910,17 +949,17 @@ Sub genLanguage
 	
 End Sub
 
-Sub genListLanguage(lang As String, width As Int ) As Panel
-	
-	Dim p As Panel
-	p.Initialize("")
-	p.SetLayout(0,0, width, 60dip)
-	p.LoadLayout("lstLanguage") 
-	
-	p.Tag = lang
-	lbl_language.Text = lang
-	Return p
-End Sub
+'Sub genListLanguage(lang As String, width As Int ) As Panel
+'	
+'	Dim p As Panel
+'	p.Initialize("")
+'	p.SetLayout(0,0, width, 60dip)
+'	p.LoadLayout("lstLanguage") 
+'	
+'	p.Tag = lang
+'	lbl_language.Text = lang
+'	Return p
+'End Sub
 
 
 Sub pnl_language_Click

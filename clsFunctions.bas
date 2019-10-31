@@ -179,7 +179,7 @@ Sub ReplaceRaros(p_strText As String) As String
 	'strTemp	= strTemp.Replace("Straks:", "")
 	strTemp	= strTemp.Replace("Now Playing: ", "")
 	strTemp	= strTemp.Replace("S.S.", "")
-	'strTemp	= strTemp.Replace(",", "%2C")
+	strTemp	= strTemp.Replace(",", "%2C")
 	
 	If strTemp.SubString2(0,3) = " - " Then
 		strTemp = strTemp.SubString2(3,strTemp.Length)

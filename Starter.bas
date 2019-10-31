@@ -84,6 +84,7 @@ End Sub
 
 
 Sub Service_Create
+	startAccPlayerTime	= DateTime.Now
 	triedGetStation = False
 	clsRndImage.Initialize
 	clsFunc.Initialize
@@ -94,11 +95,16 @@ Sub Service_Create
 	csChartLyric.Initialize
 	clsSngData.Initialize
 	exoPlayer.Initialize("player")
-	joExo = exoPlayer
+	'joExo = player As JavaObject 'exoPlayer
+	
 	'eventExo = joExo.CreateEventFromUI("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)
 	'joExo.GetFieldJO("player").RunMethod("addMetadataOutput", Null)
 '	joExo.InitializeArray("addMetadataOutput", Null)
 '	exoPlayer.Initialize("")
+	
+	
+	
+	
 	Service.AutomaticForegroundMode = Service.AUTOMATIC_FOREGROUND_ALWAYS
 
 	If rp.Check(rp.PERMISSION_READ_PHONE_STATE) Then 
@@ -111,6 +117,7 @@ Sub Service_Create
 	kvs.Initialize(irp_dbFolder, "settings", True)
 	smallIcon		= LoadBitmapResize(File.DirAssets, "radio_notif.png", 24dip, 24dip, True)
 	logs.Initialize
+	
 #if RELEASE
 	logcat.LogCatStart(Array As String("-v","raw","*:F","B4A:v"), "logcat")
 #end if
@@ -122,12 +129,23 @@ Sub Service_Create
 	tmrGetSong.Initialize("tmrGetSong", 8*1000)
 	'tmrGetSong.Enabled = True
 	connectionTimer.Initialize("connectionTimer", 5*1000)
-	'connectionTimer.Enabled	= True
+	connectionTimer.Enabled	= True
 	tmrInetConnection.Initialize("inetConnected", 1000)
 	tmrInetConnection.Enabled = False
 	localeDatFormat = GetDeviceDateFormatSettings
 	
 End Sub
+
+
+Sub StateChanged_Event (MethodName As String, Args() As Object) As Object
+Log(MethodName)
+	If MethodName = "onPlayerStateChanged" Then
+		Dim Playing As Boolean = Args(0)
+		Log("IsPlaying: " & Playing)
+	End If
+	Return Null
+End Sub
+
 
 Sub Service_Start (StartingIntent As Intent)
 	Service.StartForeground(notifId, createNotif("Not streaming.."))
@@ -292,9 +310,15 @@ Public Sub tmrGetSong_tick
 	'eventExo = joExo.CreateEvent("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)'"MetadataOutput")
 	'joExo.GetFieldJO("player").RunMethod("addListener", Array(eventExo))
 	
-	If clsFunc.IsStreamActive(3) = False Then 
+	If clsFunc.IsMusicPlaying = False Then
 		Return
 	End If
+	
+'	Dim jo As JavaObject = exoPlayer   'i declared my player as exoplay
+'	jo = jo.GetField("player")
+'	'Dim state As JavaObject = jo.RunMethod("getMetadataComponent", Null)
+'	Dim state As JavaObject = jo.RunMethod("addMetadataOutput()", Null)
+	
 	'LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
 	If clsFunc.IsMusicPlaying = True Then
 		clsSngData.icyMetaData
@@ -303,9 +327,11 @@ End Sub
 
 
 Sub addmetadataoutput_event(MethodName As String,Args() As Object)
-	Dim TrackGroups As JavaObject = joExo.GetFieldJO("player").RunMethod("getCurrentTrackGroups",Null)
-	Dim metaData As JavaObject = joExo.GetFieldJO("player").RunMethod("getMetadataComponent",Null)
-	Dim metaData1 As JavaObject = joExo.GetFieldJO("player").RunMethod("getTextComponent",Null)
+	Log($"$DateTime{DateTime.Now}"$)
+	
+'	Dim TrackGroups As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getCurrentTrackGroups",Null)
+'	Dim metaData As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getMetadataComponent",Null)
+'	Dim metaData1 As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getTextComponent",Null)
     Dim x As String	
 End Sub
 
@@ -445,6 +471,7 @@ Sub connectionTimer_Tick
 '	If IsPaused(player) Then Return
 	player.bckBtnClickCount = 1
 	clsFunc.getConnectionType
+	CallSub(player, "setTimeActive")
 End Sub
 
 Sub run_streamTimer(enable As Boolean)
@@ -455,10 +482,10 @@ End Sub
 Sub streamTimer_tick
 	Dim ticksNow, tickPlayer, tickDiff As Int
 	
-	startAccPlayerTime = DateTime.Now
-	ticksNow = clsFunc.ConvertMillisecondsToString(startAccPlayerTime)
-	tickPlayer = clsFunc.ConvertMillisecondsToString( lastAccPlayerTime)
-	tickDiff = ticksNow-tickPlayer
+'	startAccPlayerTime = DateTime.Now
+'	ticksNow = clsFunc.ConvertMillisecondsToString(startAccPlayerTime)
+'	tickPlayer = clsFunc.ConvertMillisecondsToString( lastAccPlayerTime)
+'	tickDiff = ticksNow-tickPlayer
 	'GET CONNECTION TYPE WIFI OFR MOBILE
 	clsFunc.getConnectionType
 	'CHECK IF THERE IS A INTERNET CONNECTION
@@ -602,6 +629,15 @@ Public Sub startPlayer(url As String)
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	exoPlayer.Volume = 1
 	exoPlayer.Play
+	Dim jo As JavaObject = exoPlayer
+	Dim event As Object = jo.CreateEventFromUI("com.google.android.exoplayer2.Player$EventListener", "statechanged", False)
+	jo.GetFieldJO("player").RunMethod("addListener", Array(event))
+	'Dim jo As JavaObject = exoPlayer   'i declared my player as exoplay
+'	jo = jo.GetField("player")'
+	'Dim state As JavaObject = jo.RunMethod("addMetadataOutput", Null)
+	'jo.GetFieldJO("player").RunMethod("addMetadataOutput", Null)
+'	Dim event As Object = jo.CreateEventFromUI("com.google.android.exoplayer2.Player$addMetadataOutput", "statechanged", False)
+	'jo.GetFieldJO("player").RunMethod("addListener", Array(event))
 End Sub
 
 Sub player_Error(msg As String)
@@ -625,6 +661,7 @@ Public Sub stopPlayer
 	exoPlayer.Release
 	
 	setWakeLock(False)
+	clearNotif("Not streaming")
 End Sub
 
 #End Region

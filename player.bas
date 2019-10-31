@@ -150,11 +150,13 @@ Sub Globals
 	
 	
 	Private lblRandomImage As B4XView
+	Private lblActiveTime As Label
 End Sub
 
 
 Sub Activity_Create(FirstTime As Boolean)
 	'pnlRnd.Initialize("")
+	lblActiveTime.Initialize("")
 	tmr.Initialize("disableClickTimer", 1000)
 	tmr.Enabled = False
 	hideTmr.Initialize(5000, "hideOverFlow")
@@ -295,8 +297,12 @@ Sub Activity_Create(FirstTime As Boolean)
 	clsScroll1.runMarquee(lblRandomImage, "No song information found, random image is shown", "MARQUEE")
 	dialog.Initialize(Activity)
 	
-	
+		
 End Sub
+
+
+
+
 
 
 Sub setCtrlButtonsBorder
@@ -875,9 +881,10 @@ Sub setPanelElevation(index As Int)
 				If v Is Panel Then
 					Dim pnl As Panel = v
 					pnl.Elevation = 1dip
+					'pnl.SetElevationAnimated(500, 1dip)
 					If i = index Then
 						pnl.SetElevationAnimated(500, 4dip)
-						Sleep(700)
+						'Sleep(700)
 					Else
 					'	pnl.Elevation = 1dip
 					End If
@@ -893,15 +900,9 @@ Sub start_stopStream(index As Int) As ResumableSub
 	
 	
 	If Starter.clsFunc.IsMusicPlaying Then
+		CallSub2(Starter, "tmrGetSongEnable", False)
 		dataCleared = True
-'		Log("MUSIC PLAYING " & index)
-'		CallSub2(Starter, "tmrGetSongEnable", False)
-'		CallSub(Starter, "stopPlayer")
-'		Starter.lastSong = ""
-'		CallSub(Starter,"initPlayerVars")
-'		showHideLyricsButton(False)
-'		enableAlbumButton(False)
-'		setPanelElevation(-1)
+
 		isSamePanel = Starter.clsSngData.clearSongData(index)
 		handleControlButtons(False, 0dip, 500)
 		Starter.clsFunc.shadowLayer(lblArtistNowPlaying,0,0,0, Colors.White)
@@ -1191,7 +1192,6 @@ Sub panelStationLogo(bm As Bitmap)
 End Sub
 
 Sub getStationLogo(link As String)
-	Log("GETSTATIONLOGO")
 	If link = "" Or link = Null Or link.IndexOf("ull") > -1 Then Return
 	Dim url As String
 	
@@ -1560,7 +1560,9 @@ End Sub
 
 Public Sub exitPlayer
 
-	
+	Starter.clsFunc.exitPlayer
+	Activity.Finish
+	Return
 	'***END WAKELOCK
 	CallSub2(Starter, "setWakeLock", False)
 	
@@ -1605,7 +1607,7 @@ Public Sub exitPlayer
 	Starter.tmrInetConnection.Enabled = False
 	Starter.connectionTimer.Enabled = False
 	Starter.tmrInactive.Enabled = False
-	Activity.Finish
+	'Activity.Finish
 	
 End Sub
 
@@ -2164,4 +2166,11 @@ End Sub
 Sub lblArtistNowPlaying_Click
 '	pnlRnd.Top=pnlNowPlaying.Top+30dip
 	
+End Sub
+
+Sub setTimeActive
+'	Dim active As Long = DateTime.Now-Starter.startAccPlayerTime
+'	Dim ff As String = DateTime.Time(active)
+'	'lblActiveTime.Text = $"Application is $Time{DateTime.Time( DateTime.Now-(Starter.startAccPlayerTime))}"$
+'	Log(DateTime.Time( DateTime.Now-(Starter.startAccPlayerTime)))
 End Sub
