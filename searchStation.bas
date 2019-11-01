@@ -94,6 +94,8 @@ Sub Globals
 	Private lblPnlNoFind As Label
 	Private ivNothingFound As ImageView
 	Private chkIgnoreCountry As ACCheckBox
+	Private ivAddStation As ImageView
+	Private pnlAddStation As Panel
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -982,4 +984,9 @@ End Sub
 Sub lblLanguageClear_Click
 	lblLanguageClear.Visible = False
 	lblLanguage.Text = "Language"
+End Sub
+
+
+Sub pnlAddStation_Click
+	
 End Sub

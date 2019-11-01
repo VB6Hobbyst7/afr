@@ -94,6 +94,10 @@ Sub Service_Create
 	clsGen.Initialize
 	csChartLyric.Initialize
 	clsSngData.Initialize
+	'exoPlayer.Initialize("player")
+'	Dim jo As JavaObject
+'	jo.InitializeNewInstance(Application.PackageName & ".starter$MySimpleExoPlayerWrapper", Null)
+'	exoPlayer = jo
 	exoPlayer.Initialize("player")
 	'joExo = player As JavaObject 'exoPlayer
 	
@@ -131,19 +135,19 @@ Sub Service_Create
 	connectionTimer.Initialize("connectionTimer", 5*1000)
 	connectionTimer.Enabled	= True
 	tmrInetConnection.Initialize("inetConnected", 1000)
-	tmrInetConnection.Enabled = False
+	tmrInetConnection.Enabled = True
 	localeDatFormat = GetDeviceDateFormatSettings
 	
 End Sub
 
 
 Sub StateChanged_Event (MethodName As String, Args() As Object) As Object
-Log(MethodName)
-	If MethodName = "onPlayerStateChanged" Then
-		Dim Playing As Boolean = Args(0)
-		Log("IsPlaying: " & Playing)
-	End If
-	Return Null
+'Log(MethodName)
+'	If MethodName = "onPlayerStateChanged" Then
+'		Dim Playing As Boolean = Args(0)
+'		Log("IsPlaying: " & Playing)
+'	End If
+'	Return Null
 End Sub
 
 
@@ -168,7 +172,17 @@ Sub tmrInactive_Tick
 End Sub
 
 Sub inetConnected_Tick
+	'If clsFunc.IsMusicPlaying = False Then Return
+	
 	Wait For(CheckConnected) Complete (result As Boolean)
+	
+	If result = False Then
+		'GIVE A FEW SECONDS TO RETRY TO CONNECT
+		Sleep(10*1000)
+		stopPlayer
+		CallSub2(player, "startOrStopStream", vPlayerSelectedPanel)
+	End If
+	
 End Sub
 
 Sub CheckConnected As ResumableSub
@@ -307,7 +321,9 @@ Sub tmrGetSongEnable(isEnabled As Boolean)
 End Sub
 
 Public Sub tmrGetSong_tick
+	
 	'eventExo = joExo.CreateEvent("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)'"MetadataOutput")
+	
 	'joExo.GetFieldJO("player").RunMethod("addListener", Array(eventExo))
 	
 	If clsFunc.IsMusicPlaying = False Then
@@ -316,8 +332,8 @@ Public Sub tmrGetSong_tick
 	
 '	Dim jo As JavaObject = exoPlayer   'i declared my player as exoplay
 '	jo = jo.GetField("player")
-'	'Dim state As JavaObject = jo.RunMethod("getMetadataComponent", Null)
-'	Dim state As JavaObject = jo.RunMethod("addMetadataOutput()", Null)
+'	Dim state As JavaObject = jo.RunMethod("getMetadataComponent", Null)
+'	Dim state As JavaObject = jo.RunMethod("addMetadataOutput", Null)
 	
 	'LogColor($"tmrGetSong_tick $DateTime{DateTime.Now}"$, Colors.Red)
 	If clsFunc.IsMusicPlaying = True Then
@@ -335,128 +351,7 @@ Sub addmetadataoutput_event(MethodName As String,Args() As Object)
     Dim x As String	
 End Sub
 
-#Region
-'Public Sub icyMetaData
-'	
-'	'Player_TrackChanged
-'	Dim url, nSong As String
-'	Dim job As HttpJob
-'	
-'	If selectedStream = "" Then
-'		Return
-'	End If
-'	
-'	
-'	url = $"http://ice.pdeg.nl/getIcy.php?url=${selectedStream}"$
-'	job.Initialize("", Me)
-'	job.Download(url)
-'	job.GetRequest.Timeout = jobTimeOut
-'	Wait For (job) JobDone(job As HttpJob)
-'		
-'		
-'	If job.Success Then
-'		nSong = job.GetString
-'		job.Release
-'		preProcessSongData(nSong)
-'	Else
-'		job.Release
-'		If lastSong Then
-'			showNoImage
-'			processSong(lastSong)
-'		End If
-'	End If
-'		
-'	job.Release
-'End Sub
 
-
-'Sub preProcessSongData(nSong As String)
-'	Dim newSong As String = clsFunc.parseIcy(nSong)
-''	Log(newSong)
-''	Player_TrackChanged
-'				
-'	If newSong = "" Or newSong = "No song information" Then
-'	'	showNoImage
-'	'	Return
-'	End If
-'				
-'	If lastSong = newSong Then
-'	'	Return
-'	End If
-'	
-'	If newSong <> lastSong Or lastSong = "" And newSong <> "" Then
-'		showNoImage
-'		chartSong = "" 
-'		chartArtist = ""
-'		CallSub(player, "disableInfoPanels")
-'		setSongLyric("noLyric")
-'		spotMap.Clear
-'		'CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
-'		CallSub2(Me, "setSongPlaying", icy_playing)
-'		playingSong = $"${chartSong} - ${chartArtist}"$
-'		processSong(newSong)
-'	End If
-'End Sub
-
-'Sub processSong(song As String)
-''	Log("SONG : " & song)
-'	If(song.Length > 3) Then
-'		song	= clsFunc.ReplaceRaros(song)
-'		clearNotif(song)
-'	Else
-'		CallSubDelayed2(player, "showHideLyricsButton", False)
-'		CallSubDelayed2(player, "enableAlbumButton", False)
-'		CallSub2(player, "setSongPlaying", "No information")
-'		clsRndImage.newRandomImage
-'		CallSub2(player, "pnlImgColor", True)
-'		rndImgSet = 1
-'		Return
-'	End If
-'	
-'	
-'	If lastSong = "" Or lastSong <> song And song.Length > 0 Then
-'	'	Player_TrackChanged
-'		If activeActivity = "searchStation" Then
-'			CallSub2(activeActivity, "nowPlaying", song)
-'			Return
-'		End If
-'		'DISABLE SONG-INFO & SONG-LYRICS BUTTON
-'		spotMap.Clear
-'		CallSub(player, "disableInfoPanels")
-'		showNoImage
-'		lastSong = song
-'		If song = "" Then song = "No information found"
-'		If activeActivity = "player" Then
-'			clearVars
-'				
-'			If song <> "No information found" Then
-'				songdata.songReversed	= False
-'				Dim mySong As String	= scrobbler.processPlaying(clsFunc.ReplaceRaros(song))
-'
-'				playingSong = $"${chartSong} - ${chartArtist}"$
-'				CallSub2(Me, "setSongPlaying", $"${chartSong} - ${chartArtist}"$)
-'				CallSub2(Me, "setSongPlaying", $"${song}"$)
-''				LogColor(chartArtist& " - " &  chartSong, Colors.Red)
-'				'ARTIST HOLDS SONG ANBD SONG HOLDS ARTIST BECAUSE OF SPOTIFY QUERY FORMAT
-'				CallSub3(songdata,"spBearer", chartArtist, chartSong)
-'				
-'				If IsPaused(player) = False Then
-'					CallSubDelayed(player, "enableAlbumInfo")
-'					If albumArtSet Then
-'						CallSub2(player, "enableAlbumButton", False)
-'					Else
-'					End If
-'				End If
-'			End If
-'		End If
-''		If activeActivity = "searchStation" Then
-''			CallSub2(activeActivity, "nowPlaying", song)
-''		End If
-'	Else
-'		showNoImage
-'	End If
-'End Sub
-#End Region
 
 Sub clearVars
 	CallSub2(Me, "setSongLyric", "noLyric")
@@ -711,3 +606,18 @@ End Sub
 Public Sub playerPaused As Boolean
 	Return IsPaused(player)
 End Sub
+
+#if Java
+import anywheresoftware.b4a.keywords.B4AApplication;
+import android.content.pm.PackageManager.NameNotFoundException;
+import anywheresoftware.b4a.objects.SimpleExoPlayerWrapper;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+public static class MySimpleExoPlayerWrapper extends SimpleExoPlayerWrapper {
+@Override
+public DefaultDataSourceFactory createDefaultDataFactory() {
+     return new DefaultDataSourceFactory(BA.applicationContext, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+   }
+  
+}
+
+#End If

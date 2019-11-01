@@ -94,7 +94,7 @@ Sub spBearer(artist As String, song As String)
 		song = song.Replace(" ", "%20")
 		
 		'Dim qry As String = $"track:${artist} artist:${song}&type=track%2Cartist&limit=1&offset=0"$
-		Dim qry As String = $"track:${clsFunc.removeBetween(artist, "(-)")} artist:${song}&type=track%2Cartist&limit=1&offset=1"$
+		Dim qry As String = $"track:${clsFunc.removeBetween(artist, "(-)")} artist:${clsFunc.removeBetween(song, "(-)")}&type=track%2Cartist&limit=1&offset=1"$
 		
 '		Log("QRY : " & qry)
 		SourceWeb1 = $"https://api.spotify.com/v1/search?q=${qry}&access_token=${SpotToken1}&token_type=Bearer&expires_in=3600&limit=1"$

@@ -26,7 +26,7 @@ End Sub
 
 
 Sub Globals
-	
+	Dim noInetMessage As String
 	Private DetailsDialog As CustomLayoutDialog
 	Dim dialog As B4XDialog
 	Dim selectedStationName, stream As String
@@ -150,13 +150,11 @@ Sub Globals
 	
 	
 	Private lblRandomImage As B4XView
-	Private lblActiveTime As Label
 End Sub
 
 
 Sub Activity_Create(FirstTime As Boolean)
 	'pnlRnd.Initialize("")
-	lblActiveTime.Initialize("")
 	tmr.Initialize("disableClickTimer", 1000)
 	tmr.Enabled = False
 	hideTmr.Initialize(5000, "hideOverFlow")
@@ -2168,9 +2166,3 @@ Sub lblArtistNowPlaying_Click
 	
 End Sub
 
-Sub setTimeActive
-'	Dim active As Long = DateTime.Now-Starter.startAccPlayerTime
-'	Dim ff As String = DateTime.Time(active)
-'	'lblActiveTime.Text = $"Application is $Time{DateTime.Time( DateTime.Now-(Starter.startAccPlayerTime))}"$
-'	Log(DateTime.Time( DateTime.Now-(Starter.startAccPlayerTime)))
-End Sub
