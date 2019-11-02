@@ -15,9 +15,6 @@ Sub Process_Globals
 	Public exoPlayer As SimpleExoPlayer
 	'Public clsExoPlayer As clsExo
 	Public sleepTimerDuration As Long
-	'Public AacMp3Player As JavaObject
-	Public joExo As JavaObject
-	Public eventExo As Object
 	Private logs As StringBuilder
 	Private logcat As LogCat
 	Private const emailAddress As String = "pieter09@gmail.com"
@@ -94,20 +91,7 @@ Sub Service_Create
 	clsGen.Initialize
 	csChartLyric.Initialize
 	clsSngData.Initialize
-	'exoPlayer.Initialize("player")
-'	Dim jo As JavaObject
-'	jo.InitializeNewInstance(Application.PackageName & ".starter$MySimpleExoPlayerWrapper", Null)
-'	exoPlayer = jo
 	exoPlayer.Initialize("player")
-	'joExo = player As JavaObject 'exoPlayer
-	
-	'eventExo = joExo.CreateEventFromUI("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)
-	'joExo.GetFieldJO("player").RunMethod("addMetadataOutput", Null)
-'	joExo.InitializeArray("addMetadataOutput", Null)
-'	exoPlayer.Initialize("")
-	
-	
-	
 	
 	Service.AutomaticForegroundMode = Service.AUTOMATIC_FOREGROUND_ALWAYS
 
@@ -140,15 +124,6 @@ Sub Service_Create
 	
 End Sub
 
-
-Sub StateChanged_Event (MethodName As String, Args() As Object) As Object
-'Log(MethodName)
-'	If MethodName = "onPlayerStateChanged" Then
-'		Dim Playing As Boolean = Args(0)
-'		Log("IsPlaying: " & Playing)
-'	End If
-'	Return Null
-End Sub
 
 
 Sub Service_Start (StartingIntent As Intent)
@@ -322,10 +297,9 @@ End Sub
 
 Public Sub tmrGetSong_tick
 	
-	'eventExo = joExo.CreateEvent("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)'"MetadataOutput")
-	
-	'joExo.GetFieldJO("player").RunMethod("addListener", Array(eventExo))
-	
+'	eventExo = joExo.CreateEvent("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)'"MetadataOutput")
+'	joExo.GetFieldJO("player").RunMethod("addListener", Array(eventExo))
+
 	If clsFunc.IsMusicPlaying = False Then
 		Return
 	End If
@@ -343,7 +317,7 @@ End Sub
 
 
 Sub addmetadataoutput_event(MethodName As String,Args() As Object)
-	Log($"$DateTime{DateTime.Now}"$)
+'	Log($"addmetadataoutput_event $DateTime{DateTime.Now} METHOD ${MethodName}"$)
 	
 '	Dim TrackGroups As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getCurrentTrackGroups",Null)
 '	Dim metaData As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getMetadataComponent",Null)
@@ -524,15 +498,8 @@ Public Sub startPlayer(url As String)
 	exoPlayer.Prepare(exoPlayer.CreateURISource(url))
 	exoPlayer.Volume = 1
 	exoPlayer.Play
-	Dim jo As JavaObject = exoPlayer
-	Dim event As Object = jo.CreateEventFromUI("com.google.android.exoplayer2.Player$EventListener", "statechanged", False)
-	jo.GetFieldJO("player").RunMethod("addListener", Array(event))
-	'Dim jo As JavaObject = exoPlayer   'i declared my player as exoplay
-'	jo = jo.GetField("player")'
-	'Dim state As JavaObject = jo.RunMethod("addMetadataOutput", Null)
-	'jo.GetFieldJO("player").RunMethod("addMetadataOutput", Null)
-'	Dim event As Object = jo.CreateEventFromUI("com.google.android.exoplayer2.Player$addMetadataOutput", "statechanged", False)
-	'jo.GetFieldJO("player").RunMethod("addListener", Array(event))
+	
+		
 End Sub
 
 Sub player_Error(msg As String)
@@ -560,37 +527,6 @@ Public Sub stopPlayer
 End Sub
 
 #End Region
-
-'Sub Player_TrackChanged
-Sub Player_statechanged
-	Dim jo As JavaObject = exoPlayer
-	Dim TrackGroups As JavaObject = jo.GetFieldJO("player").RunMethod("getCurrentTrackGroups",Null)
-	'Dim TrackGroups1 As JavaObject = jo.GetFieldJO("player").RunMethod("getMetadataComponent", Array(""))
-'	Dim TrackGroups1 As JavaObject = jo.GetFieldJO("player").RunMethodJO("addMetadataOutput", Null)
-	
-	
-	
-	
-	'Dim z As Object = jo.GetFieldJO("TrackGroups1").RunMethod("metadataOutputs", Null)
-	'Dim z As Object = TrackGroups1.RunMethodJO("metadataOutputs", null)
-	
-'	For i = 0 To TrackGroups.GetField("length") - 1
-'		
-'		Dim TrackGroup As JavaObject = TrackGroups1.RunMethod("get", Array(i))
-'		For j = 0 To TrackGroup.GetField("length") - 1
-'			'Log(jo.addMetadataOutput)
-'			Dim Format As JavaObject = TrackGroup.RunMethodJO("getFormat", Array(j))
-'			Dim mime As String = Format.GetField("sampleMimeType")
-'			Dim mime As String = Format.GetField("metadata")
-'			Log(mime)
-'			If mime.StartsWith("meta") Then
-'				Log("audio track")
-'			End If
-'           
-'		Next
-'	Next
-	'Log("Player_TrackChanged")
-End Sub
 
 
 
