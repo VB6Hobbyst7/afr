@@ -11,6 +11,7 @@ Version=7.8
 #End Region
 
 Sub Process_Globals
+	dim astream as AsyncStreams
 	Public clsRndImage As clsRandomImage
 	Public exoPlayer As SimpleExoPlayer
 	'Public clsExoPlayer As clsExo
@@ -340,7 +341,6 @@ Sub connectionTimer_Tick
 '	If IsPaused(player) Then Return
 	player.bckBtnClickCount = 1
 	clsFunc.getConnectionType
-	CallSub(player, "setTimeActive")
 End Sub
 
 Sub run_streamTimer(enable As Boolean)
@@ -350,6 +350,7 @@ End Sub
 
 Sub streamTimer_tick
 	Dim ticksNow, tickPlayer, tickDiff As Int
+	
 	
 '	startAccPlayerTime = DateTime.Now
 '	ticksNow = clsFunc.ConvertMillisecondsToString(startAccPlayerTime)
@@ -378,9 +379,9 @@ Sub streamTimer_tick
 	
 End Sub
 
-public Sub IsStreamActive(Stream As Int) As Boolean
+public Sub IsStreamActive(stream As Int) As Boolean
 	Dim jo As JavaObject
-	Return jo.InitializeStatic("android.media.AudioSystem").RunMethod("isStreamActive", Array(Stream, 0))
+	Return jo.InitializeStatic("android.media.AudioSystem").RunMethod("isStreamActive", Array(stream, 0))
 End Sub
 
 Sub PE_PhoneStateChanged (State As String, IncomingNumber As String, Intent As Intent)

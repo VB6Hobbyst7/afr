@@ -1630,10 +1630,6 @@ Sub lbl_stop_playing_Click
 End Sub
 
 
-'Sub showStreamWarning (show As Boolean)
-'	'lbl_stream_lost.Visible	= show
-'End Sub
-
 Sub clearLabels
 	lblNowPlayingDataRate.Text	= ""
 	lbl_time_now.Text			= ""
@@ -1644,10 +1640,6 @@ Sub clearLabels
 	lblArtistNowPlaying.Text	= ""
 End Sub
 
-
-'Sub setStationBitrate(bitrate As String)
-'	lblNowPlayingDataRate.Text	= bitrate
-'End Sub
 
 Sub setStationBitrate(bitrate As CSBuilder)
 	lblNowPlayingDataRate.Text	= bitrate
@@ -2023,7 +2015,6 @@ End Sub
 
 
 Sub iets
-'	Log(Starter.spotMap.Size)
 	If Starter.spotMap.Size < 1 Then
 		Return
 	End If
@@ -2057,12 +2048,8 @@ Sub btnSpotOpenInBrowser_Click
 	StartActivity(intent1)
 End Sub
 
-'Sub showLyricProviderImage(img As Bitmap)
-'	'lbl_stream_lost.SetBackgroundImage(img)
-'End Sub
 
 Sub lblNowPlayingStation_Click
-	'StartActivity(checkStationUpdate)
 End Sub
 
 Public Sub SetElevation(v As View, e As Float)
@@ -2135,19 +2122,11 @@ Sub showLyricDialog
 	
 End Sub
 
-'Sub setlblTimeNow(txt As String)
-'	lbl_time_now.Text = txt
-'End Sub
-
-
 
 Sub btn_img_new_station_Click
 	img_close_Click
 End Sub
 
-'Sub getNowPlaying As String
-'	Return lblArtistNowPlaying.Text
-'End Sub
 
 Sub swIsArtist_CheckedChange(Checked As Boolean)
 	
@@ -2162,7 +2141,5 @@ Public Sub retSongPlaying As String
 End Sub
 
 Sub lblArtistNowPlaying_Click
-'	pnlRnd.Top=pnlNowPlaying.Top+30dip
-	
 End Sub
 

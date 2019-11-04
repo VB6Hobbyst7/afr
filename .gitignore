@@ -1,7 +1,7 @@
 # Built application files
 *.apk
 *.ap_
-*.meta
+iRP.b4a.meta
 
 # Files for the Dalvik VM
 *.dex
