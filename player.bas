@@ -602,25 +602,6 @@ Sub setAlbumArtFading(vArt As Bitmap)
 	ivNowPlaying.Bitmap = vArt
 End Sub
 
-'Sub streamPlaying(playing As Boolean)
-'	
-'	If playing = False Then
-''		If Starter.playerUsed	= "aac" Then
-''			CallSub(Starter,"StopPlayer")
-'			CallSub(Starter, "stopPlayer")
-'			showSnackbar("Unable to play stream..")
-'			Return
-''		End If
-' 	End If
-'End Sub
-
-
-'Sub showSnackbar(msg As String)
-'	Dim snack As DSSnackbar
-'	snack.Initialize("Snack", Activity, msg, snack.DURATION_SHORT)
-'	snack.Show
-'End Sub
-
 
 Sub nowPlaying(playing As String)
 	If playing = "" Then
@@ -922,24 +903,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		If dataCleared = False Then
 			Starter.clsSngData.clearSongData(index)
 		End If
-'		If modGlobal.PlayerStarted Then
-'			clearLabels
-'			'Sleep(500)
-'			Starter.chartSong = ""
-'			Starter.chartArtist = ""
-'			modGlobal.PlayerStarted = False
-'			Starter.sStationLogoPath = "null"
-'			CallSub2(Starter, "run_streamTimer", False)
-'			CallSub2(Me, "pnlImgColor", False)
-'			
-'			CallSub2(Starter, "clearNotif", "Not streaming")
-'			CallSubDelayed2(Starter, "setSongLyric", "noLyric")
-'			'		pnlSongText.SetVisibleAnimated(500, False)
-'			hideOverflow
-'			
-'			CallSubDelayed2(Starter, "setAlbumArt", LoadBitmap(File.DirAssets, "logo_afr.png").Resize(Starter.ivAlbumArtHeight, Starter.ivAlbumArtwidth, True))
-''			handleControlButtons(False, 0dip, 500)
-'		End If
+
 	
 		If index = -1 Then
 			index = Starter.vPlayerSelectedPanel
@@ -955,22 +919,6 @@ Sub start_stopStream(index As Int) As ResumableSub
 			Return True
 		End If
 	
-		
-		
-'		If Starter.vPlayerSelectedPanel = index Then
-			'reset info screen
-			'start_stopStreamResetLabels
-			'Starter.vPlayerSelectedPanel = 999
-'			stream = ""
-			'showHideSmallStationLogo(False)
-			'CallSub2(Starter, "run_streamTimer", False)
-			'modGlobal.PlayerStarted = False
-'			setAlbumArtFading(LoadBitmap(File.DirAssets, "logo_afr.png"))
-			'Starter.lastAccPlayerTime = 0
-			'Starter.startAccPlayerTime = 0
-'			pnlClicked = 0
-'			Return True
-'		End If
 	
 		modGlobal.PlayerStarted = True
 		lblNowPlayingStation.Text	= ""
@@ -989,11 +937,8 @@ Sub start_stopStream(index As Int) As ResumableSub
 
 		handleControlButtons(True, 8dip, 500)
 		
-		'CallSub2(Starter, "StartPlayer", stream)
-		'Starter.clsExoPlayer.startPlayer(stream)
 		CallSub2(Starter, "startPlayer", stream)
 		Starter.clsSngData.icyMetaData
-		'CallSubDelayed(Starter, "icyMetaData")
 		setPanelElevation(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
 			smallStationLogo.Initialize(stationLogoPath,"")
@@ -1089,10 +1034,6 @@ End Sub
 
 
 Sub lblOverflow_Click
-'	Dim index As Int 	= clvPlayer.GetItemFromView(Sender)
-'	showStationInfo(index)
-'	Return
-	
 	Dim index As Int 	= clvPlayer.GetItemFromView(Sender)
 	Dim lbl As ImageView	= Sender
 	Dim stationId As Int
@@ -1281,8 +1222,6 @@ End Sub
 
 Sub lblOpenStationUrl_Click
 	showNowPlayingFormat
-'	cmGen.openStationUrl(getStationByIndex(lblOpenStationUrl.Tag))
-'	hideOverflow
 End Sub
 
 
@@ -1372,8 +1311,6 @@ Sub NavDrawer_NavigationItemSelected (MenuItem As ACMenuItem, DrawerGravity As I
 	else If MenuItem.Title = "Add station" Then
 		NavDrawer.CloseDrawer
 		
-		'CallSub(Starter,"StopPlayer")
-		'Starter.clsExoPlayer.stopPlayer
 		CallSub(Starter, "stopPlayer")
 		startOrStopStream(Starter.vPlayerSelectedPanel)
 		Starter.vPlayerSelectedPanel = 999
@@ -1568,7 +1505,6 @@ Public Sub exitPlayer
 	CallSub(getSetStation,"endActivity")
 	CallSub(searchStation, "endActivity")
 	'***STOP PLAYER***
-	'Starter.clsExoPlayer.stopPlayer
 	CallSub(Starter, "stopPlayer")
 	
 	
@@ -1955,9 +1891,6 @@ End Sub
 
 'CONNECTION LOST HANDLE SETTINGS
 Public Sub connectionLost
-	'modGlobal.StopPlayer
-	'CallSub(Starter,"StopPlayer")
-	'Starter.clsExoPlayer.stopPlayer
 	CallSub(Starter, "stopPlayer")
 	startOrStopStream(Starter.vPlayerSelectedPanel)
 	'MUST BE GLOBAL CODE

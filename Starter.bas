@@ -11,10 +11,9 @@ Version=7.8
 #End Region
 
 Sub Process_Globals
-	dim astream as AsyncStreams
+	'Dim astream As AsyncStreams
 	Public clsRndImage As clsRandomImage
 	Public exoPlayer As SimpleExoPlayer
-	'Public clsExoPlayer As clsExo
 	Public sleepTimerDuration As Long
 	Private logs As StringBuilder
 	Private logcat As LogCat
@@ -25,9 +24,6 @@ Sub Process_Globals
 	Public vSongLyric As String	= "noLyric"
 	Private vSongTitle As String
 	Private songdata As clsHttp
-'	Private clsChart As clsChartlyrics
-'	Private PlayerCallback As Object
-	'Private logo As Bitmap = LoadBitmapResize(File.DirAssets, "radio_flat.png", 24dip, 24dip, False)
 	Private logo As Bitmap = LoadBitmapResize(File.DirAssets, "radio_notif.png", 24dip, 24dip, False)
 	Public phoneKeepAlive As PhoneWakeState
 	Private clsImage As clsRandomImage
@@ -458,11 +454,7 @@ Public Sub restartStream
 	End If
 
 	tryRestartCount = tryRestartCount + 1
-	'StopPlayer
-	'clsExoPlayer.stopPlayer
 	stopPlayer
-	'StartPlayer(selectedStream)
-	'clsExoPlayer.startPlayer(selectedStream)
 	startPlayer(selectedStream)
 	If clsFunc.IsMusicPlaying = False And tryRestartCount < 5 Then
 		streamEnded

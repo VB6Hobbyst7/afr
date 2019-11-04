@@ -7,14 +7,13 @@ Version=7.8
 #Region  Activity Attributes 
 	#FullScreen: True
 	#IncludeTitle: False
-	#IgnoreWarnings: 9, 10
+'	#IgnoreWarnings: 9, 10
 #End Region
 
 #Extends: android.support.v7.app.AppCompatActivity
 
 Sub Process_Globals
 	Public stationUrl As String
-	''Dim bm As Bitmap
 End Sub
 
 Sub Globals
@@ -23,36 +22,23 @@ Sub Globals
 #Region Views 
 	Private clvStationList As irp_CustomListView
 	Private lblStreamCount As Label
-	''Private ProgressBar1 As ProgressBar
 	Private pnlStation As Panel
 	Private pnlStationData As Panel
 	Private lblStreamBitrate As Label
 	Private edt_find As EditText
-	''Private btn_clear_search As Label
-	''Private lbl_stationname As Label
 	Private pnl_stationname As Panel
-	''Private lblAppHeader As Label
 	Private ivCountry As ImageView
-	''Private lblSelectedCountry As Label
-	''Private ivSelectCountry As ImageView
 #End Region	
 
 #Region Vars
-	Private panelPlaying As String
+	'Private panelPlaying As String
 	Private xml As XmlLayoutBuilder
 	Private panelLabelPlaying As Label
-	Private panelLabelplayingText As String
+'	Private panelLabelplayingText As String
 	Private vDefCountry As String
 	Private vStreamLst As List
 	Private panelIndex As Int = -1
 	Private panelStationId As String
-	''Private selected_playButton As Button
-	''Private showRestartInfo As Int = 0
-	''Private imgUrlRetry As Int = 0
-	''Private stationName As String
-	''Private lblSongPlaying As Label
-	
-	
 #End Region	
 	
 	Private flagname As String
@@ -154,10 +140,7 @@ End Sub
 Sub Activity_KeyPress (KeyCode As Int) As Boolean 'Return True to consume the event
 	
 	If KeyCode = KeyCodes.KEYCODE_BACK Then
-		'Starter.clsExoPlayer.stopPlayer
 		CallSub(Starter, "stopPlayer")
-		'CallSub(Starter, "StopPlayer")
-		'StartActivity(player)
 		If IsPaused(player) = True Then
 			StartActivity(player)
 		End If
@@ -253,21 +236,6 @@ Sub checkAarPlaying
 	lblStreamBitrate.Text = ""
 End Sub
 
-'Sub streamPlaying(playing As Boolean)
-'	If playing = False Then
-''		Log(Starter.vStationUrl)
-'		'Starter.clsExoPlayer.stopPlayer
-'		CallSub(Starter, "stopPlayer")
-'		'CallSub(Starter, "StopPlayer")
-'		ToastMessageShow("Unable to play stream..", False)
-'		lblStreamBitrate.Text = ""
-'		panelLabelPlaying.Text = "Click to start"'panelLabelplayingText
-'		'RESET PLAY BUTTON
-'		restorePanelPlayButton
-'		
-'		lblStreamBitrate.Text = ""
-'	End If
-'End Sub
 
 Sub showSnackbar(msg As String)
 	Dim snack As DSSnackbar
@@ -278,14 +246,6 @@ End Sub
 Sub lblEditStation_Click
 	StartActivity(editStation)
 End Sub
-
-
-
-'Sub getsearchStation(params As List) As Cursor
-'	Dim curs As Cursor = genDb.getSearchStation(params.Get(0), params.Get(1), params.Get(2), params.Get(3))
-'	
-'	Return curs
-'End Sub
 
 
 Sub getStationStream(params As List) As Cursor
@@ -506,13 +466,7 @@ Sub playSelectedStream(selectedStream As String)
 End Sub
 
 Sub checkStreamplaying
-	'Starter.clsExoPlayer.stopPlayer
 	CallSub(Starter, "stopPlayer")
-'	If modGlobal.PlayerStarted = True Then 
-'		CallSub(Starter, "StopPlayer")
-'		Sleep(1000)
-'	End If
-		
 End Sub
 
 Sub setStreamBitRate(bitrate As String)
@@ -653,17 +607,6 @@ Sub ivSelectCountry_Click
 	showCountryList
 End Sub
 
-'Private Sub setSvg(view As ImageView, svg As String)
-'	Dim tCanvas As Canvas
-'	tCanvas.Initialize(view)
-'
-'	Dim svgGen As ioxSVG
-'	
-'	svgGen.Initialize(svg)
-'	svgGen.DocumentWidth = view.Width
-'	svgGen.DocumentHeight = view.Height
-'	svgGen.RenderToCanvas(tCanvas)
-'End Sub
 
 Sub btn_clear_search_Click
 	Dim im As IME
@@ -683,19 +626,6 @@ Private Sub createStreamPanel(pnl As Panel, startStop As ImageView, addFavorite 
 	startStop.Bitmap = LoadBitmap(File.DirAssets, "play32.png")
 	addFavorite.Background = xml.GetDrawable("outline_playlist_add_black_24")
 End Sub
-
-'Private Sub createStreamTag(streamCount As Int, stream As String)
-'	If streamCount = 1 Then
-'		pnl_stream1.Tag = stream
-'		pnl_stream1.SetElevationAnimated(0, 8dip)
-'	else If streamCount = 2 Then
-'		pnl_stream2.Tag = stream
-'		pnl_stream2.SetElevationAnimated(0, 8dip)
-'	else If streamCount = 3 Then
-'		pnl_stream3.Tag = stream
-'		pnl_stream3.SetElevationAnimated(0, 8dip)
-'	End If
-'End Sub
 
 Private Sub restorePanelPlayButton
 	createStreamPanel(pnl_stream1, iv_start_stop1, iv_add_favorite1)
@@ -748,11 +678,11 @@ Sub pnl_stream1_Click
 	
 	lbl_stream1.Text = "Loading stream.."
 	If pnl_stream1.tag = "" Then Return
-	panelPlaying = "pnl_stream1"
+'	panelPlaying = "pnl_stream1"
 	lbl_stream1.Tag = "Click to start"
 	panelLabelPlaying = lbl_stream1
 	panelLabelPlaying.Tag = lbl_stream1.Tag
-	panelLabelplayingText = lbl_stream1.Text
+	'panelLabelplayingText = lbl_stream1.Text
 	pnl_stream1.Color =0xFF7fa5cf
 	lbl_stream1.TextColor = Colors.White
 	createPanelStopButton(iv_start_stop1)
@@ -788,10 +718,10 @@ Sub pnl_stream2_Click
 	lbl_stream2.TextColor = Colors.white
 	lbl_stream2.Text = "Loading stream.."
 	If pnl_stream2.tag = "" Then Return
-	panelPlaying = "pnl_stream2"
+'	panelPlaying = "pnl_stream2"
 	lbl_stream2.Tag = "Click to start"
 	panelLabelPlaying = lbl_stream2
-	panelLabelplayingText = lbl_stream2.Text
+	'panelLabelplayingText = lbl_stream2.Text
 	pnl_stream2.Color =0xFF7fa5cf
 	lbl_stream2.TextColor = Colors.White
 	createPanelStopButton(iv_start_stop2)
@@ -819,10 +749,10 @@ Sub pnl_stream3_Click
 	lbl_stream3.TextColor = Colors.white
 	lbl_stream3.Text = "Loading stream.."
 	If pnl_stream3.tag = "" Then Return
-	panelPlaying = "pnl_stream3"
+'	panelPlaying = "pnl_stream3"
 	lbl_stream3.Tag = "Click to start"
 	panelLabelPlaying = lbl_stream3
-	panelLabelplayingText = lbl_stream3.Text
+	'panelLabelplayingText = lbl_stream3.Text
 	pnl_stream3.Color =0xFF7fa5cf
 	lbl_stream3.TextColor = Colors.White
 	createPanelStopButton(iv_start_stop3)
@@ -833,50 +763,6 @@ End Sub
 Sub getGenryCountry
 	Dim cur As Cursor = genDb.genrneCountry(vDefCountry)
 End Sub
-'
-'Sub pullStationUrl(stUrl As String)
-'	Return
-'	Dim url As String
-'	Log("SEARCHSTATION : " &stUrl)
-'	
-'	If bm.IsInitialized = False Then
-'		
-'	End If
-'	url = $"https://logo.clearbit.com/${stUrl}/?size=150&format=png"$
-'	Dim j As HttpJob
-'	j.Initialize("", Me)
-'	j.Download(url)
-'	Wait For (j) JobDone(j As HttpJob)
-'	If j.Success Then
-'		bm = j.GetBitmap
-'		bm.Resize(150, 150, True)
-'		ivLogoStation.Bitmap = bm
-'		j.Release
-'		Return
-'	Else 
-'		j.Release
-'		pullStationUrl(stripUrl(stUrl))
-'	End If
-'	
-'End Sub
-
-
-'Sub stripUrl(url As String) As String
-'	Dim countSlash, slashIndex As Int
-'	Dim newUrl As String
-'	
-'	countSlash = cmGen.CountChar(url, "/")
-'	
-'	If countSlash > 2 Then
-'		slashIndex	= cmGen.getFirstSlash(url,"/")
-'		newUrl		= url.SubString2(0, slashIndex)
-'	End If
-'	
-'	If newUrl.Length > 0 Then
-'		Return newUrl
-'	End If
-'	
-'End Sub
 
 Sub lblSearch_Click
 	edt_find_EnterPressed
@@ -911,20 +797,20 @@ Sub pnlGenre_Click
 	tsSearchMain.ScrollTo(1, True)
 End Sub
 
-Sub showUserGettingRDS
-	panelLabelPlaying.Text = "Search for song playing.."
-	Sleep(10)
-End Sub
-
-Sub showUserTryingToStartStream (tryCount As Int)
-	panelLabelPlaying.Text = $"Opening stream [ ${tryCount} ]"$
-	Sleep(0)
-End Sub
-
-Sub unableToPlaySTream
-	ToastMessageShow("Unable to play stream..", False)
-	panelLabelPlaying.Text = "Click to start"
-End Sub
+'Sub showUserGettingRDS
+'	panelLabelPlaying.Text = "Search for song playing.."
+'	Sleep(10)
+'End Sub
+'
+'Sub showUserTryingToStartStream (tryCount As Int)
+'	panelLabelPlaying.Text = $"Opening stream [ ${tryCount} ]"$
+'	Sleep(0)
+'End Sub
+'
+'Sub unableToPlaySTream
+'	ToastMessageShow("Unable to play stream..", False)
+'	panelLabelPlaying.Text = "Click to start"
+'End Sub
 
 Sub clvCountryGenre_ItemClick (Index As Int, Value As Object)
 	Dim pnl As Panel = clvCountryGenre.GetPanel(Index)
@@ -950,19 +836,6 @@ Sub genLanguage
 	Next
 	
 End Sub
-
-'Sub genListLanguage(lang As String, width As Int ) As Panel
-'	
-'	Dim p As Panel
-'	p.Initialize("")
-'	p.SetLayout(0,0, width, 60dip)
-'	p.LoadLayout("lstLanguage") 
-'	
-'	p.Tag = lang
-'	lbl_language.Text = lang
-'	Return p
-'End Sub
-
 
 Sub pnl_language_Click
 	

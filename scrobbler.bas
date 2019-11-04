@@ -5,15 +5,12 @@ Type=StaticCode
 Version=7.8
 @EndOfDesignText@
 Sub Process_Globals
-	Dim sf As StringFunctions
-	
 End Sub
 #IgnoreWarnings: 9
 
 
 Public Sub GetArtistAndSong(lst As List) As List
 	Dim cleanList As List
-	
 	
 	cleanList.Initialize
 	
@@ -22,7 +19,6 @@ Public Sub GetArtistAndSong(lst As List) As List
 			cleanList.Add(str)
 		End If
 	Next
-	
 	
 	Return cleanList
 End Sub
@@ -35,7 +31,6 @@ Sub processLyrics(playing As String, reverse As Boolean) As String
 	
 	playingList.Initialize
 	cleanPlayingList.Initialize
-	sf.Initialize
 	
 	playingList = Regex.Split(" - ", playing)
 	
@@ -49,14 +44,14 @@ Sub processLyrics(playing As String, reverse As Boolean) As String
 		Return ""
 	End If
 	
-	artist	= sf.Ltrim(cleanPlayingList.Get(0))
-	artist	= sf.Rtrim(artist)
+	artist = cleanPlayingList.Get(0)
+	artist = artist.Trim
 	
-	song	= sf.Ltrim(cleanPlayingList.Get(1))
-	song	= sf.Rtrim(song)
-	artist	= sf.Lower(artist)
-	song	= sf.Lower(song)
-
+	song = cleanPlayingList.Get(1)
+	song = song.Trim
+	
+	artist = artist.ToLowerCase
+	song = song.ToLowerCase
 	
 	If reverse = False Then
 		retArtist	= herokuProcessAmp(artist).ToLowerCase
@@ -125,8 +120,6 @@ Sub processPlaying(playing As String) As String
 	Dim playingList, cleanPlayingList As List
 	Dim station As String = CallSub(player, "getStation")
 
-	sf.Initialize
-
 	playingList.Initialize
 	cleanPlayingList.Initialize
 	
@@ -150,10 +143,12 @@ Sub processPlaying(playing As String) As String
 		End If
 	Next
 	
-	artist =  sf.Ltrim(cleanPlayingList.Get(0))
-	artist =  sf.Rtrim(artist)
-	song	= sf.Ltrim(cleanPlayingList.Get(1))
-	song	= sf.Rtrim(song)
+	artist =  cleanPlayingList.Get(0)
+	artist =  artist.Trim
+	
+	song	= cleanPlayingList.Get(1)
+	song	= song.trim
+	
 	artist = artist.Replace(" ft", "")
 	retArtist 	= song
 	retSong		= artist
@@ -195,40 +190,3 @@ Sub RemoveAccents(s As String) As String
 	Return sb.ToString
 End Sub
 
-
-'Sub createLyricsOnDemand(reverse As Boolean) As String
-'	Dim artist, song As String
-'	
-'	artist	= Starter.chartArtist.ToLowerCase
-'	song	= Starter.chartSong.ToLowerCase
-'	artist = Starter.spotMap.Get("artistname")
-'	song = Starter.spotMap.Get("artistsong")
-'	
-''	artist = artist.ToLowerCase
-''	song = song.ToLowerCase
-'	If artist = Null Or artist = "" Then Return "noUrl"
-'	
-'	artist	= Starter.clsFunc.replacetekens(artist)
-'	song	= Starter.clsFunc.replacetekens(song)
-'	
-'	song	= song.Replace(" ", "")
-'	artist	= artist.Replace("'", "")
-'	song	= song.Replace("'", "")
-'	artist	= artist.Replace("&", "")
-'	song	= song.Replace("&", "")
-'	artist	= artist.Replace("(", "")
-'	song	= song.Replace(")", "")
-'	artist	= artist.Replace(".", "")
-'	artist	= artist.Replace("-", "")
-''	artist	= artist.Replace("the", "")
-'	song	= song.Replace(".", "")
-'	song	= song.Replace("?", "")
-'	song	= song.Replace("!", "")
-'	If reverse = False Then
-'		Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1)}/${artist}/${song}lyrics.html"$
-'	Else	
-'		Return $"https://www.lyricsondemand.com/${song.SubString2(0,1)}/${song}/${artist}lyrics.html"$
-'	End If
-'	
-''	Return $"https://www.lyricsondemand.com/${artist.SubString2(0,1).ToLowerCase}/${artist}lyrics/${song}lyrics.html"$
-'End Sub
