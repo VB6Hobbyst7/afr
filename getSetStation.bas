@@ -214,9 +214,9 @@ Sub genCountryClv(countryName As String, stationCount As String, width As Int, d
 	lblStationCount.Text	= $"${stationCount} ${stationCountText}"$
 	ACSwitch1.Tag			= countryName
 	
-	If File.Exists(File.DirAssets, flagName.ToLowerCase) Then
-		imgFlag.Bitmap = LoadBitmap(File.DirAssets, flagName.ToLowerCase)
-	End If
+'	If File.Exists(File.DirAssets, flagName.ToLowerCase) Then
+'		imgFlag.Bitmap = LoadBitmap(File.DirAssets, flagName.ToLowerCase)
+'	End If
 	
 	If countryName = defaultCountry Then
 		ACSwitch1.Checked		= True

@@ -5,7 +5,7 @@ Type=Activity
 Version=7.8
 @EndOfDesignText@
 #Region  Activity Attributes 
-	#FullScreen: True
+	#FullScreen: False
 	#IncludeTitle: False
 '	#IgnoreWarnings: 9, 10
 #End Region
@@ -82,6 +82,7 @@ Sub Globals
 	Private chkIgnoreCountry As ACCheckBox
 	Private ivAddStation As ImageView
 	Private pnlAddStation As Panel
+	Private lbl_selected_country As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -91,7 +92,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	Dim cs As CSBuilder
 	cs.Initialize.Append("Find Station").Typeface(Typeface.LoadFromAssets("Montserrat-Regular.ttf"))
 	'tsSearchMain.LoadLayout("searchStation", "Find station")
-	
+	lbl_selected_country.Initialize("")
 	tsSearchMain.LoadLayout("searchStation", cs.ToString)
 	tsSearchMain.LoadLayout("searchStationGenre", "Genre")
 	tsSearchMain.LoadLayout("clvLanguage", "Language")
@@ -108,14 +109,16 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	clsScrllLabel.Initialize
 	vDefCountry	= genDb.getCountryBookmark
-	If vDefCountry = "USA" Then
-		flagname	= "united states of america.png"
-	Else
-		flagname	= vDefCountry & ".png"
-	End If
+	lbl_selected_country.Text = $"Selected country : ${vDefCountry}"$
+	lbl_selected_country.BringToFront
+'	If vDefCountry = "USA" Then
+'		flagname	= "united states of america.png"
+'	Else
+'		flagname	= vDefCountry & ".png"
+'	End If
 	
 	ivNothingFound.Bitmap = LoadBitmap(File.DirAssets, "start_search.png")
-	ivCountry.Bitmap = LoadBitmap(File.DirAssets,flagname)
+'	ivCountry.Bitmap = LoadBitmap(File.DirAssets,flagname)
 	genGenreList
 	genLanguage
 	
