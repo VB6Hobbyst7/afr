@@ -286,17 +286,21 @@ Sub tryLyrics
 '	Log($"TRY LYRICS - $DateTime{DateTime.Now}"$)
 	
 	If Starter.vSongLyric = "noLyric" Then
+		Log("checkScrapLyrics(False, False)")
 		wait for(checkScrapLyrics(False, False)) Complete (result As Boolean)
 		If result = False Then
+			Log("checkScrapLyrics(True, False)")
 			wait for(checkScrapLyrics(True, False)) Complete (result As Boolean)
 			If result = False Then
+				Log("checkScrapLyrics(False, True)")
 				wait for(checkScrapLyrics(False, True)) Complete (result As Boolean)
 			End If
 			If result = False Then
+				Log("checkScrapLyrics(True, True)")
 				wait for(checkScrapLyrics(True, True)) Complete (result As Boolean)
 			End If
 			If result = False Then
-'				Log("HEROKU")
+				Log("HEROKU")
 				wait for(getSongLyrics) Complete (result As Boolean)
 			End If
 		End If

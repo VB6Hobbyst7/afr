@@ -130,6 +130,7 @@ Library20=xui views
 Library21=dialogs
 Library22=tabstripviewpager
 Library23=exoplayer
+Library24=bctextengine
 Library3=xui
 Library4=sql
 Library5=stringutils
@@ -139,14 +140,14 @@ Library8=javaobject
 Library9=designsupport
 ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~'SetApplicationAttribute(android:icon, "@drawable/radio")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~SetApplicationAttribute(android:resizeableActivity, "true")~\n~'AddApplicationText(<meta-data android:name="android.max_aspect" android:value="10"/>)~\n~~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~AddPermission(android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)~\n~
 Module1=player
-Module10=clsRandomImage
-Module11=genDb
-Module12=KeyValueStore
-Module13=stored_songs
-Module14=scrobbler
-Module15=clsGeneral
-Module16=cmGen
-Module17=getSetStation
+Module10=clsScrollLabel
+Module11=irp_CustomListView
+Module12=clsRandomImage
+Module13=genDb
+Module14=KeyValueStore
+Module15=stored_songs
+Module16=scrobbler
+Module17=clsGeneral
 Module18=clsGenVolumeControl
 Module19=NB6
 Module2=Starter
@@ -158,18 +159,18 @@ Module24=clsGenTimer
 Module25=clsTimer
 Module26=phdetect
 Module3=searchStation
-Module4=clsSongData
+Module4=getSetStation
 Module5=clsFunctions
-Module6=clsHttp
-Module7=clsScrollLabel
-Module8=clsChartlyrics
-Module9=irp_CustomListView
+Module6=clsChartlyrics
+Module7=cmGen
+Module8=clsSongData
+Module9=clsHttp
 NumberOfFiles=56
-NumberOfLibraries=23
+NumberOfLibraries=24
 NumberOfModules=26
 Version=9.5
 @EndOfDesignText@
-#IgnoreWarnings: 9, 1, 10,16
+'#IgnoreWarnings: 9, 1, 10,16
 #Region  Activity Attributes 
 	#FullScreen: True
 	#IncludeTitle: False
@@ -240,8 +241,6 @@ End Sub
 
 
 Sub Activity_Create(FirstTime As Boolean)
-	
-	
 	Activity.LoadLayout("main")
 	'IgnoreBatteryOptimizations
 	clsGen.Initialize
@@ -449,8 +448,7 @@ End Sub
 Sub startPlayer
 	Dim cur As Cursor = genDb.getPresetStations
 	
-	
-If  genDb.getCountryBookmark = "" And cur.RowCount < 1 Then
+	If  genDb.getCountryBookmark = "" And cur.RowCount < 1 Then
 		StartActivity(getSetStation)
 	Else
 		StartActivity(player)
@@ -635,12 +633,12 @@ Public Sub importStations(table As String) As ResumableSub
 	?,
 	?)"$
 	
-	genDb.truncateTable(table)
 	
 	If File.Exists(Starter.irp_dbFolder, "rdolist_main.csv") = False Then
 		ToastMessageShow("Unable to download station list"	, True)
 		Return False
 	End If
+	genDb.truncateTable(table)
 	
 	csv = su.LoadCSV(Starter.irp_dbFolder, "rdolist_main.csv", "|")
 	stCount = csv.Size-1

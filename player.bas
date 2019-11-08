@@ -109,6 +109,7 @@ Sub Globals
 	Private pnl_volume As Panel
 	Dim clsScroll As clsScrollLabel
 	Dim clsScroll1 As clsScrollLabel
+	Private clsFunc as clsFunctions
 	
 #end region
 
@@ -132,7 +133,6 @@ Sub Globals
 	Private lblSpotDuration As Label
 	Private ivSpotify As ImageView
 	Private lbl_lyric_title As Label
-	Private wv__lyric_lyric As WebView
 	Private pnl_lyric As Panel
 	
 	'Private lbl_playing_text As Label
@@ -146,10 +146,9 @@ Sub Globals
 	Private swIsArtist As ACSwitch
 	Private swIsArtist1 As ACSwitch
 	
-	
-	
-	
 	Private lblRandomImage As B4XView
+	Private BBCodeView1 As BBCodeView
+	Private xui As XUI
 End Sub
 
 
@@ -183,6 +182,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	xSlider.SetRotationAnimated(0, -90)
 	setVolumePanel
 	clsGen.Initialize
+	clsFunc.Initialize
 	
 	setCtrlButtonsBorder
 	
@@ -2039,19 +2039,24 @@ Sub showNowPlayingFormat
 End Sub
 
 Sub showLyricDialog
-	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
-	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
-	'html = html.Replace("_header_", "")'CallSub(Starter,"getSongTitle"))
-	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/><br/>"))
-'	Log(vLyric)
+	Private TextEngine As BCTextEngine
+	
+	'Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
+	Dim vLyric As String '= CallSub(Starter, "getSetSongLyric")
+	'html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/><br/>"))
 	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
 	DetailsDialog.SetSize(100%X, Activity.Height - 200dip)
 	Wait For (sf) Dialog_Ready(pnl As Panel)
 	pnl.LoadLayout("dlgSongLyric")
+	
+	TextEngine.Initialize(pnl)
+	
 	lbl_lyric_title.Text = retSongPlaying'Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
+	'vLyric = vLyric.Replace("<!-- Usage of azlyrics.com content by any third-party lyrics provider Is prohibited by our licensing agreement. Sorry about that. -->", "")
+	'Dim txt As String = vLyric.Replace("<!-- Usage of azlyrics.com content by any third-party lyrics provider Is prohibited by our licensing agreement. Sorry about that. -->", "")
+	BBCodeView1.Text = clsFunc.processLyric(vLyric)'vLyric.Replace("<br>", $"${CRLF}${CRLF}"$)
 
-	wv__lyric_lyric.LoadHtml(html)
 	
 End Sub
 

@@ -430,6 +430,7 @@ Public Sub parseIcy(metaData As String) As String
 	icy_br  = root.Get("icy-br")
 	icy_url = root.Get("icy-url")
 	
+'	Log(icy_playing)
 	If icy_genre = "" Then
 		icy_genre = "N/A"
 	End If
@@ -612,6 +613,20 @@ Public Sub exitPlayer
 	Starter.tmrInetConnection.Enabled = False
 	Starter.connectionTimer.Enabled = False
 	Starter.tmrInactive.Enabled = False
+End Sub
+
+
+Sub processLyric(lyric As String) As String
+	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
+	LogColor(vLyric, Colors.Red)
+	Dim retVal As String
+	retVal = vLyric.Replace("<br>", $"${CRLF}${CRLF}"$)
+	
+	Dim b() As Byte = vLyric.GetBytes("UTF8")
+	retVal = BytesToString(b, 0, b.Length, "UTF8")
+	retVal	= removeBetween(retVal, "<->")
+	LogColor(retVal, Colors.Blue)
+	Return retVal
 End Sub
 
 
