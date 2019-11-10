@@ -293,7 +293,6 @@ Sub tmrGetSongEnable(isEnabled As Boolean)
 End Sub
 
 Public Sub tmrGetSong_tick
-	
 '	eventExo = joExo.CreateEvent("com.google.android.exoplayer2.Player$EventListener", "addMetadataOutput", False)'"MetadataOutput")
 '	joExo.GetFieldJO("player").RunMethod("addListener", Array(eventExo))
 
@@ -550,3 +549,5 @@ public DefaultDataSourceFactory createDefaultDataFactory() {
 }
 
 #End If
+
+

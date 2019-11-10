@@ -149,6 +149,7 @@ Sub Globals
 	Private lblRandomImage As B4XView
 	Private BBCodeView1 As BBCodeView
 	Private xui As XUI
+	Private wvLyric As WebView
 End Sub
 
 
@@ -2041,9 +2042,10 @@ End Sub
 Sub showLyricDialog
 	Private TextEngine As BCTextEngine
 	
-	'Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
-	Dim vLyric As String '= CallSub(Starter, "getSetSongLyric")
-	'html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/><br/>"))
+	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
+	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
+'	LogColor(vLyric, Colors.Red)
+	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/><br/>"))
 	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
 	DetailsDialog.SetSize(100%X, Activity.Height - 200dip)
@@ -2055,7 +2057,8 @@ Sub showLyricDialog
 	lbl_lyric_title.Text = retSongPlaying'Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
 	'vLyric = vLyric.Replace("<!-- Usage of azlyrics.com content by any third-party lyrics provider Is prohibited by our licensing agreement. Sorry about that. -->", "")
 	'Dim txt As String = vLyric.Replace("<!-- Usage of azlyrics.com content by any third-party lyrics provider Is prohibited by our licensing agreement. Sorry about that. -->", "")
-	BBCodeView1.Text = clsFunc.processLyric(vLyric)'vLyric.Replace("<br>", $"${CRLF}${CRLF}"$)
+	wvLyric.LoadHtml(html)
+	'BBCodeView1.Text = clsFunc.processLyric(vLyric)'vLyric.Replace("<br>", $"${CRLF}${CRLF}"$)
 
 	
 End Sub

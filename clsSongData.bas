@@ -39,7 +39,7 @@ Public Sub icyMetaData
 		job.Release
 		preProcessSongData(nSong)
 	Else
-		LogColor("IN JOB ERROR", Colors.Red)
+		LogColor($"IN JOB ERROR $DateTime{DateTime.Now}"$, Colors.Red)
 		job.Release
 		showNoImage
 		preProcessSongData("No information")

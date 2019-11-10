@@ -8,6 +8,8 @@ Version=8.5
 Sub Class_Globals
 	Private mlWifi As MLwifi
 	Public songPlaying As String
+	
+
 End Sub
 
 Public Sub Initialize
@@ -584,12 +586,14 @@ Sub removeBetween(str As String, charLst As String) As String
 '		Log(remString)
 		newString = str.Replace(remString, "")
 '		Log(newString)
+	Else
+		Return str
 	End If
 	
 	If newString.IndexOf(remLst.Get(0)) > -1 Then
 		newString = removeBetween(newString, charLst)
 	End If
-	Return str
+	Return newString
 End Sub
 
 
@@ -618,15 +622,18 @@ End Sub
 
 Sub processLyric(lyric As String) As String
 	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
-	LogColor(vLyric, Colors.Red)
+	File.WriteString(Starter.irp_dbFolder, "ini1.html", vLyric)
+	
+
+	
+'	LogColor(vLyric, Colors.Red)
 	Dim retVal As String
 	retVal = vLyric.Replace("<br>", $"${CRLF}${CRLF}"$)
 	
 	Dim b() As Byte = vLyric.GetBytes("UTF8")
 	retVal = BytesToString(b, 0, b.Length, "UTF8")
 	retVal	= removeBetween(retVal, "<->")
-	LogColor(retVal, Colors.Blue)
+'	LogColor(ReplaceHtmlChars(retVal), Colors.Blue)
 	Return retVal
 End Sub
-
 
