@@ -147,7 +147,7 @@ Sub Globals
 	Private swIsArtist1 As ACSwitch
 	
 	Private lblRandomImage As B4XView
-	Private BBCodeView1 As BBCodeView
+'	Private BBCodeView1 As BBCodeView
 	Private xui As XUI
 	Private wvLyric As WebView
 End Sub
