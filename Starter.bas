@@ -42,7 +42,7 @@ Sub Process_Globals
 	Public vAppname As String	= Application.LabelName
 	Public sStationLogoPath As String = "null"
 	Public mobileData As String = ""
-	Public doy As String ="pdegrootafr", moy As String ="hkWpXtB1!"
+	Public doy As String ="pdegrootafr", moy As String ="hkWpXtB1!", ftp As String = "ftp.pdeg.nl"
 	'BOOLEAN
 	Public vWifiOnly, vUpdateLogo, vWifiConnected, chartDataFound, capNowPlaying, newTitle, triedGetStation As Boolean
 	Public streamStarted, vIsPreset, pnl_album_info_button, pnl_stop_button, pnl_lyric_button, tryRestartStream As Boolean = False

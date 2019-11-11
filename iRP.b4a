@@ -162,9 +162,9 @@ Module3=searchStation
 Module4=getSetStation
 Module5=clsFunctions
 Module6=clsChartlyrics
-Module7=clsHttp
-Module8=cmGen
-Module9=clsSongData
+Module7=clsSongData
+Module8=clsHttp
+Module9=cmGen
 NumberOfFiles=56
 NumberOfLibraries=24
 NumberOfModules=26
@@ -181,7 +181,7 @@ Version=9.5
 	#VersionCode: 30052049
 	#VersionName: 1.00
 	 'SupportedOrientations possible values: unspecified, landscape or portrait
-	#SupportedOrientations: portrait
+	#SupportedOrientations: portrait 
 
 '	#LibraryName: OkHttpUtils2
 '	#AdditionalJar: Java-Json
@@ -210,7 +210,7 @@ Sub Globals
 	
 	Private toolbar As ACToolBarDark
 	Private rp As RuntimePermissions
-	Private lblDbConnected As Label
+	Public lblDbConnected As Label
 	Private pnlMain As Panel
 	'Private kvs As KeyValueStore
 
@@ -237,6 +237,8 @@ Sub Globals
 	Private pnl_permission As Panel
 	Private ivPegi As ImageView
 	Private ivSpotify As ImageView
+	
+	
 End Sub
 
 
@@ -311,7 +313,6 @@ End Sub
 
 
 Sub startIRP
-	
 	Dim appStarted, dataUsageShown As Int = 0
 	
 	If Starter.kvs.ContainsKey("app_started") = True Then
@@ -413,7 +414,9 @@ Sub checkUpdate As ResumableSub
 End Sub
 
 
-
+Sub importForm
+	pnlMain.LoadLayout("main_import_data")
+End Sub
 
 Sub importData(fileName As String, table As String)As ResumableSub
 	

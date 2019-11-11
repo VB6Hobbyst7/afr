@@ -109,7 +109,7 @@ Sub Globals
 	Private pnl_volume As Panel
 	Dim clsScroll As clsScrollLabel
 	Dim clsScroll1 As clsScrollLabel
-	Private clsFunc as clsFunctions
+	Private clsFunc As clsFunctions
 	
 #end region
 
@@ -941,6 +941,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		CallSub2(Starter, "startPlayer", stream)
 		Starter.clsSngData.icyMetaData
 		setPanelElevation(index)
+'		clvPlayer.JumpToItem(index)
 		If stationLogoPath <> "null" And stationLogoPath <> "" Then
 			smallStationLogo.Initialize(stationLogoPath,"")
 		
@@ -2045,7 +2046,7 @@ Sub showLyricDialog
 	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
 	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
 '	LogColor(vLyric, Colors.Red)
-	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br/><br/>"))
+	html = html.Replace("_text_", cmGen.RegexReplace("\n", vLyric, "<br><br>"))
 	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "OK", "", "", Null, True)
 	DetailsDialog.SetSize(100%X, Activity.Height - 200dip)
@@ -2084,3 +2085,8 @@ End Sub
 Sub lblArtistNowPlaying_Click
 End Sub
 
+
+
+Sub pnlOverflow_Click as Boolean
+	Return True
+End Sub

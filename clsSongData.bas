@@ -26,7 +26,11 @@ Public Sub icyMetaData
 		Return
 	End If
 	
+'	url = $"http://afr1.epizy.com/getIcy.php?url=${Starter.selectedStream}"$
+'	Log(url)
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${Starter.selectedStream}"$
+'	Log(url)
+''	Log(url)
 
 	job.Initialize("", Me)
 	job.Download(url)
@@ -62,11 +66,6 @@ Sub preProcessSongData(nSong As String)
 	End If
 					
 	If Starter.newTitle = True Then
-		'Log($"$DateTime{DateTime.Now} - ${newSong}"$)
-		
-	'	CallSub2(Starter, "clearNotif", newSong)
-	
-		
 		Starter.chartSong = ""
 		Starter.chartArtist = ""
 		CallSub(player, "disableInfoPanels")

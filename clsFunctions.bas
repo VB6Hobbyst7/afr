@@ -605,7 +605,8 @@ Public Sub exitPlayer
 	If File.Exists(Starter.irp_dbFolder, "imgPlaying.png") Then
 		File.Delete(Starter.irp_dbFolder, "imgPlaying.png")
 	End If
-		
+	
+	CallSub(Starter, "stopPlayer")	
 	StopService(Starter)
 	
 	CallSub(Starter, "Service_Destroy")

@@ -193,6 +193,7 @@ Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 			j.Release
 			Return False
 		End If
+'		Log(j.GetString)
 		clsFunc.parseScrapeData(j.GetString)
 		j.Release
 		'CallSub2(player, "setSongPlaying",  Starter.icy_playing)
@@ -305,7 +306,6 @@ Sub tryLyrics
 			End If
 		End If
 		
-		LogColor($"Lyrics found is ${result}"$, Colors.Red)
 	End If
 End Sub
 
