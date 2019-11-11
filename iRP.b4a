@@ -130,7 +130,6 @@ Library20=xui views
 Library21=dialogs
 Library22=tabstripviewpager
 Library23=exoplayer
-Library24=bctextengine
 Library3=xui
 Library4=sql
 Library5=stringutils
@@ -166,7 +165,7 @@ Module7=clsSongData
 Module8=clsHttp
 Module9=cmGen
 NumberOfFiles=56
-NumberOfLibraries=24
+NumberOfLibraries=23
 NumberOfModules=26
 Version=9.5
 @EndOfDesignText@

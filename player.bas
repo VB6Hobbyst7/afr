@@ -2041,7 +2041,7 @@ Sub showNowPlayingFormat
 End Sub
 
 Sub showLyricDialog
-	Private TextEngine As BCTextEngine
+	'Private TextEngine As BCTextEngine
 	
 	Dim html As String = File.ReadString(File.DirAssets, "lyric.html")
 	Dim vLyric As String = CallSub(Starter, "getSetSongLyric")
@@ -2053,7 +2053,7 @@ Sub showLyricDialog
 	Wait For (sf) Dialog_Ready(pnl As Panel)
 	pnl.LoadLayout("dlgSongLyric")
 	
-	TextEngine.Initialize(pnl)
+	'TextEngine.Initialize(pnl)
 	
 	lbl_lyric_title.Text = retSongPlaying'Starter.spotMap.Get("artistname")& " - " &Starter.spotMap.Get("artistsong")
 	'vLyric = vLyric.Replace("<!-- Usage of azlyrics.com content by any third-party lyrics provider Is prohibited by our licensing agreement. Sorry about that. -->", "")
@@ -2087,6 +2087,6 @@ End Sub
 
 
 
-Sub pnlOverflow_Click as Boolean
+Sub pnlOverflow_Click As Boolean
 	Return True
 End Sub

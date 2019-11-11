@@ -79,6 +79,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=Visual Designer,player.bal,-100,5,Visual Designer,addNewStations.bal,-100,6,player,pnlOverflow_Click,2082,4,clsSongData,Class_Globals,0,0,clsChartlyrics,tryLyrics,283,0,clsFunctions,parseScrapeData,359,0,clsSongData,preProcessSongData,54,2,clsChartlyrics,checkScrapLyrics,189,3,player,start_stopStream,937,3,player,showLyricDialog,2042,0
+NavigationStack=Visual Designer,player.bal,-100,5,Visual Designer,addNewStations.bal,-100,6,player,pnlOverflow_Click,2082,4,clsSongData,Class_Globals,0,0,clsChartlyrics,tryLyrics,283,0,clsFunctions,parseScrapeData,359,0,clsSongData,preProcessSongData,54,2,clsChartlyrics,checkScrapLyrics,189,3,player,start_stopStream,937,3,player,showLyricDialog,2049,0
 SelectedBuild=0
 VisibleModules=1,2,3,4,5,6,7
