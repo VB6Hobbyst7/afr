@@ -364,6 +364,13 @@ Public Sub singularPlural(str As String, count As Int) As String
 End Sub
 
 Public Sub parseScrapeData (metadata As String)
+	If metadata.IndexOf("error") > -1 Then
+		Starter.vSongLyric = "nolyric"
+	Else	
+		CallSubDelayed2(Starter, "setSongLyric", metadata)
+	End If
+	Return
+	
 	If metadata = "" Then 
 	'	CallSubDelayed2(player, "setlblTimeNow", "")
 		Return
@@ -477,8 +484,14 @@ End Sub
 
 Public Sub parseIcySearchStation(metaData As String)
 
+	If metaData.Length < 25 Then
+		CallSub2(searchStation, "nowPlaying", "No song information")
+		Return
+	End If
+
 	If metaData.SubString2(0,1) <> "{" Then
 		CallSub2(searchStation, "nowPlaying", "No song information")
+		Return
 	End If
 	
 	Dim icy_by, icy_name, icy_playing, icy_genre, icy_br, icy_url, icy_genre As String = ""

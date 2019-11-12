@@ -1,5 +1,5 @@
 ﻿ModuleBookmarks0=
-ModuleBookmarks1=
+ModuleBookmarks1=2054
 ModuleBookmarks10=
 ModuleBookmarks11=
 ModuleBookmarks12=
@@ -79,6 +79,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=Visual Designer,player.bal,-100,5,Visual Designer,addNewStations.bal,-100,6,player,pnlOverflow_Click,2082,4,clsSongData,Class_Globals,0,0,clsChartlyrics,tryLyrics,283,0,clsFunctions,parseScrapeData,359,0,clsSongData,preProcessSongData,54,2,clsChartlyrics,checkScrapLyrics,189,3,player,start_stopStream,937,3,player,showLyricDialog,2047,0,player,Globals,143,0
+NavigationStack=clsSongData,Class_Globals,0,0,clsScrollLabel,runMarquee,21,0,clsFunctions,parseIcySearchStation,480,6,clsChartlyrics,processUrl,262,0,clsChartlyrics,tryLyrics,284,6,clsFunctions,parseScrapeData,365,6,clsChartlyrics,checkScrapLyrics,173,3,player,Globals,145,0,Visual Designer,dlgSongLyric.bal,-100,4,player,showLyricDialog,2045,6
 SelectedBuild=0
-VisibleModules=1,2,3,4,5,6,7
+VisibleModules=1,2,3,4,5,6,7,8,10

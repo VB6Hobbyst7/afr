@@ -175,8 +175,9 @@ Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 	Else
 		song = processSong(Starter.spotMap.Get("artistname") &" - " & Starter.spotMap.Get("artistsong"), reverseFind)
 	End If
-	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
-	
+	'url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
+	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=text"$
+'	Log(url)
 '	Log(url)
 
 
@@ -307,5 +308,8 @@ Sub tryLyrics
 		End If
 		
 	End If
+	
+	
+	
 End Sub
 
