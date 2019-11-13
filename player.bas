@@ -2049,7 +2049,7 @@ Sub showLyricDialog
 	pnl.LoadLayout("dlgSongLyric")
 	TextEngine.Initialize(pnl)
 	lbl_lyric_title.Text = retSongPlaying
-	BBCodeView1.Text = $"[TextSize=18][Plain]${CallSub(Starter, "getSetSongLyric")}[/Plain][/TextSize]"$
+	BBCodeView1.Text = $"[TextSize=19][Plain]${CallSub(Starter, "getSetSongLyric")}[/Plain][/TextSize]"$
 	
 	
 '	BBCodeView1.Text = $"[TextSize=20][Plain](Greek: Ελλάς, Hellas or Ελλάδα, Ellada) is [/Plain][/TextSize]"$

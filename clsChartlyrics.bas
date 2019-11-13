@@ -175,6 +175,11 @@ Sub checkScrapLyrics(reverseFind As Boolean, useSpot As Boolean) As ResumableSub
 	Else
 		song = processSong(Starter.spotMap.Get("artistname") &" - " & Starter.spotMap.Get("artistsong"), reverseFind)
 	End If
+	If song = "" Or song.IndexOf("null") > -1 Then
+		Return False
+	End If
+
+
 	'url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=json"$
 	url = $"http://ice.pdeg.nl/index.php?filename=${Starter.clsFunc.checkAmpersant(song)}&format=text"$
 '	Log(url)
@@ -219,7 +224,9 @@ public Sub getSongLyrics As ResumableSub
 	
 	http = "https://lyric-api.herokuapp.com/api/find/"
 	
-	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), False)
+'	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), False)
+	Log("HEROKU")
+	Log(urlStream)
 	'Starter.clsFunc.showLog(urlStream, Colors.Green)
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
 
@@ -252,7 +259,7 @@ Private Sub processUrl(purl As String) As ResumableSub
 	Wait For (j) JobDone(j As HttpJob)
 	
 	If j.Success Then
-		Dim json As String = j.GetString()'("UTF-16")
+		Dim json As String = j.GetString2("UTF-8")
 		j.Release
 		
 		Dim Parser As JSONParser
