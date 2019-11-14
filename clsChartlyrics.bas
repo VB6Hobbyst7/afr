@@ -224,9 +224,9 @@ public Sub getSongLyrics As ResumableSub
 	
 	http = "https://lyric-api.herokuapp.com/api/find/"
 	
-'	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), False)
-	Log("HEROKU")
-	Log(urlStream)
+	urlStream	= scrobbler.processLyrics(CallSub(player, "retSongPlaying"), False)
+'	Log("HEROKU")
+'	Log(urlStream)
 	'Starter.clsFunc.showLog(urlStream, Colors.Green)
 	Wait For (processUrl(urlStream)) Complete (result As Boolean)
 

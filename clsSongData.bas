@@ -41,6 +41,7 @@ Public Sub icyMetaData
 	If job.Success Then
 		nSong = job.GetString
 		job.Release
+		
 		preProcessSongData(nSong)
 	Else
 		LogColor($"IN JOB ERROR $DateTime{DateTime.Now}"$, Colors.Red)
@@ -57,6 +58,11 @@ Sub preProcessSongData(nSong As String)
 		Starter.clsFunc.parseIcySearchStation(nSong)
 	Else
 		Dim newSong As String = Starter.clsFunc.parseIcy(nSong)
+	End If
+'	LogColor($"$Time{DateTime.now} - ${newSong} - NEW TITLE IS ${Starter.newTitle}"$, Colors.Blue)
+	
+	If newSong = "" Then
+		Return
 	End If
 	
 	If CallSub(Starter, "playerPaused") Then Return

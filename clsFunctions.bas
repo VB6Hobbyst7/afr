@@ -438,8 +438,7 @@ Public Sub parseIcy(metaData As String) As String
 	icy_genre = root.Get("icy-genre")
 	icy_br  = root.Get("icy-br")
 	icy_url = root.Get("icy-url")
-	
-'	Log(icy_playing)
+
 	If icy_genre = "" Then
 		icy_genre = "N/A"
 	End If
