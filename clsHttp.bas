@@ -71,7 +71,8 @@ Sub spBearer(artist As String, song As String)
 	End If
 
 	'SpotBase64 = B64.EncodeStoS(SpotClientID1 & ":" & SpotClientSecret1,"UTF8")
-	SpotBase64 = B64.EncodeStoS("91f924c1eace4879ba9c4c0f5061e925" & ":" & "b4fb29e9e2b0490bad9489c28dae6b89","UTF8")
+	'SpotBase64 = B64.EncodeStoS("91f924c1eace4879ba9c4c0f5061e925" & ":" & "b4fb29e9e2b0490bad9489c28dae6b89","UTF8")
+	SpotBase64 = B64.EncodeStoS(Starter.code1 & ":" & Starter.code2,"UTF8")
 	Dim j As HttpJob
 	
 	j.Initialize("", Me)
