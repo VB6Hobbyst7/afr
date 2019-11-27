@@ -939,6 +939,7 @@ Sub start_stopStream(index As Int) As ResumableSub
 		handleControlButtons(True, 8dip, 500)
 		
 		CallSub2(Starter, "startPlayer", stream)
+		Starter.selectedStream = stream
 		Starter.clsSngData.icyMetaData
 		setPanelElevation(index)
 '		clvPlayer.JumpToItem(index)

@@ -1,5 +1,5 @@
 ﻿ModuleBookmarks0=
-ModuleBookmarks1=2054
+ModuleBookmarks1=2055
 ModuleBookmarks10=
 ModuleBookmarks11=
 ModuleBookmarks12=
@@ -79,6 +79,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=clsChartlyrics,checkScrapLyrics,178,6,Starter,tmrGetSong_tick,303,0,clsSongData,icyMetaData,37,6,clsFunctions,GetArtistAndSong,574,0,clsFunctions,parseIcySearchStation,478,0,clsSongData,preProcessSongData,55,6,clsFunctions,parseIcy,434,6,clsChartlyrics,getSongLyrics,222,6,Starter,Process_Globals,8,6,clsHttp,spBearer,68,2
+NavigationStack=Starter,tmrGetSong_tick,303,0,clsFunctions,GetArtistAndSong,574,0,clsFunctions,parseIcySearchStation,478,0,clsSongData,preProcessSongData,55,6,clsFunctions,parseIcy,434,6,clsChartlyrics,getSongLyrics,222,6,Starter,Process_Globals,8,6,clsHttp,spBearer,68,2,clsSongData,icyMetaData,14,6,player,start_stopStream,935,3
 SelectedBuild=0
 VisibleModules=1,2,3,4,5,6,7,8,9
