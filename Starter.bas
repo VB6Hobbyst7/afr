@@ -12,7 +12,7 @@ Version=7.8
 
 Sub Process_Globals
 	Public code1 As String = "91f924c1eace4879ba9c4c0f5061e925"
-	Public code2 as String = "b4fb29e9e2b0490bad9489c28dae6b89"
+	Public code2 As String = "b4fb29e9e2b0490bad9489c28dae6b89"
 	'Dim astream As AsyncStreams
 	Public clsRndImage As clsRandomImage
 	Public exoPlayer As SimpleExoPlayer
