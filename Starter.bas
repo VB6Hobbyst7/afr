@@ -16,6 +16,7 @@ Sub Process_Globals
 	'Dim astream As AsyncStreams
 	Public clsRndImage As clsRandomImage
 	Public exoPlayer As SimpleExoPlayer
+	
 	Public sleepTimerDuration As Long
 	Private logs As StringBuilder
 	Private logcat As LogCat
@@ -316,7 +317,7 @@ End Sub
 
 Sub addmetadataoutput_event(MethodName As String,Args() As Object)
 '	Log($"addmetadataoutput_event $DateTime{DateTime.Now} METHOD ${MethodName}"$)
-	
+'	
 '	Dim TrackGroups As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getCurrentTrackGroups",Null)
 '	Dim metaData As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getMetadataComponent",Null)
 '	Dim metaData1 As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getTextComponent",Null)
