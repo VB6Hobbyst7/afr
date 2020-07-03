@@ -167,7 +167,7 @@ Module9=clsRandomImage
 NumberOfFiles=56
 NumberOfLibraries=24
 NumberOfModules=26
-Version=9.801
+Version=9.9
 @EndOfDesignText@
 '#IgnoreWarnings: 9, 1, 10,16
 #Region  Activity Attributes 
@@ -186,7 +186,7 @@ Version=9.801
 '	#AdditionalJar: Java-Json
 '   #AdditionalJar: sqlite-jdbc-3.21.0
 
-	#MultiDex: False
+	#MultiDex: True
 '	#additionaljar: com.android.support:support-v4
 #End Region
 

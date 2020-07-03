@@ -21,6 +21,7 @@ End Sub
 Public Sub icyMetaData
 	Dim url, nSong As String
 	Dim job As HttpJob
+'	Log($"STREAM : ${Starter.selectedStream}"$)
 	
 	If Starter.selectedStream = "" Or Starter.clsFunc.IsMusicPlaying = False Then
 		Return
@@ -30,7 +31,7 @@ Public Sub icyMetaData
 '	Log(url)
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${Starter.selectedStream}"$
 '	Log(url)
-''	Log(url)
+'	Log(url)
 
 	job.Initialize("", Me)
 	job.Download(url)

@@ -1626,14 +1626,14 @@ Sub pnl_album_info_button_Click
 	If lblArtistNowPlaying.Text = "" Then Return
 	Dim result As Int
 	
-	result = Msgbox2("Store selected song", Starter.vAppname, "Yes", "", "No", Null)
+	Msgbox2Async("Store selected song", Starter.vAppname, "Yes", "", "No", Application.Icon, False)
+	Wait For Msgbox_Result (result As Int)
 	If result = DialogResponse.POSITIVE Then
 		genDb.addSongToStoredSongs(lblArtistNowPlaying.Text, "", lblNowPlayingStation.Text, DateTime.Now, ivNowPlayingStation.Bitmap, ivNowPlaying.Bitmap)
 		showHideStoredSongs		
 		ToastMessageShow("Song/artist stored for future referencee", False)
 	End If
 End Sub
-
 
 Sub setControlButtonsState
 	If 	pnl_store_song_button.Elevation > 0dip Then
