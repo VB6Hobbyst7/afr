@@ -403,7 +403,7 @@ Public Sub parseIcy(metaData As String) As String
 	Dim playerPaused As Boolean = CallSub(Starter, "playerPaused")
 
 
-	If metaData.SubString2(0,1) <> "{" Then
+	If metaData.SubString2(0,1) <> "{" And Starter.icy_playing = "" Then
 		If playerPaused Then Return False
 		Starter.newTitle = True
 		Return "No song information"
@@ -424,10 +424,13 @@ Public Sub parseIcy(metaData As String) As String
 	End Try
 	
 	'Dim root As Map = parser.NextObject
+	'Log($"ROOT ERROR ${root.ContainsKey("error")}"$)
 	If root.ContainsKey("error") Then
 		If playerPaused Then Return False
-		Starter.newTitle = True
-		Return "No song information"
+		Starter.newTitle = False 'True
+		'Return "No song information"
+'		Log("ERROR")
+		Return Starter.icy_playing
 	End If
 	
 	songPlaying = CallSub(player, "retSongPlaying")
@@ -482,7 +485,7 @@ End Sub
 
 
 Public Sub parseIcySearchStation(metaData As String)
-
+	Log(metaData)
 	If metaData.Length < 25 Then
 		CallSub2(searchStation, "nowPlaying", "No song information")
 		Return
@@ -567,7 +570,7 @@ Public Sub GetArtistAndSong(song As String, reverse As Boolean) As String
 	
 	lst.Initialize
 	cleanList.Initialize
-	
+	Log(song)
 	lst = Regex.Split("-", song)
 	
 	For Each str As String In lst

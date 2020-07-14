@@ -21,7 +21,7 @@ End Sub
 Public Sub icyMetaData
 	Dim url, nSong As String
 	Dim job As HttpJob
-'	Log($"STREAM : ${Starter.selectedStream}"$)
+'	Log($"${Starter.selectedStream} @ $Time{DateTime.Now}"$)
 	
 	If Starter.selectedStream = "" Or Starter.clsFunc.IsMusicPlaying = False Then
 		Return
@@ -30,7 +30,8 @@ Public Sub icyMetaData
 '	url = $"http://afr1.epizy.com/getIcy.php?url=${Starter.selectedStream}"$
 '	Log(url)
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${Starter.selectedStream}"$
-'	Log(url)
+
+	Log(url)
 '	Log(url)
 
 	job.Initialize("", Me)
@@ -55,14 +56,15 @@ Public Sub icyMetaData
 End Sub
 
 Sub preProcessSongData(nSong As String)
+'	Log(nSong)
 	If Starter.activeActivity = "searchStation" Then
 		Starter.clsFunc.parseIcySearchStation(nSong)
 	Else
 		Dim newSong As String = Starter.clsFunc.parseIcy(nSong)
 	End If
-'	LogColor($"$Time{DateTime.now} - ${newSong} - NEW TITLE IS ${Starter.newTitle}"$, Colors.Blue)
+	LogColor($"$Time{DateTime.now} - ${newSong} - NEW TITLE IS ${Starter.newTitle}"$, Colors.Blue)
 	
-	If newSong = "" Then
+	If newSong = "" Then 'or newSong = Starter.icy_playing Then
 		Return
 	End If
 	
@@ -71,8 +73,10 @@ Sub preProcessSongData(nSong As String)
 	If Starter.newTitle = False Then 
 		Return		
 	End If
-					
+	
+	Log($"NEW TITLE IS ${Starter.newTitle}"$)				
 	If Starter.newTitle = True Then
+'		Log(Starter.icy_playing)
 		Starter.chartSong = ""
 		Starter.chartArtist = ""
 		CallSub(player, "disableInfoPanels")
@@ -87,7 +91,13 @@ End Sub
 
 
 Sub processSong(song As String)
-'	Log(song)
+	'Log(song)
+'	Log(Starter.vSongPlaying)
+	
+	If song.ToLowerCase.IndexOf("null") > -1 Then
+		song = "No song information"
+	End If
+	
 	If song = "No song information" Then
 		If CallSub(player, "retSongPlaying") <> song Then
 			CallSub2(player, "setSongPlaying", song)
@@ -105,7 +115,15 @@ Sub processSong(song As String)
 		showNoImage
 		Return
 	End If
-	
+
+	If song = Starter.vSongPlaying Then
+		'Starter.newTitle = False
+'		Log($"PPPP $DateTime{DateTime.Now}"$)
+	Else
+		Starter.newTitle = True
+		'Log($"KKKKK $DateTime{DateTime.Now}"$)
+	End If
+'	Log(Starter.newTitle)
 	If Starter.newTitle Then
 		If Starter.activeActivity = "searchStation" Then
 			CallSub2(Starter.activeActivity, "nowPlaying", song)
@@ -127,8 +145,11 @@ Sub processSong(song As String)
 					showNoImage
 					Return
 				End If
-				Starter.playingSong = $"${Starter.chartSong} - ${Starter.chartArtist}"$
-
+'				Log(song)
+				If Starter.icy_playing <> song Then
+				'	Log($"${Starter.chartSong} - ${Starter.chartArtist} $DateTime{DateTime.Now}"$)
+					Starter.playingSong = $"${Starter.chartSong} - ${Starter.chartArtist}"$
+				End If
 				wait for(CallSub3(songdata,"spBearer", Starter.chartArtist, Starter.chartSong)) Complete (result As Boolean)
 				If IsPaused(player) = False Then
 					CallSubDelayed(player, "enableAlbumInfo")

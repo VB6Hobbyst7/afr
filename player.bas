@@ -1673,6 +1673,8 @@ End Sub
 
 
 Sub startOrStopStream(index As Int)
+	Starter.icy_playing = "No information"
+	Starter.vSongPlaying = "No information"
 	freeze(True)
 	Wait For(start_stopStream(index)) Complete (result As Boolean)
 	

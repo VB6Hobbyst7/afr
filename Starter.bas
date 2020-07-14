@@ -23,7 +23,7 @@ Sub Process_Globals
 	Private const emailAddress As String = "pieter09@gmail.com"
 	Public streamTimer As Timer
 	Public clsFunc As clsFunctions
-	Private vSongPlaying As String	= "Click station to start streaming"
+	Public vSongPlaying As String	= "Click station to start streaming"
 	Public vSongLyric As String	= "noLyric"
 	Private vSongTitle As String
 	Private songdata As clsHttp
@@ -79,7 +79,6 @@ Sub Process_Globals
 	'Private albumTag="91f924c1eace4879ba9c4c0f5061e925" as String, songTag="b4fb29e9e2b0490bad9489c28dae6b89" As String
 End Sub
 
-
 Sub Service_Create
 	startAccPlayerTime	= DateTime.Now
 	triedGetStation = False
@@ -114,21 +113,20 @@ Sub Service_Create
 	DisableStrictMode
 	tmrInactive.Initialize("tmrInactive", 10*60000)
 	tmrInactive.Enabled = False
-	tmrGetSong.Initialize("tmrGetSong", 8*1000)
+	tmrGetSong.Initialize("tmrGetSong", 5*1000)
 	'tmrGetSong.Enabled = True
-	connectionTimer.Initialize("connectionTimer", 5*1000)
-	connectionTimer.Enabled	= True
-	tmrInetConnection.Initialize("inetConnected", 1000)
-	tmrInetConnection.Enabled = True
+'''	connectionTimer.Initialize("connectionTimer", 2*1000)
+'''	connectionTimer.Enabled	= True
+'''	tmrInetConnection.Initialize("inetConnected", 1000)
+'''	tmrInetConnection.Enabled = True
 	localeDatFormat = GetDeviceDateFormatSettings
 	
 End Sub
 
-
-
 Sub Service_Start (StartingIntent As Intent)
 	Service.StartForeground(notifId, createNotif("Not streaming.."))
 	songdata.Initialize(Me, "test12")
+	
 End Sub
 
 Sub GetDeviceDateFormatSettings As String
@@ -242,9 +240,11 @@ Public Sub getSongPlaying As String
 End Sub
 
 Public Sub endForeGround
-	Service.StopAutomaticForeground
-	Service.StopForeground(notifId)
-	Service.StopForeground(51042)
+	StopService(Me)
+'	Service.StopAutomaticForeground
+'	Log($"NOTIF ID ${notifId} $Time{DateTime.Now}"$)
+'	Service.StopForeground(notifId)
+'	Service.StopForeground(51042)
 	
 End Sub
 
@@ -321,7 +321,7 @@ Sub addmetadataoutput_event(MethodName As String,Args() As Object)
 '	Dim TrackGroups As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getCurrentTrackGroups",Null)
 '	Dim metaData As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getMetadataComponent",Null)
 '	Dim metaData1 As JavaObject = joExo.GetFieldJO("exoplayer").RunMethod("getTextComponent",Null)
-    Dim x As String	
+'    Dim x As String	
 End Sub
 
 
@@ -394,7 +394,7 @@ End Sub
 
 #Region notification
 Public Sub clearNotif(nText As String)
-	'Log("NTEXT : " & nText)
+'	Log("NTEXT : " & nText)
 	Dim n As Notification = createNotif(nText)
 	n.Notify(notifId)
 	If nText = "cancel" Then
@@ -416,7 +416,7 @@ Sub createNotif(nText As String) As Notification
 	If sStationLogoPath <> "null" Then
 		Dim largeIcon As Bitmap = LoadBitmapResize("", sStationLogoPath, 256dip, 256dip, True)
 	Else
-		Dim largeIcon As Bitmap = LoadBitmapResize(File.DirAssets, "radio_flat.png", 256dip, 256dip, True)
+		Dim largeIcon As Bitmap = LoadBitmapResize(File.DirAssets, "foreground.png", 256dip, 256dip, True)
 	End If
 	
 	Dim n1 As NB6
@@ -431,6 +431,7 @@ Sub createNotif(nText As String) As Notification
 	
 	n1.SetDefaults(False, False, False)
 	n1.OnlyAlertOnce(True)
+
 	Return n1.Build(title, content, "tag", player)
 End Sub
 #End Region
