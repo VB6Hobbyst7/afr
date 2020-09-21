@@ -21,6 +21,7 @@ Sub Process_Globals
 	Private clsGen As clsGeneral
 	Private tmr As Timer
 	Dim hideTmr As clsGenTimer
+	Private clsFontSize as ClassSetFontSize
 	
 End Sub
 
@@ -155,6 +156,7 @@ End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	'pnlRnd.Initialize("")
+	clsFontSize.Initialize
 	tmr.Initialize("disableClickTimer", 1000)
 	tmr.Enabled = False
 	hideTmr.Initialize(5000, "hideOverFlow")
@@ -163,6 +165,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
 	
 	Activity.LoadLayout("player")
+	clsFontSize.ResetUserFontScale(Activity)
 	'lblRandomImage.Initialize("")
 	lblRandomImage.SetRotationAnimated(0, 90)
 	lblRandomImage.Top=pnlNowPlaying.Top+30dip
@@ -539,6 +542,8 @@ Sub setStation(lst As List) As Panel
 	End If
 	
 	p.Tag	= False
+	
+	clsFontSize.ResetUserFontScale(p)
 	Return p
 End Sub
 

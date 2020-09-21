@@ -136,6 +136,7 @@ Library21=dialogs
 Library22=tabstripviewpager
 Library23=exoplayer
 Library24=bctextengine
+Library25=accessibility
 Library3=xui
 Library4=sql
 Library5=stringutils
@@ -143,37 +144,38 @@ Library6=phone
 Library7=mlwifi
 Library8=javaobject
 Library9=designsupport
-ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~~\n~SetApplicationAttribute(android:icon, "@mipmap/ic_launcher")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~SetApplicationAttribute(android:resizeableActivity, "true")~\n~'AddApplicationText(<meta-data android:name="android.max_aspect" android:value="10"/>)~\n~~\n~~\n~~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~AddPermission(android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)~\n~~\n~CreateResource(mipmap-anydpi-v26, ic_launcher.xml,~\n~<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">~\n~    <background android:drawable="@mipmap/background"/>~\n~    <foreground android:drawable="@mipmap/foreground"/>~\n~</adaptive-icon>~\n~)~\n~
+ManifestCode=AddManifestText(~\n~~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29"/>~\n~<uses-permission~\n~  android:name="android.permission.READ_PHONE_STATE"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true"~\n~	android:name=".App" ~\n~    android:anyDensity="true"/>~\n~	 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />~\n~	<uses-permission android:name="android.permission.WAKE_LOCK" />~\n~	<uses-permission android:name="android.permission.INTERNET" />~\n~	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />~\n~	)~\n~~\n~SetApplicationAttribute(android:icon, "@mipmap/ic_launcher")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~~\n~~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~SetApplicationAttribute(android:resizeableActivity, "true")~\n~'AddApplicationText(<meta-data android:name="android.max_aspect" android:value="10"/>)~\n~~\n~~\n~~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~~\n~</resources>~\n~)~\n~~\n~'<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~ '   	<item name="android:statusBarColor">#0098FF</item>~\n~'		<item name="android:navigationBarColor">#004ba0</item>~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <external-files-path name="files" path="" />~\n~)~\n~CreateResourceFromFile(Macro, Core.NetworkClearText)~\n~~\n~AddPermission(android.permission.INTERNET)~\n~AddPermission(android.permission.VIBRATE)~\n~AddPermission(android.permission.FOREGROUND_SERVICE)~\n~AddPermission(android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)~\n~~\n~CreateResource(mipmap-anydpi-v26, ic_launcher.xml,~\n~<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">~\n~    <background android:drawable="@mipmap/background"/>~\n~    <foreground android:drawable="@mipmap/foreground"/>~\n~</adaptive-icon>~\n~)~\n~
 Module1=addNewStations
-Module10=clsScrollLabel
-Module11=clsSongData
-Module12=clsTimer
-Module13=cmGen
-Module14=editStation
-Module15=genDb
-Module16=getSetStation
-Module17=irp_CustomListView
-Module18=KeyValueStore
-Module19=modGlobal
-Module2=clsChartlyrics
-Module20=NB6
-Module21=phdetect
-Module22=player
-Module23=scrobbler
-Module24=searchStation
-Module25=Starter
-Module26=stored_songs
-Module3=clsDeviceVolume
-Module4=clsFunctions
-Module5=clsGeneral
-Module6=clsGenTimer
-Module7=clsGenVolumeControl
-Module8=clsHttp
-Module9=clsRandomImage
+Module10=clsRandomImage
+Module11=clsScrollLabel
+Module12=clsSongData
+Module13=clsTimer
+Module14=cmGen
+Module15=editStation
+Module16=genDb
+Module17=getSetStation
+Module18=irp_CustomListView
+Module19=KeyValueStore
+Module2=ClassSetFontSize
+Module20=modGlobal
+Module21=NB6
+Module22=phdetect
+Module23=player
+Module24=scrobbler
+Module25=searchStation
+Module26=Starter
+Module27=stored_songs
+Module3=clsChartlyrics
+Module4=clsDeviceVolume
+Module5=clsFunctions
+Module6=clsGeneral
+Module7=clsGenTimer
+Module8=clsGenVolumeControl
+Module9=clsHttp
 NumberOfFiles=59
-NumberOfLibraries=24
-NumberOfModules=26
-Version=9.95
+NumberOfLibraries=25
+NumberOfModules=27
+Version=10.2
 @EndOfDesignText@
 '#IgnoreWarnings: 9, 1, 10,16
 #Region  Activity Attributes 
@@ -193,6 +195,7 @@ Version=9.95
 '   #AdditionalJar: sqlite-jdbc-3.21.0
 
 	#MultiDex: True
+	#DebuggerForceFullDeployment:True
 '	#additionaljar: com.android.support:support-v4
 #End Region
 
@@ -211,6 +214,8 @@ End Sub
 Sub Globals
 	Private dbTimestamp As Long
 	Dim clsGen As clsGeneral
+	Dim clsFunc As clsFunctions
+	dim clsFontSize as ClassSetFontSize
 '	Private NativeMe As JavaObject
 	
 	Private toolbar As ACToolBarDark
@@ -249,8 +254,14 @@ End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("main")
+	
 	'IgnoreBatteryOptimizations
 	clsGen.Initialize
+	clsFunc.Initialize
+	clsFontSize.Initialize
+	
+	clsFontSize.ResetUserFontScale(Activity)
+	
 	getSetrdoDatabase
 	'kvs.Initialize(Starter.irp_dbFolder, "settings", True)
 	initKvs
@@ -337,7 +348,7 @@ Sub startIRP
 	
 	
 	If dbTimestamp > Starter.kvs.getSimple("stationsTimestamp") And rdoCount > 0 Then
-		Msgbox2Async($"Radio station update availeble, update now?"$, Starter.vAppname, "Yes", "", "No", Null, False)
+		Msgbox2Async($"Radio station database is updated, update now?"$, Starter.vAppname, "Yes", "", "No", Application.Icon, False)
 	
 		Wait For Msgbox_Result (response As Int)
 	

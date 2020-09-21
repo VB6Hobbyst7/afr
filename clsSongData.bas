@@ -28,10 +28,10 @@ Public Sub icyMetaData
 	End If
 	
 '	url = $"http://afr1.epizy.com/getIcy.php?url=${Starter.selectedStream}"$
-'	Log(url)
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${Starter.selectedStream}"$
+'	Log(url)
 
-	Log(url)
+'Log(url)
 '	Log(url)
 
 	job.Initialize("", Me)
@@ -43,7 +43,7 @@ Public Sub icyMetaData
 	If job.Success Then
 		nSong = job.GetString
 		job.Release
-		
+'		Log(nSong)
 		preProcessSongData(nSong)
 	Else
 		LogColor($"IN JOB ERROR $DateTime{DateTime.Now}"$, Colors.Red)
@@ -62,7 +62,7 @@ Sub preProcessSongData(nSong As String)
 	Else
 		Dim newSong As String = Starter.clsFunc.parseIcy(nSong)
 	End If
-	LogColor($"$Time{DateTime.now} - ${newSong} - NEW TITLE IS ${Starter.newTitle}"$, Colors.Blue)
+'	LogColor($"$Time{DateTime.now} - ${newSong} - NEW TITLE IS ${Starter.newTitle}"$, Colors.Blue)
 	
 	If newSong = "" Then 'or newSong = Starter.icy_playing Then
 		Return
@@ -74,7 +74,7 @@ Sub preProcessSongData(nSong As String)
 		Return		
 	End If
 	
-	Log($"NEW TITLE IS ${Starter.newTitle}"$)				
+'	Log($"NEW TITLE IS ${Starter.newTitle}"$)				
 	If Starter.newTitle = True Then
 '		Log(Starter.icy_playing)
 		Starter.chartSong = ""
@@ -91,7 +91,7 @@ End Sub
 
 
 Sub processSong(song As String)
-	'Log(song)
+'	Log(song)
 '	Log(Starter.vSongPlaying)
 	
 	If song.ToLowerCase.IndexOf("null") > -1 Then

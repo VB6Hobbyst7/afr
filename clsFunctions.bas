@@ -402,7 +402,7 @@ End Sub
 Public Sub parseIcy(metaData As String) As String
 	Dim playerPaused As Boolean = CallSub(Starter, "playerPaused")
 
-
+	'Log(metaData)
 	If metaData.SubString2(0,1) <> "{" And Starter.icy_playing = "" Then
 		If playerPaused Then Return False
 		Starter.newTitle = True
@@ -410,7 +410,7 @@ Public Sub parseIcy(metaData As String) As String
 	End If
 	
 	Dim icy_by, icy_name, icy_playing, icy_genre, icy_br, icy_url, icy_genre As String = ""
-	
+	Dim icy_maint As Int = 16000
 	
 	Dim parser As JSONParser
 	parser.Initialize(metaData)
@@ -426,6 +426,11 @@ Public Sub parseIcy(metaData As String) As String
 	'Dim root As Map = parser.NextObject
 	'Log($"ROOT ERROR ${root.ContainsKey("error")}"$)
 	If root.ContainsKey("error") Then
+		Try
+			SetIcyMaintTimer(root.Get("icy-maint"))
+		Catch
+			Log(LastException)
+		End Try
 		If playerPaused Then Return False
 		Starter.newTitle = False 'True
 		'Return "No song information"
@@ -441,7 +446,16 @@ Public Sub parseIcy(metaData As String) As String
 	icy_genre = root.Get("icy-genre")
 	icy_br  = root.Get("icy-br")
 	icy_url = root.Get("icy-url")
+	icy_maint = root.Get("icy-maint")
 
+	'Log($"ICY-MAINT : ${icy_maint}"$)
+	'Log($"Starter.tmrGetSong.Interval : ${Starter.tmrGetSong.Interval}"$)
+'	If Starter.tmrGetSong.Interval <> icy_maint Then
+'		Starter.tmrGetSong.Enabled = False
+'		Starter.tmrGetSong.Interval = icy_maint
+'		Starter.tmrGetSong.Enabled = True
+'	End If
+	SetIcyMaintTimer(icy_maint)
 	If icy_genre = "" Then
 		icy_genre = "N/A"
 	End If
@@ -483,6 +497,14 @@ Public Sub parseIcy(metaData As String) As String
 	Return icy_playing
 End Sub
 
+Public Sub SetIcyMaintTimer(interval As Int)
+'	Log($"Starter.tmrGetSong.Interval : ${Starter.tmrGetSong.Interval} $Time{DateTime.Now}"$)
+	If Starter.tmrGetSong.Interval <> interval Then
+		Starter.tmrGetSong.Enabled = False
+		Starter.tmrGetSong.Interval = interval
+		Starter.tmrGetSong.Enabled = True
+	End If
+End Sub
 
 Public Sub parseIcySearchStation(metaData As String)
 	Log(metaData)
@@ -497,10 +519,10 @@ Public Sub parseIcySearchStation(metaData As String)
 	End If
 	
 	Dim icy_by, icy_name, icy_playing, icy_genre, icy_br, icy_url, icy_genre As String = ""
-	
+	Dim icy_maint As Int
 	Dim parser As JSONParser
 	parser.Initialize(metaData)
-
+	Log($"ICY-MAINT : ${icy_maint}"$)
 	Try
 		Dim root As Map = parser.NextObject
 	Catch
@@ -519,7 +541,7 @@ Public Sub parseIcySearchStation(metaData As String)
 	icy_genre = root.Get("icy-genre")
 	icy_br  = root.Get("icy-br")
 	icy_url = root.Get("icy-url")
-	
+	icy_maint = root.Get("icy-maint")
 	If icy_genre = "" Then
 		icy_genre = "N/A"
 	End If
@@ -528,6 +550,7 @@ Public Sub parseIcySearchStation(metaData As String)
 		icy_playing = "No song information"
 	End If
 	
+	Log($"ICY-MAINT : ${icy_maint}"$)
 	CallSub2(Starter, "clearNotif", icy_playing)
 	If CallSub(searchStation, "retCurrLabel") = icy_playing Then
 		Return
@@ -570,7 +593,7 @@ Public Sub GetArtistAndSong(song As String, reverse As Boolean) As String
 	
 	lst.Initialize
 	cleanList.Initialize
-	Log(song)
+'	Log(song)
 	lst = Regex.Split("-", song)
 	
 	For Each str As String In lst
@@ -652,4 +675,20 @@ Sub processLyric(lyric As String) As String
 '	LogColor(ReplaceHtmlChars(retVal), Colors.Blue)
 	Return retVal
 End Sub
+
+Sub GenMsgBox(msg As String, answerPositive As String, answerCancel As String, answerNegative As String) As ResumableSub
+	Msgbox2Async(msg, Starter.vAppname, answerPositive, answerCancel, answerNegative, Application.Icon, False)
+	
+	Wait For Msgbox_Result (response As Int)
+	If response = DialogResponse.POSITIVE Then 
+		Return True
+	End If
+	
+	If response = DialogResponse.NEGATIVE Then
+		Return False
+	End If
+	Return False
+End Sub
+
+
 

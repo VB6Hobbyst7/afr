@@ -113,7 +113,7 @@ Sub Service_Create
 	DisableStrictMode
 	tmrInactive.Initialize("tmrInactive", 10*60000)
 	tmrInactive.Enabled = False
-	tmrGetSong.Initialize("tmrGetSong", 5*1000)
+	tmrGetSong.Initialize("tmrGetSong", 4000)'16*1000)
 	'tmrGetSong.Enabled = True
 '''	connectionTimer.Initialize("connectionTimer", 2*1000)
 '''	connectionTimer.Enabled	= True
