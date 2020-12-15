@@ -26,8 +26,7 @@ Public Sub icyMetaData
 	If Starter.selectedStream = "" Or Starter.clsFunc.IsMusicPlaying = False Then
 		Return
 	End If
-	
-'	url = $"http://afr1.epizy.com/getIcy.php?url=${Starter.selectedStream}"$
+	Log($"$Time{DateTime.Now}"$)
 	url = $"http://ice.pdeg.nl/getIcy.php?url=${Starter.selectedStream}"$
 '	Log(url)
 
@@ -43,7 +42,7 @@ Public Sub icyMetaData
 	If job.Success Then
 		nSong = job.GetString
 		job.Release
-'		Log(nSong)
+	Log(nSong)
 		preProcessSongData(nSong)
 	Else
 		LogColor($"IN JOB ERROR $DateTime{DateTime.Now}"$, Colors.Red)
@@ -51,9 +50,12 @@ Public Sub icyMetaData
 		showNoImage
 		preProcessSongData("No information")
 	End If
+'	Log($"NSOG : ${nSong}"$)
 '	getlycis
 	job.Release
 End Sub
+
+
 
 Sub preProcessSongData(nSong As String)
 '	Log(nSong)
